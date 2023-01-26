@@ -46,4 +46,5 @@ func main() {
 	err = data.GenCodeFromTextFilesDir(out, "./files/", true, func(s string) bool {
 		return path.Ext(s) == ".yaml"
 	})
+	die(err)
 }

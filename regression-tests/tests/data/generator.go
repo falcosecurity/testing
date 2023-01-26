@@ -35,7 +35,7 @@ var {{ .VarName }} = utils.NewLocalFileAccessor("{{ .FileName }}", "{{ .FilePath
 type codeWriter func(io.Writer, string, string) error
 
 func writeTextFileCode(w io.Writer, varName, fileName string) error {
-	logrus.Infof("generating text file accessor '%s' from file '%s'", varName, fileName)
+	logrus.Infof("generating string file var %s from file %s", varName, fileName)
 	data, err := os.ReadFile(fileName)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func writeTextFileCode(w io.Writer, varName, fileName string) error {
 }
 
 func writeLargeFileCode(w io.Writer, varName, fileName string) error {
-	logrus.Infof("generating local file accessor '%s' from file '%s'", varName, fileName)
+	logrus.Infof("generating local file var %s from file %s", varName, fileName)
 	absPath, err := filepath.Abs(fileName)
 	if err != nil {
 		return err

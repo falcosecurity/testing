@@ -4,13 +4,18 @@
 package main
 
 import (
+	"archive/zip"
+	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"path"
 	"text/template"
 	"time"
 
 	"github.com/falcosecurity/falco/regression-tests/tests/data"
+	"github.com/sirupsen/logrus"
 )
 
 type headerInfo struct {
@@ -43,8 +48,94 @@ func main() {
 		Timestamp: time.Now(),
 		Package:   "captures",
 	})
+
+	traceDir := "./download"
+	os.RemoveAll(traceDir)
+
+	traceVersion := "20200831"
+	for _, traceName := range []string{"traces-info", "traces-positive", "traces-negative"} {
+		url := fmt.Sprintf("https://download.falco.org/fixtures/trace-files/%s-%s.zip", traceName, traceVersion)
+		err = downloadTraceFiles("./download", url)
+		die(err)
+	}
+
+	scapFileFilter := func(s string) bool { return path.Ext(s) == ".scap" }
+
+	die(data.GenCodeFromLargeFilesDir(out, "./download/", true, scapFileFilter))
+
 	// todo: make this recursive and support plugin tests too
-	err = data.GenCodeFromLargeFilesDir(out, "./files/", false, func(s string) bool {
-		return path.Ext(s) == ".scap"
-	})
+	die(data.GenCodeFromLargeFilesDir(out, "./files/", false, scapFileFilter))
+}
+
+func downloadIntoTempFile(url string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	file, err := os.CreateTemp("", "falco-tester-data-")
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+	name := file.Name()
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		return "", err
+	}
+	return name, nil
+}
+
+func downloadTraceFiles(extractDir, url string) error {
+	logrus.Infof("downloading %s into temp file", url)
+	zipFile, err := downloadIntoTempFile(url)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		logrus.Infof("removing temp file %s", url)
+		os.Remove(zipFile)
+	}()
+	return unzipIntoDir(extractDir, zipFile)
+}
+
+func unzipIntoDir(dirName, zipFile string) error {
+	logrus.Infof("unzipping %s into %s", zipFile, dirName)
+	reader, err := zip.OpenReader(zipFile)
+	if err != nil {
+		return err
+	}
+	defer reader.Close()
+
+	for _, file := range reader.File {
+		fileReader, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer fileReader.Close()
+
+		logrus.Infof("extracting %s", file.Name)
+		relname := path.Join(dirName, file.Name)
+		if file.FileInfo().IsDir() {
+			err = os.MkdirAll(relname, 0777)
+			if err != nil {
+				return err
+			}
+		} else {
+			err = os.MkdirAll(path.Dir(relname), 0777)
+			if err != nil {
+				return err
+			}
+			out, err := os.Create(relname)
+			if err != nil {
+				return err
+			}
+			defer out.Close()
+			_, err = io.Copy(out, fileReader)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
