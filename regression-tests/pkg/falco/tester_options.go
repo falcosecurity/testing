@@ -85,6 +85,7 @@ func TestWithCaptureFile(f utils.FileAccessor) TesterOption {
 
 func TestWithMaxDuration(duration time.Duration) TesterOption {
 	return func(o *testOpts) {
+		o.duration = duration
 		o.args = removeFromArgs(o.args, "-M", 1)
 		o.args = append(o.args, "-M", fmt.Sprintf("%d", int64(duration.Seconds())))
 	}

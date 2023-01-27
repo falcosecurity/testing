@@ -1,13 +1,13 @@
 package data
 
 import (
-	"html/template"
 	"io"
-	"io/ioutil"
+
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
+	"text/template"
 
 	"github.com/iancoleman/strcase"
 	"github.com/sirupsen/logrus"
@@ -61,7 +61,7 @@ func writeLargeFileCode(w io.Writer, varName, fileName string) error {
 }
 
 func genCodeFromDir(w io.Writer, dirPath, namePath string, recursive bool, cw codeWriter, nameFilter func(string) bool) error {
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := os.ReadDir(dirPath)
 	if err != nil {
 		return err
 	}

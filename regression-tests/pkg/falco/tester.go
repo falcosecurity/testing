@@ -60,7 +60,7 @@ func TestRun(runner Runner, options ...TesterOption) *TesterOutput {
 		RunWithStderr(&res.stderr),
 	)
 	if res.err != nil {
-		logrus.WithError(res.err).WithField("stdout", res.Stdout()).Warn("error in running Falco with tester")
+		logrus.WithError(res.err).Warn("error in running Falco with tester")
 	}
 	// todo: should we log stderr and stdout? That can become quite messy in the output
 	return res

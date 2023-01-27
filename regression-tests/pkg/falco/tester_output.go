@@ -35,7 +35,11 @@ func (d Detections) filter(f func(*Alert) bool) Detections {
 }
 
 func (d Detections) ForPriority(p string) Detections {
-	return d.filter(func(a *Alert) bool { return strings.EqualFold(a.Priority, p) })
+	return d.filter(func(a *Alert) bool {
+		// note: we need to use "CONTAINS" because of
+		// the INFO -> INFORMATIONAL changes we had in the past
+		return strings.Contains(strings.ToLower(a.Priority), strings.ToLower(p))
+	})
 }
 
 func (d Detections) ForRule(v interface{}) Detections {
@@ -74,42 +78,40 @@ type RuleValidationInfo struct {
 
 type RuleValidationInfos []*RuleValidationInfo
 
+type RuleValidationResult struct {
+	Successful bool                `json:"successful"`
+	Name       string              `json:"name"`
+	Errors     RuleValidationInfos `json:"errors"`
+	Warnings   RuleValidationInfos `json:"warnings"`
+}
+
+var emptyRuleValidationResult = RuleValidationResult{}
+
 type RuleValidation struct {
-	Results []struct {
-		Successful bool                `json:"successful"`
-		Name       string              `json:"name"`
-		Errors     RuleValidationInfos `json:"errors"`
-		Warnings   RuleValidationInfos `json:"warnings"`
-	} `json:"falco_load_results"`
+	Results []*RuleValidationResult `json:"falco_load_results"`
 }
 
-// todo: support multiple results
-func (r RuleValidation) Errors() RuleValidationInfos {
-	if len(r.Results) > 0 {
-		return r.Results[0].Errors
+func (r RuleValidation) ForIndex(index int) *RuleValidationResult {
+	if index >= len(r.Results) {
+		return &emptyRuleValidationResult
 	}
-	return nil
+	return r.Results[index]
 }
 
-func (r RuleValidation) Warnings() RuleValidationInfos {
-	if len(r.Results) > 0 {
-		return r.Results[0].Warnings
+func (r RuleValidation) AllWarnings() RuleValidationInfos {
+	var res RuleValidationInfos
+	for _, result := range r.Results {
+		res = append(res, result.Warnings...)
 	}
-	return nil
+	return res
 }
 
-func (r RuleValidation) Name() string {
-	if len(r.Results) > 0 {
-		return r.Results[0].Name
+func (r RuleValidation) AllErrors() RuleValidationInfos {
+	var res RuleValidationInfos
+	for _, result := range r.Results {
+		res = append(res, result.Errors...)
 	}
-	return ""
-}
-
-func (r RuleValidation) Successful() bool {
-	if len(r.Results) > 0 {
-		return r.Results[0].Successful
-	}
-	return false
+	return res
 }
 
 func (d RuleValidationInfos) filter(f func(*RuleValidationInfo) bool) RuleValidationInfos {
@@ -216,12 +218,12 @@ func (t *TesterOutput) StdoutJSON() map[string]interface{} {
 
 func (t *TesterOutput) Detections() Detections {
 	if !t.hasOutputJSON() {
-		logrus.Fatalf("TesterOutput.Detections: must use TestWithOutputJSON")
+		logrus.Errorf("TesterOutput.Detections: must use TestWithOutputJSON")
 	}
 
 	lines, err := readLineByLine(strings.NewReader(t.Stdout()))
 	if err != nil {
-		logrus.WithError(err).Fatalf("TesterOutput.Detections: can't read stdout line by line")
+		logrus.WithError(err).Errorf("TesterOutput.Detections: can't read stdout line by line")
 		return nil
 	}
 	var res Detections
@@ -239,12 +241,12 @@ func (t *TesterOutput) Detections() Detections {
 
 func (t *TesterOutput) RuleValidation() *RuleValidation {
 	if !t.hasOutputJSON() {
-		logrus.Fatalf("TesterOutput.Detections: must use TestWithOutputJSON")
+		logrus.Errorf("TesterOutput.Detections: must use TestWithOutputJSON")
 	}
 
 	res := &RuleValidation{}
 	if err := json.Unmarshal([]byte(t.Stdout()), res); err != nil {
-		logrus.WithField("stdout", t.Stdout()).Fatalf("TesterOutput.RuleValidation: can't parse stdout JSON")
+		logrus.WithField("stdout", t.Stdout()).Errorf("TesterOutput.RuleValidation: can't parse stdout JSON")
 		return nil
 	}
 	return res
