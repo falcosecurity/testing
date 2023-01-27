@@ -99,3 +99,9 @@ func TestWithRulesValidation(rules ...utils.FileAccessor) TesterOption {
 		}
 	}
 }
+
+func TestWithExtraFiles(files ...utils.FileAccessor) TesterOption {
+	return func(o *testOpts) {
+		o.files = append(o.files, files...)
+	}
+}

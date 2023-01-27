@@ -49,7 +49,7 @@ func TestRun(runner Runner, options ...TesterOption) *TesterOutput {
 	res.opts.args = append(res.opts.args, "-o", "log_level=debug")
 	res.opts.args = append(res.opts.args, "-o", "log_stderr=true")
 	res.opts.args = append(res.opts.args, "-o", "log_syslog=false")
-
+	res.opts.args = append(res.opts.args, "-o", "stdout_output.enabled=true")
 	logrus.WithField("maxDuration", res.opts.duration).Info("running falco with tester")
 	ctx, cancel := context.WithTimeout(context.Background(), skewedDuration(res.opts.duration))
 	defer cancel()
