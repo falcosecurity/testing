@@ -1,6 +1,7 @@
 package falco
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"fmt"
@@ -23,14 +24,33 @@ type dockerRunner struct {
 }
 
 // NewDockerRunner returns a Falco runner that runs a container image with Docker
-func NewDockerRunner(image string, privileged bool) Runner {
-	return &dockerRunner{
+func NewDockerRunner(image string, privileged bool) (Runner, error) {
+	// need to pull the image
+	res := &dockerRunner{
 		image:      image,
 		privileged: privileged,
 	}
+	err := res.withClient(context.Background(), func(cli *client.Client) error {
+		logrus.WithField("image", res.image).Debugf("pulling docker image")
+		reader, err := cli.ImagePull(context.Background(), res.image, types.ImagePullOptions{})
+		if err != nil {
+			return err
+		}
+		scanner := bufio.NewScanner(reader)
+		scanner.Split(bufio.ScanLines)
+		for scanner.Scan() {
+			logrus.Debugf(scanner.Text())
+		}
+		defer reader.Close()
+		return scanner.Err()
+	})
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
-func (d *dockerRunner) withClientAndImage(ctx context.Context, do func(*client.Client) error) error {
+func (d *dockerRunner) withClient(ctx context.Context, do func(*client.Client) error) error {
 	// create a new Docker client
 	logrus.Debugf("creating new docker client")
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
@@ -38,19 +58,6 @@ func (d *dockerRunner) withClientAndImage(ctx context.Context, do func(*client.C
 		return err
 	}
 	defer cli.Close()
-
-	// todo: pulling the image takes time and there is no clear way to wait
-	// up until it's finished. For now, let's assume that the used image is
-	// already present in the local daemon
-	// // pull new Image
-	// logrus.WithField("image", d.image).Debugf("pulling docker image")
-	// reader, err := cli.ImagePull(context.Background(), d.image, types.ImagePullOptions{
-	// 	All: true,
-	// })
-	// if err != nil {
-	// 	return err
-	// }
-	// defer reader.Close()
 
 	// perform action
 	return do(cli)
@@ -119,7 +126,7 @@ func (d *dockerRunner) Run(ctx context.Context, options ...RunnerOption) (retErr
 		return retErr
 	}
 
-	return d.withClientAndImage(ctx, func(cli *client.Client) error {
+	return d.withClient(ctx, func(cli *client.Client) error {
 		return d.withNewContainer(ctx, cli, func(containerID string) (err error) {
 			log := logrus.WithField("containerID", containerID)
 			// copy files archive into container
