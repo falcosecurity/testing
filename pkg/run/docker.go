@@ -69,7 +69,7 @@ func (d *dockerRunner) WorkDir() string {
 	// mutex protection
 	// note: the working directory is the root dir itself, because
 	// the executable will run inside a container
-	// todo: figure out if root dir can cause issues
+	// todo(jasondellaluce): figure out if root dir can cause issues
 	return "/"
 }
 
@@ -94,7 +94,7 @@ func (d *dockerRunner) withNewContainer(ctx context.Context, cli *client.Client,
 		ctx,
 		&container.Config{
 			Image: d.image,
-			// todo: the whole docker runner may be simplified by:
+			// todo(jasondellaluce): the whole docker runner may be simplified by:
 			//   1) copying archive before starting (and controlling the workdir)
 			//   2) use a custom entrypoint and args here
 			Entrypoint: strslice.StrSlice{"/bin/bash", "-c", "--", "while true; do sleep 30; done;"},
@@ -131,7 +131,7 @@ func (d *dockerRunner) withNewContainer(ctx context.Context, cli *client.Client,
 	return do(resp.ID)
 }
 
-// todo: check that everything is ok here
+// todo(jasondellaluce): check that everything is ok here
 // contract:
 // if a file is a relpath, or is within the work dir, it's moved in the
 // workdir

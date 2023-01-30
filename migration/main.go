@@ -318,7 +318,7 @@ func (f FalcoTestInfo) TemplateInput(name string) (TestTemplateTestInput, bool) 
 			res.Options = append(res.Options, `falco.WithAllEvents()`)
 		}
 		if f.TimeIso8601 {
-			// todo: consider removing this
+			// todo(jasondellaluce): consider removing this
 			res.Options = append(res.Options, `falco.WithArgs("-o", "time_format_iso_8601=true")`)
 		}
 		if len(MultiStrValues(f.EnableSource)) > 0 {
@@ -342,9 +342,9 @@ func (f FalcoTestInfo) TemplateInput(name string) (TestTemplateTestInput, bool) 
 				res.Checks = append(res.Checks, fmt.Sprintf(`assert.Equal(t, %d, res.Detections().ForRule("%s").Count())`, count, rule))
 			}
 		}
-		// todo: consider removing this
+		// todo(jasondellaluce): consider removing this
 		res.Options = append(res.Options, fmt.Sprintf(`falco.WithArgs("-o", "json_include_output_property=%v")`, f.JSONIncludeOutputProperty))
-		// todo: consider removing this
+		// todo(jasondellaluce): consider removing this
 		res.Options = append(res.Options, fmt.Sprintf(`falco.WithArgs("-o", "json_include_tags_property=%v")`, f.JSONIncludeTagsProperty))
 
 	}

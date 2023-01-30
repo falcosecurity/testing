@@ -12,6 +12,20 @@
 // - falco_tests.yaml
 // - falco_traces.yaml
 // - falco_tests_exceptions.yaml
+//
+// todo(jasondellaluce): finish porting the following tests manually:
+// EnabledRuleUsingFalseEnabledFlagOnly
+// NullOutputField
+// TimeIso8601
+// JsonOutputNoOutputProperty
+// JsonOutputNoTagsProperty
+// TestWarnings
+// RulesDirectory
+// GrpcUnixSocketOutputs
+// JsonOutputEmptyTagsProperty
+// InOperatorNetmasks
+// DetectCounts
+// RuleNamesWithRegexChars
 
 package tests
 
