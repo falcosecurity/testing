@@ -71,7 +71,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 {{range $testIndex, $test := .Tests}}
-func Test{{ $test.Name }}(t *testing.T) {
+func TestLegacy_{{ $test.Name }}(t *testing.T) {
 	t.Parallel()
     res := falco.Test(
         newExecutableRunner(t),{{range $optionIndex, $option := $test.Options}}
