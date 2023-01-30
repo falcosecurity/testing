@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCommandVersion(t *testing.T) {
+func TestCmd_Version(t *testing.T) {
 	runner := newExecutableRunner(t)
 	t.Run("text-output", func(t *testing.T) {
 		res := falco.Test(runner, falco.WithArgs("--version"))

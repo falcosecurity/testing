@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jasondellaluce/falco-testing/tests/data"
+	"github.com/jasondellaluce/falco-testing/tests/falco/data"
 )
 
 func die(err error) {

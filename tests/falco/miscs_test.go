@@ -4,11 +4,11 @@ import (
 	"testing"
 
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
-	"github.com/jasondellaluce/falco-testing/tests/data/configs"
+	"github.com/jasondellaluce/falco-testing/tests/falco/data/configs"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStartupFail(t *testing.T) {
+func TestMiscs_StartupFail(t *testing.T) {
 	runner := newExecutableRunner(t)
 	t.Run("empty-config", func(t *testing.T) {
 		res := falco.Test(runner, falco.WithConfig(configs.EmptyConfig))

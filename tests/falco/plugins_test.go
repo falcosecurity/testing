@@ -14,7 +14,7 @@ var (
 	JSONPluginLibrary     = run.NewLocalFileAccessor("libjson.so", "/usr/share/falco/plugins/libjson.so")
 )
 
-func TestK8SAudit(t *testing.T) {
+func TestPlugins_K8SAudit(t *testing.T) {
 	input := run.NewLocalFileAccessor("input.json", "/home/vagrant/dev/falcosecurity/falco/test/trace_files/k8s_audit/create_nginx_pod_privileged.json")
 	rules := run.NewLocalFileAccessor("k8saudit_rules.yaml", "/home/vagrant/dev/falcosecurity/falco/test/rules/k8s_audit/engine_v4_k8s_audit_rules.yaml")
 	config, err := falco.NewPluginConfig(

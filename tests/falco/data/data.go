@@ -24,7 +24,7 @@ var DownloadDir = ""
 
 func init() {
 	var err error
-	DownloadDir, err = filepath.Abs("../../../download")
+	DownloadDir, err = filepath.Abs("../../../../download")
 	if err != nil {
 		log.Fatal(err.Error())
 	}

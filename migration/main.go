@@ -65,9 +65,9 @@ import (
 	"testing"
 
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
-	"github.com/jasondellaluce/falco-testing/tests/data/rules"
-    "github.com/jasondellaluce/falco-testing/tests/data/configs"
-    "github.com/jasondellaluce/falco-testing/tests/data/captures"
+	"github.com/jasondellaluce/falco-testing/tests/falco/data/rules"
+    "github.com/jasondellaluce/falco-testing/tests/falco/data/configs"
+    "github.com/jasondellaluce/falco-testing/tests/falco/data/captures"
 	"github.com/stretchr/testify/assert"
 )
 {{range $testIndex, $test := .Tests}}
@@ -376,7 +376,7 @@ func main() {
 		//"falco_k8s_audit_tests.yaml",
 		"falco_tests_exceptions.yaml",
 		//"falco_tests_package.yaml",
-		"falco_traces.yaml.in",
+		"falco_traces.yaml",
 	}
 
 	input := TestTemplateInput{
