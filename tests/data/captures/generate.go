@@ -14,7 +14,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/falcosecurity/falco/regression-tests/tests/data"
+	"github.com/jasondellaluce/falco-testing/tests/data"
 	"github.com/sirupsen/logrus"
 )
 
@@ -29,7 +29,7 @@ var headerTemplate = template.Must(template.New("header").Parse(`// Code generat
 package {{ .Package }}
 
 import (
-	"github.com/falcosecurity/falco/regression-tests/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/utils"
 )
 `))
 

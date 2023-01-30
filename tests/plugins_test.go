@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	"github.com/falcosecurity/falco/regression-tests/pkg/falco"
-	"github.com/falcosecurity/falco/regression-tests/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/falco"
+	"github.com/jasondellaluce/falco-testing/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 

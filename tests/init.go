@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"github.com/falcosecurity/falco/regression-tests/pkg/falco"
+	"github.com/jasondellaluce/falco-testing/pkg/falco"
 	"github.com/sirupsen/logrus"
 )
 

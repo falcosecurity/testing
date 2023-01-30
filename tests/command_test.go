@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/falcosecurity/falco/regression-tests/pkg/falco"
+	"github.com/jasondellaluce/falco-testing/pkg/falco"
 	"github.com/stretchr/testify/assert"
 )
 

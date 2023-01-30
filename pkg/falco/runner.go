@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/falcosecurity/falco/regression-tests/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/utils"
 )
 
 const (

@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/falcosecurity/falco/regression-tests/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/utils"
 	"github.com/sirupsen/logrus"
 )
 

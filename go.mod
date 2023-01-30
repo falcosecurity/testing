@@ -1,4 +1,4 @@
-module github.com/falcosecurity/falco/regression-tests
+module github.com/jasondellaluce/falco-testing
 
 go 1.17
 

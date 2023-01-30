@@ -1,6 +1,6 @@
 package configs
 
-import "github.com/falcosecurity/falco/regression-tests/pkg/utils"
+import "github.com/jasondellaluce/falco-testing/pkg/utils"
 
 //go:generate go run generate.go
 

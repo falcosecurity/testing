@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/falcosecurity/falco/regression-tests/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/utils"
 )
 
 func testWithMultipleArgValues(arg string, values ...string) TesterOption {

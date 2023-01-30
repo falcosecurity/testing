@@ -5,7 +5,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/falcosecurity/falco/regression-tests/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/utils"
 	"github.com/sirupsen/logrus"
 )
 

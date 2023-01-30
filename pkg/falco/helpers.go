@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"text/template"
 
-	"github.com/falcosecurity/falco/regression-tests/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/utils"
 )
 
 // PluginInfo is a struct representing the info about a single plugin

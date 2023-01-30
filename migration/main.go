@@ -64,10 +64,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/falcosecurity/falco/regression-tests/pkg/falco"
-	"github.com/falcosecurity/falco/regression-tests/tests/data/rules"
-    "github.com/falcosecurity/falco/regression-tests/tests/data/configs"
-    "github.com/falcosecurity/falco/regression-tests/tests/data/captures"
+	"github.com/jasondellaluce/falco-testing/pkg/falco"
+	"github.com/jasondellaluce/falco-testing/tests/data/rules"
+    "github.com/jasondellaluce/falco-testing/tests/data/configs"
+    "github.com/jasondellaluce/falco-testing/tests/data/captures"
 	"github.com/stretchr/testify/assert"
 )
 {{range $testIndex, $test := .Tests}}
