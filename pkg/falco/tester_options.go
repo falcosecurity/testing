@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jasondellaluce/falco-testing/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/run"
 )
 
-func testWithMultipleArgValues(arg string, values ...string) TesterOption {
-	return func(o *testOpts) {
+func withMultipleArgValues(arg string, values ...string) TestOption {
+	return func(o *testOptions) {
 		for _, v := range values {
 			o.args = append(o.args, arg)
 			o.args = append(o.args, v)
@@ -16,12 +16,12 @@ func testWithMultipleArgValues(arg string, values ...string) TesterOption {
 	}
 }
 
-func TestWithArgs(args ...string) TesterOption {
-	return func(ro *testOpts) { ro.args = append(ro.args, args...) }
+func WithArgs(args ...string) TestOption {
+	return func(ro *testOptions) { ro.args = append(ro.args, args...) }
 }
 
-func TestWithRules(rules ...utils.FileAccessor) TesterOption {
-	return func(o *testOpts) {
+func WithRules(rules ...run.FileAccessor) TestOption {
+	return func(o *testOptions) {
 		for _, r := range rules {
 			o.args = append(o.args, "-r", r.Name())
 			o.files = append(o.files, r)
@@ -29,70 +29,70 @@ func TestWithRules(rules ...utils.FileAccessor) TesterOption {
 	}
 }
 
-func TestWithConfig(f utils.FileAccessor) TesterOption {
-	return func(o *testOpts) {
+func WithConfig(f run.FileAccessor) TestOption {
+	return func(o *testOptions) {
 		o.args = removeFromArgs(o.args, "-c", 1)
 		o.args = append(o.args, "-c", f.Name())
 		o.files = append(o.files, f)
 	}
 }
 
-func TestWithEnabledTags(tags ...string) TesterOption {
-	return testWithMultipleArgValues("-t", tags...)
+func WithEnabledTags(tags ...string) TestOption {
+	return withMultipleArgValues("-t", tags...)
 }
 
-func TestWithDisabledTags(tags ...string) TesterOption {
-	return testWithMultipleArgValues("-T", tags...)
+func WithDisabledTags(tags ...string) TestOption {
+	return withMultipleArgValues("-T", tags...)
 }
 
-func TestWithDisableRules(rules ...string) TesterOption {
-	return testWithMultipleArgValues("-D", rules...)
+func WithDisabledRules(rules ...string) TestOption {
+	return withMultipleArgValues("-D", rules...)
 }
 
-func TestWithEnabledSources(sources ...string) TesterOption {
-	return testWithMultipleArgValues("--enable-source", sources...)
+func WithEnabledSources(sources ...string) TestOption {
+	return withMultipleArgValues("--enable-source", sources...)
 }
 
-func TestWithDisabledSources(sources ...string) TesterOption {
-	return testWithMultipleArgValues("--disable-source", sources...)
+func WithDisabledSources(sources ...string) TestOption {
+	return withMultipleArgValues("--disable-source", sources...)
 }
 
-func TestWithMinRulePriority(priority string) TesterOption {
-	return func(o *testOpts) {
+func WithMinRulePriority(priority string) TestOption {
+	return func(o *testOptions) {
 		o.args = append(o.args, "-o", "priority="+priority)
 	}
 }
 
-func TestWithOutputJSON() TesterOption {
-	return func(o *testOpts) {
+func WithOutputJSON() TestOption {
+	return func(o *testOptions) {
 		o.args = append(o.args, "-o", "json_output=true")
 	}
 }
 
-func TestWithAllEvents() TesterOption {
-	return func(o *testOpts) {
+func WithAllEvents() TestOption {
+	return func(o *testOptions) {
 		o.args = append(o.args, "-A")
 	}
 }
 
-func TestWithCaptureFile(f utils.FileAccessor) TesterOption {
-	return func(o *testOpts) {
+func WithCaptureFile(f run.FileAccessor) TestOption {
+	return func(o *testOptions) {
 		o.args = removeFromArgs(o.args, "-e", 1)
 		o.args = append(o.args, "-e", f.Name())
 		o.files = append(o.files, f)
 	}
 }
 
-func TestWithMaxDuration(duration time.Duration) TesterOption {
-	return func(o *testOpts) {
+func WithMaxDuration(duration time.Duration) TestOption {
+	return func(o *testOptions) {
 		o.duration = duration
 		o.args = removeFromArgs(o.args, "-M", 1)
 		o.args = append(o.args, "-M", fmt.Sprintf("%d", int64(duration.Seconds())))
 	}
 }
 
-func TestWithRulesValidation(rules ...utils.FileAccessor) TesterOption {
-	return func(o *testOpts) {
+func WithRulesValidation(rules ...run.FileAccessor) TestOption {
+	return func(o *testOptions) {
 		for _, r := range rules {
 			o.args = append(o.args, "-V", r.Name())
 			o.files = append(o.files, r)
@@ -100,8 +100,8 @@ func TestWithRulesValidation(rules ...utils.FileAccessor) TesterOption {
 	}
 }
 
-func TestWithExtraFiles(files ...utils.FileAccessor) TesterOption {
-	return func(o *testOpts) {
+func WithExtraFiles(files ...run.FileAccessor) TestOption {
+	return func(o *testOptions) {
 		o.files = append(o.files, files...)
 	}
 }

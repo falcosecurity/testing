@@ -5,36 +5,49 @@ import (
 	"context"
 	"time"
 
-	"github.com/jasondellaluce/falco-testing/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/run"
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	// PrivilegedDockerBinds is the set of Docker binds required by Falco
+	// when running as a Docker privileged container
+	PrivilegedDockerBinds = []string{
+		"/dev:/host/dev",
+		"/proc:/host/proc:ro",
+		"/var/run/docker.sock:/host/var/run/docker.sock",
+	}
 )
 
 const (
 	// DefaultMaxDuration is the default max duration of a Falco run
 	DefaultMaxDuration = time.Second * 10
+	//
+	// DefaultFalcoExecutable is the default path of the Falco executable
+	DefaultExecutable = "/usr/bin/falco"
 )
 
-type testOpts struct {
+type testOptions struct {
 	err      error
 	args     []string
+	files    []run.FileAccessor
 	duration time.Duration
-	files    []utils.FileAccessor
 }
 
-// TesterOutput is the output of a Falco run for testing purposes
-type TesterOutput struct {
-	opts   *testOpts
+// TestOutput is the output of a Falco run for testing purposes
+type TestOutput struct {
+	opts   *testOptions
 	err    error
 	stdout bytes.Buffer
 	stderr bytes.Buffer
 }
 
-// TesterOption is an option for testing Falco
-type TesterOption func(*testOpts)
+// TestOption is an option for testing Falco
+type TestOption func(*testOptions)
 
-func TestRun(runner Runner, options ...TesterOption) *TesterOutput {
-	res := &TesterOutput{
-		opts: &testOpts{
+func Test(runner run.Runner, options ...TestOption) *TestOutput {
+	res := &TestOutput{
+		opts: &testOptions{
 			duration: DefaultMaxDuration,
 		},
 	}
@@ -54,10 +67,10 @@ func TestRun(runner Runner, options ...TesterOption) *TesterOutput {
 	ctx, cancel := context.WithTimeout(context.Background(), skewedDuration(res.opts.duration))
 	defer cancel()
 	res.err = runner.Run(ctx,
-		RunWithArgs(res.opts.args...),
-		RunWithFiles(res.opts.files...),
-		RunWithStdout(&res.stdout),
-		RunWithStderr(&res.stderr),
+		run.WithArgs(res.opts.args...),
+		run.WithFiles(res.opts.files...),
+		run.WithStdout(&res.stdout),
+		run.WithStderr(&res.stderr),
 	)
 	if res.err != nil {
 		logrus.WithError(res.err).Warn("error in running Falco with tester")

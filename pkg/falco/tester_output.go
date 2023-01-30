@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jasondellaluce/falco-testing/pkg/run"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/multierr"
 )
@@ -168,7 +169,7 @@ func (d RuleValidationInfos) Count() int {
 	return len(d)
 }
 
-func (t *TesterOutput) hasOutputJSON() bool {
+func (t *TestOutput) hasOutputJSON() bool {
 	for i := 0; i < len(t.opts.args)-1; i++ {
 		if t.opts.args[i] == "-o" && t.opts.args[i+1] == "json_output=true" {
 			return true
@@ -177,11 +178,11 @@ func (t *TesterOutput) hasOutputJSON() bool {
 	return false
 }
 
-func (t *TesterOutput) Err() error {
+func (t *TestOutput) Err() error {
 	return multierr.Append(t.opts.err, t.err)
 }
 
-func (t *TesterOutput) DurationExceeded() bool {
+func (t *TestOutput) DurationExceeded() bool {
 	for _, err := range multierr.Errors(t.Err()) {
 		if err == context.DeadlineExceeded {
 			return true
@@ -190,24 +191,24 @@ func (t *TesterOutput) DurationExceeded() bool {
 	return false
 }
 
-func (t *TesterOutput) ExitCode() int {
+func (t *TestOutput) ExitCode() int {
 	for _, err := range multierr.Errors(t.Err()) {
-		if exitCodeErr, ok := err.(*ExitCodeError); ok {
+		if exitCodeErr, ok := err.(*run.ExitCodeError); ok {
 			return exitCodeErr.Code
 		}
 	}
 	return 0
 }
 
-func (t *TesterOutput) Stdout() string {
+func (t *TestOutput) Stdout() string {
 	return t.stdout.String()
 }
 
-func (t *TesterOutput) Stderr() string {
+func (t *TestOutput) Stderr() string {
 	return t.stderr.String()
 }
 
-func (t *TesterOutput) StdoutJSON() map[string]interface{} {
+func (t *TestOutput) StdoutJSON() map[string]interface{} {
 	res := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(t.Stdout()), &res); err != nil {
 		// todo: log this
@@ -216,14 +217,14 @@ func (t *TesterOutput) StdoutJSON() map[string]interface{} {
 	return res
 }
 
-func (t *TesterOutput) Detections() Detections {
+func (t *TestOutput) Detections() Detections {
 	if !t.hasOutputJSON() {
-		logrus.Errorf("TesterOutput.Detections: must use TestWithOutputJSON")
+		logrus.Errorf("TestOutput.Detections: must use WithOutputJSON")
 	}
 
 	lines, err := readLineByLine(strings.NewReader(t.Stdout()))
 	if err != nil {
-		logrus.WithError(err).Errorf("TesterOutput.Detections: can't read stdout line by line")
+		logrus.WithError(err).Errorf("TestOutput.Detections: can't read stdout line by line")
 		return nil
 	}
 	var res Detections
@@ -231,7 +232,7 @@ func (t *TesterOutput) Detections() Detections {
 		alert := Alert{}
 		if err := json.Unmarshal([]byte(line), &alert); err != nil {
 			// todo: consider logging this
-			// logrus.WithField("line", line).Debugf("TesterOutput.Detections: stdout line not JSON")
+			// logrus.WithField("line", line).Debugf("TestOutput.Detections: stdout line not JSON")
 			continue
 		}
 		res = append(res, &alert)
@@ -239,14 +240,14 @@ func (t *TesterOutput) Detections() Detections {
 	return res
 }
 
-func (t *TesterOutput) RuleValidation() *RuleValidation {
+func (t *TestOutput) RuleValidation() *RuleValidation {
 	if !t.hasOutputJSON() {
-		logrus.Errorf("TesterOutput.Detections: must use TestWithOutputJSON")
+		logrus.Errorf("TestOutput.Detections: must use WithOutputJSON")
 	}
 
 	res := &RuleValidation{}
 	if err := json.Unmarshal([]byte(t.Stdout()), res); err != nil {
-		logrus.WithField("stdout", t.Stdout()).Errorf("TesterOutput.RuleValidation: can't parse stdout JSON")
+		logrus.WithField("stdout", t.Stdout()).Errorf("TestOutput.RuleValidation: can't parse stdout JSON")
 		return nil
 	}
 	return res

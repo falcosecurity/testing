@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"text/template"
 
-	"github.com/jasondellaluce/falco-testing/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/run"
 )
 
 // PluginInfo is a struct representing the info about a single plugin
@@ -34,7 +34,7 @@ func (p *PluginConfigInfo) initConfigString() string {
 
 // NewPluginConfig helps creating valid Falco configuration files
 // (i.e. falco.yaml) loading one or more plugins.
-func NewPluginConfig(plugins ...*PluginConfigInfo) (utils.FileAccessor, error) {
+func NewPluginConfig(plugins ...*PluginConfigInfo) (run.FileAccessor, error) {
 	var buf bytes.Buffer
 	err := template.Must(template.New("").Parse(`
 stdout_output:
@@ -51,5 +51,5 @@ plugins:
 	if err != nil {
 		return nil, err
 	}
-	return utils.NewStringFileAccessor("plugin-config.yaml", buf.String()), err
+	return run.NewStringFileAccessor("plugin-config.yaml", buf.String()), err
 }

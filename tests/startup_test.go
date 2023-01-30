@@ -9,13 +9,11 @@ import (
 )
 
 func TestStartupFail(t *testing.T) {
-	runner := falco.NewExecutableRunner(FalcoExecutable)
-
+	runner := newExecutableRunner(t)
 	t.Run("empty-config", func(t *testing.T) {
-		res := falco.TestRun(runner, falco.TestWithConfig(configs.EmptyConfig))
+		res := falco.Test(runner, falco.WithConfig(configs.EmptyConfig))
 		assert.NotNil(t, res.Err())
 		assert.Equal(t, res.ExitCode(), 1)
 		assert.Contains(t, res.Stderr(), "You must specify at least one rules file")
 	})
-
 }

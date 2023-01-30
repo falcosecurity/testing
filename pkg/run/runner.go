@@ -6,11 +6,6 @@ import (
 	"io"
 )
 
-const (
-	// DefaultFalcoExecutable is the default path of the Falco executable
-	DefaultFalcoExecutable = "/usr/bin/falco"
-)
-
 type runOpts struct {
 	stderr io.Writer
 	stdout io.Writer

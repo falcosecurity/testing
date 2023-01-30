@@ -4,19 +4,19 @@ import (
 	"testing"
 
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
-	"github.com/jasondellaluce/falco-testing/pkg/utils"
+	"github.com/jasondellaluce/falco-testing/pkg/run"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	falcoRules            = utils.NewLocalFileAccessor("falco_rules.yaml", "/etc/falco/falco_rules.yaml")
-	K8SAuditPluginLibrary = utils.NewLocalFileAccessor("libk8saudit.so", "/usr/share/falco/plugins/libk8saudit.so")
-	JSONPluginLibrary     = utils.NewLocalFileAccessor("libjson.so", "/usr/share/falco/plugins/libjson.so")
+	falcoRules            = run.NewLocalFileAccessor("falco_rules.yaml", "/etc/falco/falco_rules.yaml")
+	K8SAuditPluginLibrary = run.NewLocalFileAccessor("libk8saudit.so", "/usr/share/falco/plugins/libk8saudit.so")
+	JSONPluginLibrary     = run.NewLocalFileAccessor("libjson.so", "/usr/share/falco/plugins/libjson.so")
 )
 
 func TestK8SAudit(t *testing.T) {
-	input := utils.NewLocalFileAccessor("input.json", "/home/vagrant/dev/falcosecurity/falco/test/trace_files/k8s_audit/create_nginx_pod_privileged.json")
-	rules := utils.NewLocalFileAccessor("k8saudit_rules.yaml", "/home/vagrant/dev/falcosecurity/falco/test/rules/k8s_audit/engine_v4_k8s_audit_rules.yaml")
+	input := run.NewLocalFileAccessor("input.json", "/home/vagrant/dev/falcosecurity/falco/test/trace_files/k8s_audit/create_nginx_pod_privileged.json")
+	rules := run.NewLocalFileAccessor("k8saudit_rules.yaml", "/home/vagrant/dev/falcosecurity/falco/test/rules/k8s_audit/engine_v4_k8s_audit_rules.yaml")
 	config, err := falco.NewPluginConfig(
 		&falco.PluginConfigInfo{
 			Name:       "k8saudit",
@@ -32,15 +32,14 @@ func TestK8SAudit(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	runner := falco.NewExecutableRunner(FalcoExecutable)
-	res := falco.TestRun(runner,
-		falco.TestWithOutputJSON(),
-		falco.TestWithConfig(config),
-		falco.TestWithRules(falcoRules, rules),
-		falco.TestWithEnabledSources("k8s_audit"),
-		falco.TestWithExtraFiles(input, K8SAuditPluginLibrary, JSONPluginLibrary),
+	runner := newExecutableRunner(t)
+	res := falco.Test(runner,
+		falco.WithOutputJSON(),
+		falco.WithConfig(config),
+		falco.WithRules(falcoRules, rules),
+		falco.WithEnabledSources("k8s_audit"),
+		falco.WithExtraFiles(input, K8SAuditPluginLibrary, JSONPluginLibrary),
 	)
-	println(res.Stderr())
 	assert.Nil(t, res.Err())
 	assert.Equal(t, 0, res.ExitCode())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Privileged Pod").Count())

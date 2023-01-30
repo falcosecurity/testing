@@ -9,9 +9,9 @@ import (
 )
 
 func TestCommandVersion(t *testing.T) {
-	runner := falco.NewExecutableRunner(FalcoExecutable)
+	runner := newExecutableRunner(t)
 	t.Run("text-output", func(t *testing.T) {
-		res := falco.TestRun(runner, falco.TestWithArgs("--version"))
+		res := falco.Test(runner, falco.WithArgs("--version"))
 		assert.Nil(t, res.Err())
 		assert.Equal(t, res.ExitCode(), 0)
 		assert.Regexp(t, regexp.MustCompile(
@@ -26,9 +26,9 @@ func TestCommandVersion(t *testing.T) {
 			res.Stdout())
 	})
 	t.Run("json-output", func(t *testing.T) {
-		res := falco.TestRun(runner,
-			falco.TestWithArgs("--version"),
-			falco.TestWithOutputJSON(),
+		res := falco.Test(runner,
+			falco.WithArgs("--version"),
+			falco.WithOutputJSON(),
 		)
 		out := res.StdoutJSON()
 		assert.Nil(t, res.Err())

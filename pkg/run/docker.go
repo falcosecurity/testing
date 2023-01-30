@@ -63,6 +63,7 @@ func NewDockerRunner(image, entryPoint string, options *DockerRunnerOptions) (Ru
 	}
 	return res, nil
 }
+
 func (d *dockerRunner) WorkDir() string {
 	// note: this is constant after construction and does not need
 	// mutex protection
