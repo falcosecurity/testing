@@ -211,7 +211,7 @@ func (t *TestOutput) Stderr() string {
 func (t *TestOutput) StdoutJSON() map[string]interface{} {
 	res := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(t.Stdout()), &res); err != nil {
-		// todo: log this
+		logrus.Errorf("TestOutput.StdoutJSON: stdout is not json")
 		return nil
 	}
 	return res
@@ -231,7 +231,7 @@ func (t *TestOutput) Detections() Detections {
 	for _, line := range lines {
 		alert := Alert{}
 		if err := json.Unmarshal([]byte(line), &alert); err != nil {
-			// todo: consider logging this
+			// todo: consider logging this? it is quite noisy
 			// logrus.WithField("line", line).Debugf("TestOutput.Detections: stdout line not JSON")
 			continue
 		}

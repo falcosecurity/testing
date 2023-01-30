@@ -20,14 +20,15 @@ import (
 
 // tests that require manual intervention
 var problematicTests = []string{
+	"Yes", "No", // these are just parsing leftovers
 	"InOperatorNetmasks",
 	"InvalidMacroLoop",
 	"EnabledRuleUsingFalseEnabledFlagOnly", // needs reworking to check rule name instead of stdout regexp
-	"JsonOutputNoTagsProperty",             // TODO: needs reworking to use json stdout
-	"NullOutputField",                      // TODO: needs reworking to use json stdout
-	"JsonOutputNoOutputProperty",           // TODO: needs reworking to use json stdout
-	"TimeIso8601",                          // TODO: needs reworking to use json stdout
-	"JsonOutputEmptyTagsProperty",          //  json_include_tags_property=true must be true for some reason
+	"JsonOutputNoTagsProperty",             // needs reworking to use json stdout
+	"NullOutputField",                      // needs reworking to use json stdout
+	"JsonOutputNoOutputProperty",           // needs reworking to use json stdout
+	"TimeIso8601",                          // needs reworking to use json stdout
+	"JsonOutputEmptyTagsProperty",          // json_include_tags_property=true must be true for some reason
 	"RuleNamesWithRegexChars",              // rule is matched with regex
 	"DetectCounts",                         // scap file wrong name
 	"RulesDirectory",                       // rules files wrong name
@@ -62,7 +63,6 @@ package {{ .PackageName }}
 
 import (
 	"testing"
-	"time"
 
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
 	"github.com/jasondellaluce/falco-testing/tests/data/rules"
@@ -73,8 +73,8 @@ import (
 {{range $testIndex, $test := .Tests}}
 func Test{{ $test.Name }}(t *testing.T) {
 	t.Parallel()
-    res := falco.TestRun(
-        falco.NewExecutableRunner(FalcoExecutable),{{range $optionIndex, $option := $test.Options}}
+    res := falco.Test(
+        newExecutableRunner(t),{{range $optionIndex, $option := $test.Options}}
         {{ $option }},{{end}}
     ){{range $checkIndex, $check := $test.Checks}}
     {{ $check }}{{end}}
@@ -164,7 +164,7 @@ type FalcoTestConfig map[string]map[string]FalcoTestInfo
 func filePackageName(packageName string) func(string) string {
 	return func(s string) string {
 		noExtension := strings.TrimSuffix(s, path.Ext(s))
-		for _, pr := range []string{"rules/", "trace_files/"} {
+		for _, pr := range []string{"rules/", "trace_files/", "confs/"} {
 			noExtension = strings.TrimPrefix(noExtension, pr)
 		}
 		snakeCase := strings.ReplaceAll(noExtension, "/", "_")
@@ -189,12 +189,14 @@ func (f FalcoTestInfo) TemplateInput(name string) (TestTemplateTestInput, bool) 
 	res := TestTemplateTestInput{Name: name}
 	for _, prob := range problematicTests {
 		if name == prob {
+			println("skipping test:", name)
 			// test requires manual intervention
 			return res, false
 		}
 	}
 	if f.Grpc != nil || f.Package != nil || f.RulesEvents != nil {
 		// ignoring these tests for now, they require manual intervention
+		println("skipping test:", name)
 		return res, false
 	}
 	cmdValidation := len(f.ValidateErrors) > 0 ||
@@ -207,16 +209,16 @@ func (f FalcoTestInfo) TemplateInput(name string) (TestTemplateTestInput, bool) 
 
 	if len(f.AddlCmdlineOpts) > 0 {
 		cmds := convertStrings(strings.Split(f.AddlCmdlineOpts, " "), quoteString)
-		res.Options = append(res.Options, `falco.TestWithArgs(`+strings.Join(cmds, ", ")+`)`)
+		res.Options = append(res.Options, `falco.WithArgs(`+strings.Join(cmds, ", ")+`)`)
 	}
 	if len(f.Priority) > 0 {
-		res.Options = append(res.Options, `falco.TestWithMinRulePriority("`+f.Priority+`")`)
+		res.Options = append(res.Options, `falco.WithMinRulePriority("`+f.Priority+`")`)
 	}
 	if f.RunDuration > 0 {
-		res.Options = append(res.Options, fmt.Sprintf(`falco.TestWithMaxDuration(%d * time.Second)`, f.RunDuration))
+		res.Options = append(res.Options, fmt.Sprintf(`falco.WithMaxDuration(%d * time.Second)`, f.RunDuration))
 	}
 	if len(f.ConfFile) > 0 {
-		res.Options = append(res.Options, `falco.TestWithConfig(`+filePackageName("configs")(f.ConfFile)+`)`)
+		res.Options = append(res.Options, `falco.WithConfig(`+filePackageName("configs")(f.ConfFile)+`)`)
 	}
 	if len(MultiStrValues(f.StderrContains)) > 0 {
 		for _, v := range MultiStrValues(f.StderrContains) {
@@ -239,32 +241,32 @@ func (f FalcoTestInfo) TemplateInput(name string) (TestTemplateTestInput, bool) 
 		}
 	}
 	if f.JSONOutput || cmdValidation || cmdDetect {
-		res.Options = append(res.Options, `falco.TestWithOutputJSON()`)
+		res.Options = append(res.Options, `falco.WithOutputJSON()`)
 	}
 	if len(MultiStrValues(f.RulesFile)) > 0 {
 		values := convertStrings(MultiStrValues(f.RulesFile), filePackageName("rules"))
-		res.Options = append(res.Options, `falco.TestWithRules(`+strings.Join(values, ", ")+`)`)
+		res.Options = append(res.Options, `falco.WithRules(`+strings.Join(values, ", ")+`)`)
 	}
 	if len(f.DisabledRules) > 0 {
 		values := convertStrings(f.DisabledRules, quoteString)
-		res.Options = append(res.Options, `falco.TestWithDisableRules(`+strings.Join(values, ", ")+`)`)
+		res.Options = append(res.Options, `falco.WithDisabledRules(`+strings.Join(values, ", ")+`)`)
 	}
 	if len(f.DisableTags) > 0 {
 		tags := convertStrings(f.DisableTags, quoteString)
-		res.Options = append(res.Options, `falco.TestWithDisabledTags(`+strings.Join(tags, ", ")+`)`)
+		res.Options = append(res.Options, `falco.WithDisabledTags(`+strings.Join(tags, ", ")+`)`)
 	}
 	if len(f.RunTags) > 0 {
 		tags := convertStrings(f.RunTags, quoteString)
-		res.Options = append(res.Options, `falco.TestWithEnabledTags(`+strings.Join(tags, ", ")+`)`)
+		res.Options = append(res.Options, `falco.WithEnabledTags(`+strings.Join(tags, ", ")+`)`)
 	}
 	if len(f.TraceFile) > 0 && !cmdValidation {
 		name := filePackageName("captures")(f.TraceFile)
-		res.Options = append(res.Options, `falco.TestWithCaptureFile(`+name+`)`)
+		res.Options = append(res.Options, `falco.WithCaptureFile(`+name+`)`)
 	}
 	if cmdValidation {
 		if len(MultiStrValues(f.ValidateRulesFile)) > 0 {
 			values := convertStrings(MultiStrValues(f.ValidateRulesFile), filePackageName("rules"))
-			res.Options = append(res.Options, `falco.TestWithRulesValidation(`+strings.Join(values, ", ")+`)`)
+			res.Options = append(res.Options, `falco.WithRulesValidation(`+strings.Join(values, ", ")+`)`)
 		}
 		for _, rule := range f.ValidateOk {
 			idx := -1
@@ -281,47 +283,47 @@ func (f FalcoTestInfo) TemplateInput(name string) (TestTemplateTestInput, bool) 
 		for _, info := range f.ValidateErrors {
 			check := "assert.NotNil(t, res.RuleValidation().AllErrors()"
 			if len(info.Code) > 0 {
-				check += ".ForCode(\"" + info.Code + "\")"
+				check += ".\n        ForCode(\"" + info.Code + "\")"
 			}
 			if len(info.ItemType) > 0 {
-				check += ".ForItemType(\"" + info.ItemType + "\")"
+				check += ".\n        ForItemType(\"" + info.ItemType + "\")"
 			}
 			if len(info.ItemName) > 0 {
-				check += ".ForItemName(\"" + info.ItemName + "\")"
+				check += ".\n        ForItemName(\"" + info.ItemName + "\")"
 			}
 			if len(info.Message) > 0 {
-				check += ".ForMessage(\"" + info.Message + "\")"
+				check += ".\n        ForMessage(\"" + info.Message + "\")"
 			}
 			res.Checks = append(res.Checks, check+")")
 		}
 		for _, info := range f.ValidateWarnings {
 			check := "assert.NotNil(t, res.RuleValidation().AllWarnings()"
 			if len(info.Code) > 0 {
-				check += ".ForCode(\"" + info.Code + "\")"
+				check += ".\n        ForCode(\"" + info.Code + "\")"
 			}
 			if len(info.ItemType) > 0 {
-				check += ".ForItemType(\"" + info.ItemType + "\")"
+				check += ".\n        ForItemType(\"" + info.ItemType + "\")"
 			}
 			if len(info.ItemName) > 0 {
-				check += ".ForItemName(\"" + info.ItemName + "\")"
+				check += ".\n        ForItemName(\"" + info.ItemName + "\")"
 			}
 			if len(info.Message) > 0 {
-				check += ".ForMessage(\"" + info.Message + "\")"
+				check += ".\n        ForMessage(\"" + info.Message + "\")"
 			}
 			res.Checks = append(res.Checks, check+")")
 		}
 	}
 	if cmdDetect {
 		if f.AllEvents {
-			res.Options = append(res.Options, `falco.TestWithAllEvents()`)
+			res.Options = append(res.Options, `falco.WithAllEvents()`)
 		}
 		if f.TimeIso8601 {
 			// todo: consider removing this
-			res.Options = append(res.Options, `falco.TestWithArgs("-o", "time_format_iso_8601=true")`)
+			res.Options = append(res.Options, `falco.WithArgs("-o", "time_format_iso_8601=true")`)
 		}
 		if len(MultiStrValues(f.EnableSource)) > 0 {
 			sources := convertStrings(MultiStrValues(f.EnableSource), quoteString)
-			res.Options = append(res.Options, `falco.TestWithEnabledSources(`+strings.Join(sources, ", ")+`)`)
+			res.Options = append(res.Options, `falco.WithEnabledSources(`+strings.Join(sources, ", ")+`)`)
 		}
 		if !f.Detect {
 			res.Checks = append(res.Checks, `assert.Zero(t, res.Detections().Count())`)
@@ -341,9 +343,9 @@ func (f FalcoTestInfo) TemplateInput(name string) (TestTemplateTestInput, bool) 
 			}
 		}
 		// todo: consider removing this
-		res.Options = append(res.Options, fmt.Sprintf(`falco.TestWithArgs("-o", "json_include_output_property=%v")`, f.JSONIncludeOutputProperty))
+		res.Options = append(res.Options, fmt.Sprintf(`falco.WithArgs("-o", "json_include_output_property=%v")`, f.JSONIncludeOutputProperty))
 		// todo: consider removing this
-		res.Options = append(res.Options, fmt.Sprintf(`falco.TestWithArgs("-o", "json_include_tags_property=%v")`, f.JSONIncludeTagsProperty))
+		res.Options = append(res.Options, fmt.Sprintf(`falco.WithArgs("-o", "json_include_tags_property=%v")`, f.JSONIncludeTagsProperty))
 
 	}
 	if f.ExitStatus != 0 {
@@ -370,11 +372,11 @@ func readConfig(file string) (FalcoTestConfig, error) {
 
 func main() {
 	files := []string{
-		//"falco_tests.yaml",
+		"falco_tests.yaml",
 		//"falco_k8s_audit_tests.yaml",
-		//"falco_tests_exceptions.yaml",
+		"falco_tests_exceptions.yaml",
 		//"falco_tests_package.yaml",
-		//"falco_traces.yaml",
+		"falco_traces.yaml.in",
 	}
 
 	input := TestTemplateInput{
@@ -382,7 +384,7 @@ func main() {
 		PackageName: "tests",
 	}
 	for _, fname := range files {
-		config, err := readConfig("/home/vagrant/dev/falcosecurity/falco/test/" + fname)
+		config, err := readConfig("./download/falco-0.33.1/test/" + fname)
 		die(err)
 		input.Tests = append(input.Tests, config.TestInputs()...)
 	}
