@@ -1,12 +1,14 @@
-package tests
+package testfalco
 
 import (
 	"testing"
 
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
 	"github.com/jasondellaluce/falco-testing/pkg/run"
-	"github.com/jasondellaluce/falco-testing/tests/falco/data/captures"
-	"github.com/jasondellaluce/falco-testing/tests/falco/data/rules"
+	"github.com/jasondellaluce/falco-testing/tests"
+	"github.com/jasondellaluce/falco-testing/tests/data/captures"
+	"github.com/jasondellaluce/falco-testing/tests/data/rules"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +37,7 @@ func TestPlugins_K8SAudit(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	runner := newExecutableRunner(t)
+	runner := tests.NewFalcoExecutableRunner(t)
 	res := falco.Test(runner,
 		falco.WithOutputJSON(),
 		falco.WithConfig(config),

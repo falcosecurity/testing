@@ -1,15 +1,17 @@
-package tests
+package testfalco
 
 import (
 	"regexp"
 	"testing"
 
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
+	"github.com/jasondellaluce/falco-testing/tests"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCmd_Version(t *testing.T) {
-	runner := newExecutableRunner(t)
+	runner := tests.NewFalcoExecutableRunner(t)
 	t.Run("text-output", func(t *testing.T) {
 		res := falco.Test(runner, falco.WithArgs("--version"))
 		assert.Nil(t, res.Err(), "%s", res.Stderr())
@@ -45,7 +47,7 @@ func TestCmd_Version(t *testing.T) {
 
 func TestCmd_ListPlugins(t *testing.T) {
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--list-plugins"),
 		falco.WithArgs("-o", "load_plugins[0]=cloudtrail"),
 		falco.WithArgs("-o", "load_plugins[1]=json"),
@@ -73,7 +75,7 @@ func TestCmd_ListPlugins(t *testing.T) {
 
 func TestCmd_PluginInfo(t *testing.T) {
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--plugin-info=cloudtrail"),
 		falco.WithArgs("-o", "load_plugins[0]=cloudtrail"),
 	)

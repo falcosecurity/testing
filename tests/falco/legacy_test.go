@@ -22,7 +22,7 @@
 // - incompat_plugin_rules_version
 // - wrong_plugin_path
 
-package tests
+package testfalco
 
 import (
 	"context"
@@ -33,10 +33,13 @@ import (
 
 	"github.com/falcosecurity/client-go/pkg/api/outputs"
 	"github.com/falcosecurity/client-go/pkg/client"
+
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
-	"github.com/jasondellaluce/falco-testing/tests/falco/data/captures"
-	"github.com/jasondellaluce/falco-testing/tests/falco/data/configs"
-	"github.com/jasondellaluce/falco-testing/tests/falco/data/rules"
+	"github.com/jasondellaluce/falco-testing/tests"
+	"github.com/jasondellaluce/falco-testing/tests/data/captures"
+	"github.com/jasondellaluce/falco-testing/tests/data/configs"
+	"github.com/jasondellaluce/falco-testing/tests/data/rules"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -44,7 +47,7 @@ import (
 func TestLegacy_EngineVersionMismatch(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.EngineVersionMismatch),
 	)
@@ -58,7 +61,7 @@ func TestLegacy_EngineVersionMismatch(t *testing.T) {
 func TestLegacy_MacroOverriding(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SingleRule, rules.OverrideMacro),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -69,7 +72,7 @@ func TestLegacy_MacroOverriding(t *testing.T) {
 func TestLegacy_Endswith(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.Endswith),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -85,7 +88,7 @@ func TestLegacy_Endswith(t *testing.T) {
 func TestLegacy_DisabledAndEnabledRules1(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SingleRule),
 		falco.WithDisabledTags("a"),
 		falco.WithEnabledTags("a"),
@@ -99,7 +102,7 @@ func TestLegacy_DisabledAndEnabledRules1(t *testing.T) {
 func TestLegacy_StdoutOutputStrict(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.StdoutOutput),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule),
@@ -117,7 +120,7 @@ func TestLegacy_StdoutOutputStrict(t *testing.T) {
 func TestLegacy_StdoutOutputJsonStrict(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.StdoutOutput),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRuleWithTags),
@@ -135,7 +138,7 @@ func TestLegacy_StdoutOutputJsonStrict(t *testing.T) {
 func TestLegacy_ListAppendFalse(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.ListAppendFalse),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -146,7 +149,7 @@ func TestLegacy_ListAppendFalse(t *testing.T) {
 func TestLegacy_MacroAppend(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.MacroAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -162,7 +165,7 @@ func TestLegacy_MacroAppend(t *testing.T) {
 func TestLegacy_ListSubstring(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.ListSubstring),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -173,7 +176,7 @@ func TestLegacy_ListSubstring(t *testing.T) {
 func TestLegacy_InvalidNotArray(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidNotArray),
 	)
@@ -188,7 +191,7 @@ func TestLegacy_InvalidNotArray(t *testing.T) {
 func TestLegacy_InvalidEngineVersionNotNumber(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidEngineVersionNotNumber),
 	)
@@ -203,7 +206,7 @@ func TestLegacy_InvalidEngineVersionNotNumber(t *testing.T) {
 func TestLegacy_InvalidOverwriteRuleMultipleDocs(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidOverwriteRuleMultipleDocs),
 	)
@@ -219,7 +222,7 @@ func TestLegacy_InvalidOverwriteRuleMultipleDocs(t *testing.T) {
 func TestLegacy_DisabledRulesUsingSubstring(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.EmptyRules, rules.SingleRule),
 		falco.WithDisabledRules("open_from"),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -231,7 +234,7 @@ func TestLegacy_DisabledRulesUsingSubstring(t *testing.T) {
 func TestLegacy_DetectSkipUnknownNoevt(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SkipUnknownEvt),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -242,7 +245,7 @@ func TestLegacy_DetectSkipUnknownNoevt(t *testing.T) {
 func TestLegacy_ListAppend(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ListAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -258,7 +261,7 @@ func TestLegacy_ListAppend(t *testing.T) {
 func TestLegacy_RuleAppendSkipped(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithMinRulePriority("ERROR"),
 		falco.WithRules(rules.SingleRule, rules.AppendSingleRule),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -270,7 +273,7 @@ func TestLegacy_RuleAppendSkipped(t *testing.T) {
 func TestLegacy_SkipUnknownError(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.SkipUnknownError),
 	)
@@ -286,7 +289,7 @@ func TestLegacy_SkipUnknownError(t *testing.T) {
 func TestLegacy_MultipleRulesOverriding(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SingleRule, rules.OverrideRule),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -297,7 +300,7 @@ func TestLegacy_MultipleRulesOverriding(t *testing.T) {
 func TestLegacy_InvalidAppendMacro(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidBaseMacro, rules.InvalidAppendMacro),
 	)
@@ -319,7 +322,7 @@ func TestLegacy_InvalidAppendMacro(t *testing.T) {
 func TestLegacy_InvalidMissingListName(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidMissingListName),
 	)
@@ -334,7 +337,7 @@ func TestLegacy_InvalidMissingListName(t *testing.T) {
 func TestLegacy_DisabledTagsB(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithDisabledTags("b"),
@@ -364,7 +367,7 @@ func TestLegacy_DisabledTagsB(t *testing.T) {
 func TestLegacy_RunTagsC(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithEnabledTags("c"),
@@ -394,7 +397,7 @@ func TestLegacy_RunTagsC(t *testing.T) {
 func TestLegacy_RunTagsAbc(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithEnabledTags("a", "b", "c"),
@@ -424,7 +427,7 @@ func TestLegacy_RunTagsAbc(t *testing.T) {
 func TestLegacy_RuleAppend(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.RuleAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -440,7 +443,7 @@ func TestLegacy_RuleAppend(t *testing.T) {
 func TestLegacy_ListOverriding(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SingleRule, rules.OverrideList),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -451,7 +454,7 @@ func TestLegacy_ListOverriding(t *testing.T) {
 func TestLegacy_ListSubBare(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ListSubBare),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -467,7 +470,7 @@ func TestLegacy_ListSubBare(t *testing.T) {
 func TestLegacy_InvalidAppendMacroDangling(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidAppendMacroDangling),
 	)
@@ -483,7 +486,7 @@ func TestLegacy_InvalidAppendMacroDangling(t *testing.T) {
 func TestLegacy_InvalidOverwriteMacroMultipleDocs(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidOverwriteMacroMultipleDocs),
 	)
@@ -499,7 +502,7 @@ func TestLegacy_InvalidOverwriteMacroMultipleDocs(t *testing.T) {
 func TestLegacy_DisabledTagsA(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithDisabledTags("a"),
@@ -529,7 +532,7 @@ func TestLegacy_DisabledTagsA(t *testing.T) {
 func TestLegacy_InvalidYamlParseError(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidYamlParseError),
 	)
@@ -544,7 +547,7 @@ func TestLegacy_InvalidYamlParseError(t *testing.T) {
 func TestLegacy_InvalidRuleWithoutOutput(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidRuleWithoutOutput),
 	)
@@ -560,7 +563,7 @@ func TestLegacy_InvalidRuleWithoutOutput(t *testing.T) {
 func TestLegacy_Syscalls(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.Syscalls),
 		falco.WithCaptureFile(captures.Syscall),
@@ -579,7 +582,7 @@ func TestLegacy_Syscalls(t *testing.T) {
 func TestLegacy_BuiltinRulesNoWarnings(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithCaptureFile(captures.Empty),
 	)
 	assert.Nil(t, res.Err(), "%s", res.Stderr())
@@ -589,7 +592,7 @@ func TestLegacy_BuiltinRulesNoWarnings(t *testing.T) {
 func TestLegacy_RunTagsA(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithEnabledTags("a"),
@@ -619,7 +622,7 @@ func TestLegacy_RunTagsA(t *testing.T) {
 func TestLegacy_MonitorSyscallDropsNone(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.DropsNone),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.PingSendto),
@@ -635,7 +638,7 @@ func TestLegacy_MonitorSyscallDropsNone(t *testing.T) {
 func TestLegacy_MonitorSyscallDropsIgnore(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.DropsIgnore),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.PingSendto),
@@ -651,7 +654,7 @@ func TestLegacy_MonitorSyscallDropsIgnore(t *testing.T) {
 func TestLegacy_MonitorSyscallDropsThresholdOor(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.DropsThresholdOor),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.PingSendto),
@@ -668,7 +671,7 @@ func TestLegacy_MonitorSyscallDropsThresholdOor(t *testing.T) {
 func TestLegacy_MultipleRulesSuppressInfo(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithMinRulePriority("WARNING"),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule, rules.DoubleRule),
@@ -690,7 +693,7 @@ func TestLegacy_MultipleRulesSuppressInfo(t *testing.T) {
 func TestLegacy_ListSubMid(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ListSubMid),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -706,7 +709,7 @@ func TestLegacy_ListSubMid(t *testing.T) {
 func TestLegacy_InvalidListWithoutItems(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidListWithoutItems),
 	)
@@ -722,7 +725,7 @@ func TestLegacy_InvalidListWithoutItems(t *testing.T) {
 func TestLegacy_DisabledRulesUsingEnabledFlag(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SingleRuleEnabledFlag),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -733,7 +736,7 @@ func TestLegacy_DisabledRulesUsingEnabledFlag(t *testing.T) {
 func TestLegacy_DisabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.DisabledRuleUsingEnabledFlagOnly),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -744,7 +747,7 @@ func TestLegacy_DisabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
 func TestLegacy_InvalidRuleOutput(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidRuleOutput),
 	)
@@ -760,7 +763,7 @@ func TestLegacy_InvalidRuleOutput(t *testing.T) {
 func TestLegacy_FileOutputStrict(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.FileOutput),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule),
@@ -778,7 +781,7 @@ func TestLegacy_FileOutputStrict(t *testing.T) {
 func TestLegacy_RunTagsBc(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithEnabledTags("b", "c"),
@@ -808,7 +811,7 @@ func TestLegacy_RunTagsBc(t *testing.T) {
 func TestLegacy_MonitorSyscallDropsIgnoreAndLog(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.DropsIgnoreLog),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.PingSendto),
@@ -825,7 +828,7 @@ func TestLegacy_MonitorSyscallDropsIgnoreAndLog(t *testing.T) {
 func TestLegacy_MonitorSyscallDropsThresholdNeg(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.DropsThresholdNeg),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.PingSendto),
@@ -842,7 +845,7 @@ func TestLegacy_MonitorSyscallDropsThresholdNeg(t *testing.T) {
 func TestLegacy_MultipleRulesLastEmpty(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule, rules.EmptyRules),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -858,7 +861,7 @@ func TestLegacy_MultipleRulesLastEmpty(t *testing.T) {
 func TestLegacy_ListSubWhitespace(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ListSubWhitespace),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -874,7 +877,7 @@ func TestLegacy_ListSubWhitespace(t *testing.T) {
 func TestLegacy_InvalidMacroWithoutCondition(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidMacroWithoutCondition),
 	)
@@ -890,7 +893,7 @@ func TestLegacy_InvalidMacroWithoutCondition(t *testing.T) {
 func TestLegacy_CatchallOrder(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.CatchallOrder),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -908,7 +911,7 @@ func TestLegacy_CatchallOrder(t *testing.T) {
 func TestLegacy_ListSubFront(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ListSubFront),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -924,7 +927,7 @@ func TestLegacy_ListSubFront(t *testing.T) {
 func TestLegacy_ListOrder(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ListOrder),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -940,7 +943,7 @@ func TestLegacy_ListOrder(t *testing.T) {
 func TestLegacy_InvalidMissingMacroName(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidMissingMacroName),
 	)
@@ -955,7 +958,7 @@ func TestLegacy_InvalidMissingMacroName(t *testing.T) {
 func TestLegacy_DisabledTagsAbc(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithDisabledTags("a", "b", "c"),
@@ -985,7 +988,7 @@ func TestLegacy_DisabledTagsAbc(t *testing.T) {
 func TestLegacy_SkipUnknownPrefix(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SkipUnknownPrefix),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -996,7 +999,7 @@ func TestLegacy_SkipUnknownPrefix(t *testing.T) {
 func TestLegacy_MonitorSyscallDropsLog(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.DropsLog),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.PingSendto),
@@ -1012,7 +1015,7 @@ func TestLegacy_MonitorSyscallDropsLog(t *testing.T) {
 func TestLegacy_InvalidRuleAppendDangling(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.RuleAppendFailure),
 	)
@@ -1028,7 +1031,7 @@ func TestLegacy_InvalidRuleAppendDangling(t *testing.T) {
 func TestLegacy_InvalidOverwriteRule(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidBaseRule, rules.InvalidOverwriteRule),
 	)
@@ -1045,7 +1048,7 @@ func TestLegacy_InvalidOverwriteRule(t *testing.T) {
 func TestLegacy_DisabledTagsC(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithDisabledTags("c"),
@@ -1075,7 +1078,7 @@ func TestLegacy_DisabledTagsC(t *testing.T) {
 func TestLegacy_RunTagsD(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithEnabledTags("d"),
@@ -1105,7 +1108,7 @@ func TestLegacy_RunTagsD(t *testing.T) {
 func TestLegacy_MacroAppendFalse(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.MacroAppendFalse),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -1116,7 +1119,7 @@ func TestLegacy_MacroAppendFalse(t *testing.T) {
 func TestLegacy_InvalidAppendMacroMultipleDocs(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidAppendMacroMultipleDocs),
 	)
@@ -1132,7 +1135,7 @@ func TestLegacy_InvalidAppendMacroMultipleDocs(t *testing.T) {
 func TestLegacy_DisabledRules(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.EmptyRules, rules.SingleRule),
 		falco.WithDisabledRules("open_from_cat"),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1144,7 +1147,7 @@ func TestLegacy_DisabledRules(t *testing.T) {
 func TestLegacy_MultipleRules(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule, rules.DoubleRule),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1163,7 +1166,7 @@ func TestLegacy_MultipleRules(t *testing.T) {
 func TestLegacy_MultipleDocs(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule, rules.DoubleRule),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1182,7 +1185,7 @@ func TestLegacy_MultipleDocs(t *testing.T) {
 func TestLegacy_NestedListOverriding(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SingleRule, rules.OverrideNestedList),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -1193,7 +1196,7 @@ func TestLegacy_NestedListOverriding(t *testing.T) {
 func TestLegacy_MacroOrder(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.MacroOrder),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1209,7 +1212,7 @@ func TestLegacy_MacroOrder(t *testing.T) {
 func TestLegacy_InvalidAppendRuleWithoutCondition(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidAppendRuleWithoutCondition),
 	)
@@ -1225,7 +1228,7 @@ func TestLegacy_InvalidAppendRuleWithoutCondition(t *testing.T) {
 func TestLegacy_SkipUnknownUnspecError(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.SkipUnknownUnspec),
 	)
@@ -1241,7 +1244,7 @@ func TestLegacy_SkipUnknownUnspecError(t *testing.T) {
 func TestLegacy_MonitorSyscallDropsAlert(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.DropsAlert),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.PingSendto),
@@ -1257,7 +1260,7 @@ func TestLegacy_MonitorSyscallDropsAlert(t *testing.T) {
 func TestLegacy_MonitorSyscallDropsExit(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.DropsExit),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.PingSendto),
@@ -1274,7 +1277,7 @@ func TestLegacy_MonitorSyscallDropsExit(t *testing.T) {
 func TestLegacy_DisabledTagsAb(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithDisabledTags("a", "b"),
@@ -1304,7 +1307,7 @@ func TestLegacy_DisabledTagsAb(t *testing.T) {
 func TestLegacy_RunTagsB(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithEnabledTags("b"),
@@ -1334,7 +1337,7 @@ func TestLegacy_RunTagsB(t *testing.T) {
 func TestLegacy_RuleAppendFalse(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.RuleAppendFalse),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
@@ -1345,7 +1348,7 @@ func TestLegacy_RuleAppendFalse(t *testing.T) {
 func TestLegacy_RuleOrder(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.RuleOrder),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1361,7 +1364,7 @@ func TestLegacy_RuleOrder(t *testing.T) {
 func TestLegacy_InvalidNotYaml(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidNotYaml),
 	)
@@ -1376,7 +1379,7 @@ func TestLegacy_InvalidNotYaml(t *testing.T) {
 func TestLegacy_InvalidOverwriteMacro(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidBaseMacro, rules.InvalidOverwriteMacro),
 	)
@@ -1398,7 +1401,7 @@ func TestLegacy_InvalidOverwriteMacro(t *testing.T) {
 func TestLegacy_InvalidMissingRuleName(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidMissingRuleName),
 	)
@@ -1413,7 +1416,7 @@ func TestLegacy_InvalidMissingRuleName(t *testing.T) {
 func TestLegacy_RuleNamesWithSpaces(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.RuleNamesWithSpaces),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1429,7 +1432,7 @@ func TestLegacy_RuleNamesWithSpaces(t *testing.T) {
 func TestLegacy_MultipleRulesFirstEmpty(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.EmptyRules, rules.SingleRule),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1445,7 +1448,7 @@ func TestLegacy_MultipleRulesFirstEmpty(t *testing.T) {
 func TestLegacy_ProgramOutputStrict(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.ProgramOutput),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule),
@@ -1463,7 +1466,7 @@ func TestLegacy_ProgramOutputStrict(t *testing.T) {
 func TestLegacy_InvalidAppendRule(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidBaseRule, rules.InvalidAppendRule),
 	)
@@ -1480,7 +1483,7 @@ func TestLegacy_InvalidAppendRule(t *testing.T) {
 func TestLegacy_InvalidAppendRuleMultipleDocs(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidAppendRuleMultipleDocs),
 	)
@@ -1496,7 +1499,7 @@ func TestLegacy_InvalidAppendRuleMultipleDocs(t *testing.T) {
 func TestLegacy_DisabledAndEnabledRules2(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithRules(rules.SingleRule),
 		falco.WithDisabledRules("open.*"),
 		falco.WithEnabledTags("a"),
@@ -1510,7 +1513,7 @@ func TestLegacy_DisabledAndEnabledRules2(t *testing.T) {
 func TestLegacy_RunTagsAb(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.TaggedRules),
 		falco.WithEnabledTags("a", "b"),
@@ -1540,7 +1543,7 @@ func TestLegacy_RunTagsAb(t *testing.T) {
 func TestLegacy_ValidateSkipUnknownNoevt(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.SkipUnknownEvt),
 	)
@@ -1556,7 +1559,7 @@ func TestLegacy_ValidateSkipUnknownNoevt(t *testing.T) {
 func TestLegacy_ListSubEnd(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ListSubEnd),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1572,7 +1575,7 @@ func TestLegacy_ListSubEnd(t *testing.T) {
 func TestLegacy_InvalidArrayItemNotObject(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidArrayItemNotObject),
 	)
@@ -1587,7 +1590,7 @@ func TestLegacy_InvalidArrayItemNotObject(t *testing.T) {
 func TestLegacy_InvalidListAppendDangling(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ListAppendFailure),
 	)
@@ -1603,7 +1606,7 @@ func TestLegacy_InvalidListAppendDangling(t *testing.T) {
 func TestLegacy_RuleExceptionSecondItem(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionSecondItem),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1619,7 +1622,7 @@ func TestLegacy_RuleExceptionSecondItem(t *testing.T) {
 func TestLegacy_RuleExceptionAppendMultipleValues(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionAppendMultiple),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1635,7 +1638,7 @@ func TestLegacy_RuleExceptionAppendMultipleValues(t *testing.T) {
 func TestLegacy_RuleExceptionAppendComp(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionAppendComp),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1651,7 +1654,7 @@ func TestLegacy_RuleExceptionAppendComp(t *testing.T) {
 func TestLegacy_RuleExceptionSingleField(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionSingleField),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1667,7 +1670,7 @@ func TestLegacy_RuleExceptionSingleField(t *testing.T) {
 func TestLegacy_RuleExceptionNewAppendNoField(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsRuleExceptionNewNoFieldAppend),
 	)
@@ -1683,7 +1686,7 @@ func TestLegacy_RuleExceptionNewAppendNoField(t *testing.T) {
 func TestLegacy_RuleExceptionAppendOneValue(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionAppendOneValue),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1699,7 +1702,7 @@ func TestLegacy_RuleExceptionAppendOneValue(t *testing.T) {
 func TestLegacy_RuleExceptionQuoted(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionQuoted),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1715,7 +1718,7 @@ func TestLegacy_RuleExceptionQuoted(t *testing.T) {
 func TestLegacy_RuleExceptionAppendThirdItem(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionAppendThirdItem),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1731,7 +1734,7 @@ func TestLegacy_RuleExceptionAppendThirdItem(t *testing.T) {
 func TestLegacy_RuleExceptionSingleFieldAppend(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionSingleFieldAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1747,7 +1750,7 @@ func TestLegacy_RuleExceptionSingleFieldAppend(t *testing.T) {
 func TestLegacy_RuleExceptionNewSingleFieldAppend(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionNewSingleFieldAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1763,7 +1766,7 @@ func TestLegacy_RuleExceptionNewSingleFieldAppend(t *testing.T) {
 func TestLegacy_RuleExceptionUnknownFields(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsItemUnknownFields),
 	)
@@ -1779,7 +1782,7 @@ func TestLegacy_RuleExceptionUnknownFields(t *testing.T) {
 func TestLegacy_RuleExceptionSecondValue(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionSecondValue),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1795,7 +1798,7 @@ func TestLegacy_RuleExceptionSecondValue(t *testing.T) {
 func TestLegacy_RuleExceptionValuesList(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionValuesList),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1811,7 +1814,7 @@ func TestLegacy_RuleExceptionValuesList(t *testing.T) {
 func TestLegacy_RuleExceptionAppendFieldsValuesLenMismatch(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsAppendItemFieldsValuesLenMismatch),
 	)
@@ -1827,7 +1830,7 @@ func TestLegacy_RuleExceptionAppendFieldsValuesLenMismatch(t *testing.T) {
 func TestLegacy_RuleExceptionAppendItemNotInRule(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsAppendItemNotInRule),
 	)
@@ -1843,7 +1846,7 @@ func TestLegacy_RuleExceptionAppendItemNotInRule(t *testing.T) {
 func TestLegacy_RuleExceptionThirdItem(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionThirdItem),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1859,7 +1862,7 @@ func TestLegacy_RuleExceptionThirdItem(t *testing.T) {
 func TestLegacy_RuleExceptionNoFields(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsItemNoFields),
 	)
@@ -1875,7 +1878,7 @@ func TestLegacy_RuleExceptionNoFields(t *testing.T) {
 func TestLegacy_RuleExceptionAppendNoName(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsAppendItemNoName),
 	)
@@ -1890,7 +1893,7 @@ func TestLegacy_RuleExceptionAppendNoName(t *testing.T) {
 func TestLegacy_RuleExceptionCompsFieldsLenMismatch(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsItemCompsFieldsLenMismatch),
 	)
@@ -1906,7 +1909,7 @@ func TestLegacy_RuleExceptionCompsFieldsLenMismatch(t *testing.T) {
 func TestLegacy_RuleExceptionNoValues(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionNoValues),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1922,7 +1925,7 @@ func TestLegacy_RuleExceptionNoValues(t *testing.T) {
 func TestLegacy_RuleExceptionAppendSecondValue(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionAppendSecondValue),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1938,7 +1941,7 @@ func TestLegacy_RuleExceptionAppendSecondValue(t *testing.T) {
 func TestLegacy_RuleExceptionNoName(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsItemNoName),
 	)
@@ -1953,7 +1956,7 @@ func TestLegacy_RuleExceptionNoName(t *testing.T) {
 func TestLegacy_RuleExceptionComp(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionComp),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1969,7 +1972,7 @@ func TestLegacy_RuleExceptionComp(t *testing.T) {
 func TestLegacy_RuleExceptionValuesListref(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionValuesListref),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -1985,7 +1988,7 @@ func TestLegacy_RuleExceptionValuesListref(t *testing.T) {
 func TestLegacy_RuleExceptionNewSecondFieldAppend(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionNewSecondFieldAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2001,7 +2004,7 @@ func TestLegacy_RuleExceptionNewSecondFieldAppend(t *testing.T) {
 func TestLegacy_RuleExceptionUnknownComp(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsItemUnknownComp),
 	)
@@ -2017,7 +2020,7 @@ func TestLegacy_RuleExceptionUnknownComp(t *testing.T) {
 func TestLegacy_RuleExceptionFieldsValuesLenMismatch(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.ExceptionsItemFieldsValuesLenMismatch),
 	)
@@ -2033,7 +2036,7 @@ func TestLegacy_RuleExceptionFieldsValuesLenMismatch(t *testing.T) {
 func TestLegacy_RuleExceptionOneValue(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionOneValue),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2049,7 +2052,7 @@ func TestLegacy_RuleExceptionOneValue(t *testing.T) {
 func TestLegacy_RuleExceptionAppendSecondItem(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionAppendSecondItem),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2065,7 +2068,7 @@ func TestLegacy_RuleExceptionAppendSecondItem(t *testing.T) {
 func TestLegacy_RuleExceptionValuesListrefNoparens(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.ExceptionsRuleExceptionValuesListrefNoparens),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2081,7 +2084,7 @@ func TestLegacy_RuleExceptionValuesListrefNoparens(t *testing.T) {
 func TestLegacy_ReadSensitiveFileUntrusted(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveReadSensitiveFileUntrusted),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2097,7 +2100,7 @@ func TestLegacy_ReadSensitiveFileUntrusted(t *testing.T) {
 func TestLegacy_KernelUpgrade(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeKernelUpgrade),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2112,7 +2115,7 @@ func TestLegacy_KernelUpgrade(t *testing.T) {
 func TestLegacy_CreateFilesBelowDev(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveCreateFilesBelowDev),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2128,7 +2131,7 @@ func TestLegacy_CreateFilesBelowDev(t *testing.T) {
 func TestLegacy_ReadSensitiveFileAfterStartup(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveReadSensitiveFileAfterStartup),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2145,7 +2148,7 @@ func TestLegacy_ReadSensitiveFileAfterStartup(t *testing.T) {
 func TestLegacy_RunShellUntrusted(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveRunShellUntrusted),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2161,7 +2164,7 @@ func TestLegacy_RunShellUntrusted(t *testing.T) {
 func TestLegacy_ChangeThreadNamespace(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveChangeThreadNamespace),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2177,7 +2180,7 @@ func TestLegacy_ChangeThreadNamespace(t *testing.T) {
 func TestLegacy_MkdirBinaryDirs(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveMkdirBinaryDirs),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2193,7 +2196,7 @@ func TestLegacy_MkdirBinaryDirs(t *testing.T) {
 func TestLegacy_SystemBinariesNetworkActivity(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveSystemBinariesNetworkActivity),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2209,7 +2212,7 @@ func TestLegacy_SystemBinariesNetworkActivity(t *testing.T) {
 func TestLegacy_WriteRpmDatabase(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveWriteRpmDatabase),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2225,7 +2228,7 @@ func TestLegacy_WriteRpmDatabase(t *testing.T) {
 func TestLegacy_DockerCompose(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeDockerCompose),
 		falco.WithAllEvents(),
@@ -2242,7 +2245,7 @@ func TestLegacy_DockerCompose(t *testing.T) {
 func TestLegacy_CurlUninstall(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeCurlUninstall),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2257,7 +2260,7 @@ func TestLegacy_CurlUninstall(t *testing.T) {
 func TestLegacy_DhcpclientRenew(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeDhcpclientRenew),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2272,7 +2275,7 @@ func TestLegacy_DhcpclientRenew(t *testing.T) {
 func TestLegacy_StagingWorker(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeStagingWorker),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2287,7 +2290,7 @@ func TestLegacy_StagingWorker(t *testing.T) {
 func TestLegacy_DbProgramSpawnedProcess(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveDbProgramSpawnedProcess),
 		falco.WithAllEvents(),
@@ -2304,7 +2307,7 @@ func TestLegacy_DbProgramSpawnedProcess(t *testing.T) {
 func TestLegacy_UserMgmtBinaries(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveUserMgmtBinaries),
 		falco.WithAllEvents(),
@@ -2321,7 +2324,7 @@ func TestLegacy_UserMgmtBinaries(t *testing.T) {
 func TestLegacy_Exim4(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeExim4),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2336,7 +2339,7 @@ func TestLegacy_Exim4(t *testing.T) {
 func TestLegacy_WriteEtc(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveWriteEtc),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2352,7 +2355,7 @@ func TestLegacy_WriteEtc(t *testing.T) {
 func TestLegacy_StagingCollector(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeStagingCollector),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2367,7 +2370,7 @@ func TestLegacy_StagingCollector(t *testing.T) {
 func TestLegacy_ContainerPrivileged(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveContainerPrivileged),
 		falco.WithAllEvents(),
@@ -2384,7 +2387,7 @@ func TestLegacy_ContainerPrivileged(t *testing.T) {
 func TestLegacy_ContainerSensitiveMount(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveContainerSensitiveMount),
 		falco.WithAllEvents(),
@@ -2401,7 +2404,7 @@ func TestLegacy_ContainerSensitiveMount(t *testing.T) {
 func TestLegacy_WriteBinaryDir(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveWriteBinaryDir),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2417,7 +2420,7 @@ func TestLegacy_WriteBinaryDir(t *testing.T) {
 func TestLegacy_CurlInstall(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeCurlInstall),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2432,7 +2435,7 @@ func TestLegacy_CurlInstall(t *testing.T) {
 func TestLegacy_StagingDb(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeStagingDb),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2447,7 +2450,7 @@ func TestLegacy_StagingDb(t *testing.T) {
 func TestLegacy_ModifyBinaryDirs(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveModifyBinaryDirs),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2463,7 +2466,7 @@ func TestLegacy_ModifyBinaryDirs(t *testing.T) {
 func TestLegacy_NonSudoSetuid(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveNonSudoSetuid),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2479,7 +2482,7 @@ func TestLegacy_NonSudoSetuid(t *testing.T) {
 func TestLegacy_GitPush(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeGitPush),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2496,7 +2499,7 @@ func TestLegacy_KubeDemo(t *testing.T) {
 	t.Skip()
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithMaxDuration(90*time.Second),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeKubeDemo),
@@ -2512,7 +2515,7 @@ func TestLegacy_KubeDemo(t *testing.T) {
 func TestLegacy_FalcoEventGenerator(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveFalcoEventGenerator),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2543,7 +2546,7 @@ func TestLegacy_FalcoEventGenerator(t *testing.T) {
 func TestLegacy_SystemUserInteractive(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveSystemUserInteractive),
 		falco.WithAllEvents(),
@@ -2560,7 +2563,7 @@ func TestLegacy_SystemUserInteractive(t *testing.T) {
 func TestLegacy_DetectCounts(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesPositiveFalcoEventGenerator),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2588,7 +2591,7 @@ func TestLegacy_DetectCounts(t *testing.T) {
 func TestLegacy_RuleNamesWithRegexChars(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.RuleNamesWithRegexChars),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2605,7 +2608,7 @@ func TestLegacy_RuleNamesWithRegexChars(t *testing.T) {
 func TestLegacy_JsonOutputNoOutputProperty(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.RuleAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2622,7 +2625,7 @@ func TestLegacy_JsonOutputNoOutputProperty(t *testing.T) {
 func TestLegacy_JsonOutputNoTagsProperty(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.RuleAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2639,7 +2642,7 @@ func TestLegacy_JsonOutputNoTagsProperty(t *testing.T) {
 func TestLegacy_JsonOutputEmptyTagsProperty(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.RuleAppend),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2656,7 +2659,7 @@ func TestLegacy_JsonOutputEmptyTagsProperty(t *testing.T) {
 func TestLegacy_RulesDirectory(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.RulesDir000SingleRule, rules.RulesDir001DoubleRule),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2675,7 +2678,7 @@ func TestLegacy_RulesDirectory(t *testing.T) {
 func TestLegacy_EnabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.EnabledRuleUsingEnabledFlagOnly),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2692,7 +2695,7 @@ func TestLegacy_EnabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
 func TestLegacy_NullOutputField(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.NullOutputField),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2709,7 +2712,7 @@ func TestLegacy_NullOutputField(t *testing.T) {
 func TestLegacy_InOperatorNetmasks(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.DetectConnectUsingIn),
 		falco.WithCaptureFile(captures.ConnectLocalhost),
@@ -2725,7 +2728,7 @@ func TestLegacy_InOperatorNetmasks(t *testing.T) {
 func TestLegacy_TimeIso8601(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.CatWrite),
@@ -2744,7 +2747,7 @@ func TestLegacy_TimeIso8601(t *testing.T) {
 func TestLegacy_TestWarnings(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.FalcoRulesWarnings),
 	)
@@ -2772,7 +2775,7 @@ func TestLegacy_GrpcUnixSocketOutputs(t *testing.T) {
 	t.Parallel()
 
 	// launch falco asynchronously
-	runner := newExecutableRunner(t)
+	runner := tests.NewFalcoExecutableRunner(t)
 	socketName := runner.WorkDir() + "/falco.sock"
 	wg.Add(1)
 	go func() {
@@ -2833,7 +2836,7 @@ func TestLegacy_GrpcUnixSocketOutputs(t *testing.T) {
 func TestLegacy_NoPluginsUnknownSource(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.PluginsCloudtrailCreateInstances),
 	)
@@ -2849,7 +2852,7 @@ func TestLegacy_NoPluginsUnknownSource(t *testing.T) {
 func TestLegacy_NoPluginsUnknownSourceRuleException(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.PluginsCloudtrailCreateInstancesExceptions),
 	)

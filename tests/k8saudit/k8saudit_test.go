@@ -1,13 +1,19 @@
-package tests
+// NOTE: this file is a 1-1 porting of the legacy regression tests
+// implemented in python that we historically have in falcosecurity/falco.
+// see tests/falco/legacy_test.go for more details.
+
+package testk8saudit
 
 import (
 	"testing"
 
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
 	"github.com/jasondellaluce/falco-testing/pkg/run"
-	"github.com/jasondellaluce/falco-testing/tests/falco/data/captures"
-	"github.com/jasondellaluce/falco-testing/tests/falco/data/plugins"
-	"github.com/jasondellaluce/falco-testing/tests/falco/data/rules"
+	"github.com/jasondellaluce/falco-testing/tests"
+	"github.com/jasondellaluce/falco-testing/tests/data/captures"
+	"github.com/jasondellaluce/falco-testing/tests/data/plugins"
+	"github.com/jasondellaluce/falco-testing/tests/data/rules"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -37,7 +43,7 @@ func runFalcoWithK8SAudit(t *testing.T, r run.Runner, input run.FileAccessor, op
 func TestLegacy_CreateSensitiveMountPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodSensitiveMount,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -54,7 +60,7 @@ func TestLegacy_CreateSensitiveMountPod(t *testing.T) {
 func TestLegacy_CreateService(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateService,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -71,7 +77,7 @@ func TestLegacy_CreateService(t *testing.T) {
 func TestLegacy_DeleteConfigmap(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteConfigmap,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -88,7 +94,7 @@ func TestLegacy_DeleteConfigmap(t *testing.T) {
 func TestLegacy_CreateNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditSomeUserCreatesNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -107,7 +113,7 @@ func TestLegacy_CreateNamespace(t *testing.T) {
 func TestLegacy_DeleteDeployment(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteDeployment,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -124,7 +130,7 @@ func TestLegacy_DeleteDeployment(t *testing.T) {
 func TestLegacy_DeleteClusterrolebinding(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteClusterrolebinding,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -141,7 +147,7 @@ func TestLegacy_DeleteClusterrolebinding(t *testing.T) {
 func TestLegacy_CompatEngineV4CreateDisallowedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -159,7 +165,7 @@ func TestLegacy_CompatEngineV4CreateDisallowedPod(t *testing.T) {
 func TestLegacy_CompatEngineV4CreateHostnetworkPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodHostnetwork,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -176,7 +182,7 @@ func TestLegacy_CompatEngineV4CreateHostnetworkPod(t *testing.T) {
 func TestLegacy_CreatePodExecClusterRole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateClusterRolePodExec,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -193,7 +199,7 @@ func TestLegacy_CreatePodExecClusterRole(t *testing.T) {
 func TestLegacy_CreateConfigmap(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateConfigmap,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -210,7 +216,7 @@ func TestLegacy_CreateConfigmap(t *testing.T) {
 func TestLegacy_CompatEngineV4CreatePrivilegedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodPrivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -227,7 +233,7 @@ func TestLegacy_CompatEngineV4CreatePrivilegedPod(t *testing.T) {
 func TestLegacy_NamespaceInAllowedSet(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditMinikubeCreatesNamespaceFoo,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -242,7 +248,7 @@ func TestLegacy_NamespaceInAllowedSet(t *testing.T) {
 func TestLegacy_CreateServiceaccountInKubePublicNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateServiceaccountKubePublicNamespace,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -259,7 +265,7 @@ func TestLegacy_CreateServiceaccountInKubePublicNamespace(t *testing.T) {
 func TestLegacy_CreateDeployment(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateDeployment,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -276,7 +282,7 @@ func TestLegacy_CreateDeployment(t *testing.T) {
 func TestLegacy_DeleteNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -293,7 +299,7 @@ func TestLegacy_DeleteNamespace(t *testing.T) {
 func TestLegacy_JsonPointerCorrectParse(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(rules.K8SAuditSingleRuleWithJsonPointer),
@@ -308,7 +314,7 @@ func TestLegacy_JsonPointerCorrectParse(t *testing.T) {
 func TestLegacy_CreateDisallowedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -326,7 +332,7 @@ func TestLegacy_CreateDisallowedPod(t *testing.T) {
 func TestLegacy_CreateNohostnetworkPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodNohostnetwork,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -339,7 +345,7 @@ func TestLegacy_CreateNohostnetworkPod(t *testing.T) {
 func TestLegacy_CreateNonodeportService(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxServiceNonodeport,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -353,7 +359,7 @@ func TestLegacy_CreateNonodeportService(t *testing.T) {
 func TestLegacy_CreatePodInKubePublicNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreatePodKubePublicNamespace,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -370,7 +376,7 @@ func TestLegacy_CreatePodInKubePublicNamespace(t *testing.T) {
 func TestLegacy_CreateClusterRoleWildcardResources(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateClusterRoleWildcardResources,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -387,7 +393,7 @@ func TestLegacy_CreateClusterRoleWildcardResources(t *testing.T) {
 func TestLegacy_SystemClusterroleDeleted(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteClusterRoleKubeAggregator,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -404,7 +410,7 @@ func TestLegacy_SystemClusterroleDeleted(t *testing.T) {
 func TestLegacy_CompatEngineV4CreateAllowedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -418,7 +424,7 @@ func TestLegacy_CompatEngineV4CreateAllowedPod(t *testing.T) {
 func TestLegacy_CompatEngineV4CreatePrivilegedTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodPrivileged,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -433,7 +439,7 @@ func TestLegacy_CompatEngineV4CreatePrivilegedTrustedPod(t *testing.T) {
 func TestLegacy_CreateUnsensitiveMountPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnsensitiveMount,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -446,7 +452,7 @@ func TestLegacy_CreateUnsensitiveMountPod(t *testing.T) {
 func TestLegacy_CreateNodeportService(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxServiceNodeport,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -464,7 +470,7 @@ func TestLegacy_CreateNodeportService(t *testing.T) {
 func TestLegacy_NamespaceOutsideAllowedSet(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditSomeUserCreatesNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -482,7 +488,7 @@ func TestLegacy_NamespaceOutsideAllowedSet(t *testing.T) {
 func TestLegacy_DeleteSecret(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteSecret,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -499,7 +505,7 @@ func TestLegacy_DeleteSecret(t *testing.T) {
 func TestLegacy_CreateSensitiveMountTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodSensitiveMount,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -513,7 +519,7 @@ func TestLegacy_CreateSensitiveMountTrustedPod(t *testing.T) {
 func TestLegacy_PodExec(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditExecPod,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -530,7 +536,7 @@ func TestLegacy_PodExec(t *testing.T) {
 func TestLegacy_PodAttach(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditAttachPod,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -547,7 +553,7 @@ func TestLegacy_PodAttach(t *testing.T) {
 func TestLegacy_CreateServiceaccountInKubeSystemNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateServiceaccountKubeSystemNamespace,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -564,7 +570,7 @@ func TestLegacy_CreateServiceaccountInKubeSystemNamespace(t *testing.T) {
 func TestLegacy_AttachClusterAdminRole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditAttachClusterAdminRole,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -581,7 +587,7 @@ func TestLegacy_AttachClusterAdminRole(t *testing.T) {
 func TestLegacy_CompatEngineV4CreateUnprivilegedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -594,7 +600,7 @@ func TestLegacy_CompatEngineV4CreateUnprivilegedPod(t *testing.T) {
 func TestLegacy_CreatePrivilegedNoSecctx1StContainer2NdContainerPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodNoSecctx1StContainerPrivileged2NdContainer,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -611,7 +617,7 @@ func TestLegacy_CreatePrivilegedNoSecctx1StContainer2NdContainerPod(t *testing.T
 func TestLegacy_CreateUnsensitiveMountTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnsensitiveMount,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -625,7 +631,7 @@ func TestLegacy_CreateUnsensitiveMountTrustedPod(t *testing.T) {
 func TestLegacy_CreatePrivileged2NdContainerPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodPrivileged2NdContainer,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -642,7 +648,7 @@ func TestLegacy_CreatePrivileged2NdContainerPod(t *testing.T) {
 func TestLegacy_CreateHostnetworkTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodHostnetwork,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -656,7 +662,7 @@ func TestLegacy_CreateHostnetworkTrustedPod(t *testing.T) {
 func TestLegacy_CreateServiceaccount(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateServiceaccount,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -673,7 +679,7 @@ func TestLegacy_CreateServiceaccount(t *testing.T) {
 func TestLegacy_CreateKubeSystemSecret(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateKubeSystemSecret,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -689,7 +695,7 @@ func TestLegacy_CreateKubeSystemSecret(t *testing.T) {
 func TestLegacy_UserInAllowedSet(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditSomeUserCreatesNamespaceFoo,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -705,7 +711,7 @@ func TestLegacy_UserInAllowedSet(t *testing.T) {
 func TestLegacy_CreateClusterRoleWildcardVerbs(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateClusterRoleWildcardVerbs,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -722,7 +728,7 @@ func TestLegacy_CreateClusterRoleWildcardVerbs(t *testing.T) {
 func TestLegacy_CreateWritableClusterRole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateClusterRoleWritePrivileges,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -739,7 +745,7 @@ func TestLegacy_CreateWritableClusterRole(t *testing.T) {
 func TestLegacy_DeleteClusterrole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteClusterrole,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -756,7 +762,7 @@ func TestLegacy_DeleteClusterrole(t *testing.T) {
 func TestLegacy_CreateSecret(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateSecret,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -773,7 +779,7 @@ func TestLegacy_CreateSecret(t *testing.T) {
 func TestLegacy_CompatEngineV4CreateHostnetworkTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodHostnetwork,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -788,7 +794,7 @@ func TestLegacy_CompatEngineV4CreateHostnetworkTrustedPod(t *testing.T) {
 func TestLegacy_CreateSensitiveMount2NdContainerPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodSensitiveMount2NdContainer,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -805,7 +811,7 @@ func TestLegacy_CreateSensitiveMount2NdContainerPod(t *testing.T) {
 func TestLegacy_DeleteServiceaccount(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteServiceaccount,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -822,7 +828,7 @@ func TestLegacy_DeleteServiceaccount(t *testing.T) {
 func TestLegacy_CreateClusterrole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateClusterrole,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -839,7 +845,7 @@ func TestLegacy_CreateClusterrole(t *testing.T) {
 func TestLegacy_CreateClusterrolebinding(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateClusterrolebinding,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -856,7 +862,7 @@ func TestLegacy_CreateClusterrolebinding(t *testing.T) {
 func TestLegacy_CreateAllowedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -870,7 +876,7 @@ func TestLegacy_CreateAllowedPod(t *testing.T) {
 func TestLegacy_CreateUnprivilegedTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -884,7 +890,7 @@ func TestLegacy_CreateUnprivilegedTrustedPod(t *testing.T) {
 func TestLegacy_CreateNohostnetworkTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodNohostnetwork,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -898,7 +904,7 @@ func TestLegacy_CreateNohostnetworkTrustedPod(t *testing.T) {
 func TestLegacy_CreatePrivilegedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodPrivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -915,7 +921,7 @@ func TestLegacy_CreatePrivilegedPod(t *testing.T) {
 func TestLegacy_CreateConfigmapPrivateCreds(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateConfigmapSensitiveValues,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -933,7 +939,7 @@ func TestLegacy_CreateConfigmapPrivateCreds(t *testing.T) {
 func TestLegacy_CreateConfigmapNoPrivateCreds(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateConfigmapNoSensitiveValues,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -947,7 +953,7 @@ func TestLegacy_CreateConfigmapNoPrivateCreds(t *testing.T) {
 func TestLegacy_CreatePrivilegedTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodPrivileged,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -961,7 +967,7 @@ func TestLegacy_CreatePrivilegedTrustedPod(t *testing.T) {
 func TestLegacy_CreateHostnetworkPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodHostnetwork,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -978,7 +984,7 @@ func TestLegacy_CreateHostnetworkPod(t *testing.T) {
 func TestLegacy_AnonymousUser(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditAnonymousCreatesNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -995,7 +1001,7 @@ func TestLegacy_AnonymousUser(t *testing.T) {
 func TestLegacy_SystemClusterroleModified(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditModifyClusterRoleNodeProblemDetector,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -1012,7 +1018,7 @@ func TestLegacy_SystemClusterroleModified(t *testing.T) {
 func TestLegacy_Fal01003(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditFal01003,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -1026,7 +1032,7 @@ func TestLegacy_Fal01003(t *testing.T) {
 func TestLegacy_UserOutsideAllowedSet(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditSomeUserCreatesNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -1044,7 +1050,7 @@ func TestLegacy_UserOutsideAllowedSet(t *testing.T) {
 func TestLegacy_CreateUnprivilegedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
 			rules.FalcoRules,
@@ -1057,7 +1063,7 @@ func TestLegacy_CreateUnprivilegedPod(t *testing.T) {
 func TestLegacy_CreatePodInKubeSystemNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreatePodKubeSystemNamespace,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -1074,7 +1080,7 @@ func TestLegacy_CreatePodInKubeSystemNamespace(t *testing.T) {
 func TestLegacy_DeleteService(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditDeleteService,
 		falco.WithOutputJSON(),
 		falco.WithRules(
@@ -1091,7 +1097,7 @@ func TestLegacy_DeleteService(t *testing.T) {
 func TestLegacy_CreateServiceAccountTokenSecret(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
-		newExecutableRunner(t),
+		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateServiceAccountTokenSecret,
 		falco.WithOutputJSON(),
 		falco.WithRules(
