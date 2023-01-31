@@ -1,7 +1,8 @@
 // NOTE: this file is a 1-1 porting of the legacy regression tests
 // implemented in python that we historically have in falcosecurity/falco
 // (see: https://github.com/falcosecurity/falco/tree/059a28184d1d4f498f5b0bd53ffe10d6fedf35c2/test).
-// The porting has been 90% automated with the script in migration/main.go.
+// The porting has been 90% automated with a migration script
+// (see: https://github.com/jasondellaluce/falco-testing/blob/32ce0c31eb8fa098a689f1888a4f11b984ae26d8/migration/main.go).
 //
 // Data files used for running the tests is generated on-the-fly by using
 // `go generate` and are pulled from the same sources used in the python tests.
