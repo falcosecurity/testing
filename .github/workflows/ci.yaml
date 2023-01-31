@@ -38,7 +38,7 @@ jobs:
 
       - name: Run Go Tests
         run: |
-          go test -json ./tests/... 2>&1 | go-junit-report -set-exit-code -parser gojson > report.xml
+          go test -timeout=90s -json ./tests/... 2>&1 | go-junit-report -set-exit-code -parser gojson > report.xml
 
       - name: Test Summary
         uses: test-summary/action@v2

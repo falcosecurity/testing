@@ -21,7 +21,7 @@ var (
 
 const (
 	// DefaultMaxDuration is the default max duration of a Falco run
-	DefaultMaxDuration = time.Second * 10
+	DefaultMaxDuration = time.Second * 30
 	//
 	// DefaultFalcoExecutable is the default path of the Falco executable
 	DefaultExecutable = "/usr/bin/falco"
