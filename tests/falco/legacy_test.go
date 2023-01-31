@@ -12,22 +12,24 @@
 // - falco_tests.yaml
 // - falco_traces.yaml
 // - falco_tests_exceptions.yaml
-//
-// todo(jasondellaluce): finish porting the following tests manually:
-// test_warnings
-// GrpcUnixSocketOutputs
 
 package tests
 
 import (
+	"context"
+	"os"
+	"sync"
 	"testing"
 	"time"
 
+	"github.com/falcosecurity/client-go/pkg/api/outputs"
+	"github.com/falcosecurity/client-go/pkg/client"
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
 	"github.com/jasondellaluce/falco-testing/tests/falco/data/captures"
 	"github.com/jasondellaluce/falco-testing/tests/falco/data/configs"
 	"github.com/jasondellaluce/falco-testing/tests/falco/data/rules"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestLegacy_EngineVersionMismatch(t *testing.T) {
@@ -2755,4 +2757,66 @@ func TestLegacy_TestWarnings(t *testing.T) {
 	assert.NotNil(t, warnings.ForItemName("leading_in_not_equals_at_evttype"))
 	assert.NotNil(t, warnings.ForItemName("not_with_evttypes"))
 	assert.NotNil(t, warnings.ForItemName("not_with_evttypes_addl"))
+}
+
+func TestLegacy_GrpcUnixSocketOutputs(t *testing.T) {
+	var wg sync.WaitGroup
+	defer wg.Wait()
+	t.Parallel()
+
+	// launch falco asynchronously
+	runner := newExecutableRunner(t)
+	socketName := runner.WorkDir() + "/falco.sock"
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		res := falco.Test(
+			runner,
+			falco.WithRules(rules.SingleRuleWithTags),
+			falco.WithConfig(configs.GrpcUnixSocket),
+			falco.WithCaptureFile(captures.CatWrite),
+			falco.WithMaxDuration(5*time.Second),
+			falco.WithArgs("-o", "time_format_iso_8601=true"),
+			falco.WithArgs("-o", "grpc.bind_address=unix://"+socketName),
+		)
+		require.NotContains(t, res.Stderr(), "Error starting gRPC server")
+		require.Nil(t, res.Err())
+	}()
+
+	// wait for Falco to create the unix socket
+	for i := 0; i < 5; i++ {
+		if _, err := os.Stat(socketName); err == nil {
+			break
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	// connect using the Falco grpc client and collect detection
+	var detections falco.Detections
+	grpcClient, err := client.NewForConfig(
+		context.Background(),
+		&client.Config{UnixSocketPath: "unix://" + socketName},
+	)
+	require.Nil(t, err)
+	err = grpcClient.OutputsWatch(context.Background(), func(res *outputs.Response) error {
+		detections = append(detections, &falco.Alert{
+			Time:     res.Time.AsTime(),
+			Rule:     res.Rule,
+			Output:   res.Output,
+			Priority: res.Priority.String(),
+			Source:   res.Source,
+			Hostname: res.Hostname,
+			Tags:     res.Tags,
+			// OutputFields: res.OutputFields,
+		})
+		return nil
+	}, 100*time.Millisecond)
+
+	// perform checks on the detections
+	// todo(jasondellaluce): add deeper checks on the received struct
+	require.Nil(t, err)
+	assert.NotZero(t, detections.Count())
+	assert.NotZero(t, detections.
+		ForPriority("WARNING").
+		ForRule("open_from_cat").Count())
 }
