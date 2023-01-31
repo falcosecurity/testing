@@ -42,3 +42,51 @@ func TestCmd_Version(t *testing.T) {
 		assert.Contains(t, out, "plugin_api_version")
 	})
 }
+
+func TestCmd_ListPlugins(t *testing.T) {
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithArgs("--list-plugins"),
+		falco.WithArgs("-o", "load_plugins[0]=cloudtrail"),
+		falco.WithArgs("-o", "load_plugins[1]=json"),
+	)
+	assert.Nil(t, res.Err())
+	assert.Equal(t, res.ExitCode(), 0, "stderr: %s", res.Stderr())
+	assert.Regexp(t, regexp.MustCompile(
+		`2 Plugins Loaded:[\s]+`+
+			`Name: cloudtrail[\s]+`+
+			`Description: .*[\s]+`+
+			`Contact: .*[\s]+`+
+			`Version: .*[\s]+`+
+			`Capabilities:[\s]+`+
+			`- Event Sourcing \(ID=2, source='aws_cloudtrail'\)[\s]+`+
+			`- Field Extraction[\s]+`+
+			`Name: json[\s]+`+
+			`Description: .*[\s]+`+
+			`Contact: .*[\s]+`+
+			`Version: .*[\s]+`+
+			`Capabilities:[\s]+`+
+			`[\s]+`+
+			`- Field Extraction`),
+		res.Stdout())
+}
+
+func TestCmd_PluginInfo(t *testing.T) {
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithArgs("--plugin-info=cloudtrail"),
+	)
+	assert.Nil(t, res.Err())
+	assert.Equal(t, res.ExitCode(), 0)
+	assert.Regexp(t, regexp.MustCompile(
+		`Name: cloudtrail[\s]+`+
+			`Description: .*[\s]+`+
+			`Contact: .*[\s]+`+
+			`Version: .*[\s]+`+
+			`Capabilities:[\s]+`+
+			`- Event Sourcing \(ID=2, source='aws_cloudtrail'\)[\s]+`+
+			`- Field Extraction[\s]+`+
+			`Init config schema type: JSON[\s]+.*[\s]+`+
+			`No suggested open params available.*`),
+		res.Stdout())
+}
