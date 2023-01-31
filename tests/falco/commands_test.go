@@ -75,6 +75,7 @@ func TestCmd_PluginInfo(t *testing.T) {
 	res := falco.Test(
 		newExecutableRunner(t),
 		falco.WithArgs("--plugin-info=cloudtrail"),
+		falco.WithArgs("-o", "load_plugins[0]=cloudtrail"),
 	)
 	assert.Nil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
