@@ -349,7 +349,7 @@ func (f FalcoTestInfo) TemplateInput(name string) (TestTemplateTestInput, bool) 
 
 	}
 	if f.ExitStatus != 0 {
-		res.Checks = append(res.Checks, `assert.NotNil(t, res.Err())`)
+		res.Checks = append(res.Checks, `assert.NotNil(t, res.Err(), "%s", res.Stderr())`)
 	} else {
 		res.Checks = append(res.Checks, ` assert.Nil(t, res.Err(), "%s", res.Stderr())`)
 	}

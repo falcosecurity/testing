@@ -12,6 +12,14 @@
 // - falco_tests.yaml
 // - falco_traces.yaml
 // - falco_tests_exceptions.yaml
+//
+// todo(jasondellaluce): finish porting legacy plugin tests
+// - list_plugin_fields
+// - incompatible_extract_sources
+// - overlap_extract_sources
+// - incompat_plugin_api
+// - incompat_plugin_rules_version
+// - wrong_plugin_path
 
 package tests
 
@@ -42,7 +50,7 @@ func TestLegacy_EngineVersionMismatch(t *testing.T) {
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		ForCode("LOAD_ERR_VALIDATE").
 		ForItemType("required_engine_version"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -83,7 +91,7 @@ func TestLegacy_DisabledAndEnabledRules1(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.Regexp(t, `Runtime error: You can not specify both disabled .-D/-T. and enabled .-t. rules. Exiting.`, res.Stderr())
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -172,7 +180,7 @@ func TestLegacy_InvalidNotArray(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("rules content").
 		ForMessage("Rules content is not yaml array of objects"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -187,7 +195,7 @@ func TestLegacy_InvalidEngineVersionNotNumber(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("required_engine_version").
 		ForMessage("Can't decode YAML scalar value"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -203,7 +211,7 @@ func TestLegacy_InvalidOverwriteRuleMultipleDocs(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("some rule").
 		ForMessage("Undefined macro 'bar' used in filter."))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -270,7 +278,7 @@ func TestLegacy_SkipUnknownError(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("Contains Unknown Event And Not Skipping").
 		ForMessage("filter_check called with nonexistent field proc.nobody"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -303,7 +311,7 @@ func TestLegacy_InvalidAppendMacro(t *testing.T) {
 		ForItemType("macro").
 		ForItemName("some macro").
 		ForMessage("Macro not referred to by any other rule/macro"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -318,7 +326,7 @@ func TestLegacy_InvalidMissingListName(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("list").
 		ForMessage("Mapping for key 'list' is empty"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -467,7 +475,7 @@ func TestLegacy_InvalidAppendMacroDangling(t *testing.T) {
 		ForItemType("macro").
 		ForItemName("dangling append").
 		ForMessage("Macro has 'append' key but no macro by that name already exists"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -483,7 +491,7 @@ func TestLegacy_InvalidOverwriteMacroMultipleDocs(t *testing.T) {
 		ForItemType("macro").
 		ForItemName("some macro").
 		ForMessage("Undefined macro 'foo' used in filter."))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -528,7 +536,7 @@ func TestLegacy_InvalidYamlParseError(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_PARSE").
 		ForItemType("rules content").
 		ForMessage("yaml-cpp: error at line 1, column 11: illegal map value"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -544,7 +552,7 @@ func TestLegacy_InvalidRuleWithoutOutput(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("no output rule").
 		ForMessage("Item has no mapping for key 'output'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -652,7 +660,7 @@ func TestLegacy_MonitorSyscallDropsThresholdOor(t *testing.T) {
 	assert.NotRegexp(t, `num times actions taken: 9`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -706,7 +714,7 @@ func TestLegacy_InvalidListWithoutItems(t *testing.T) {
 		ForItemType("list").
 		ForItemName("bad_list").
 		ForMessage("Item has no mapping for key 'items'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -744,7 +752,7 @@ func TestLegacy_InvalidRuleOutput(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("rule_with_invalid_output").
 		ForMessage("invalid formatting token not_a_real_field"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -809,7 +817,7 @@ func TestLegacy_MonitorSyscallDropsIgnoreAndLog(t *testing.T) {
 	assert.NotRegexp(t, `num times actions taken: 9`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -826,7 +834,7 @@ func TestLegacy_MonitorSyscallDropsThresholdNeg(t *testing.T) {
 	assert.NotRegexp(t, `num times actions taken: 9`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -874,7 +882,7 @@ func TestLegacy_InvalidMacroWithoutCondition(t *testing.T) {
 		ForItemType("macro").
 		ForItemName("bad_macro").
 		ForMessage("Item has no mapping for key 'condition'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -939,7 +947,7 @@ func TestLegacy_InvalidMissingMacroName(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("macro").
 		ForMessage("Mapping for key 'macro' is empty"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1012,7 +1020,7 @@ func TestLegacy_InvalidRuleAppendDangling(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("my_rule").
 		ForMessage("Rule has 'append' key but no rule by that name already exists"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1029,7 +1037,7 @@ func TestLegacy_InvalidOverwriteRule(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("some rule").
 		ForMessage("Undefined macro 'bar' used in filter."))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1116,7 +1124,7 @@ func TestLegacy_InvalidAppendMacroMultipleDocs(t *testing.T) {
 		ForItemType("macro").
 		ForItemName("some macro").
 		ForMessage("unexpected token after 'execve', expecting 'or', 'and'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1209,7 +1217,7 @@ func TestLegacy_InvalidAppendRuleWithoutCondition(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("no condition rule").
 		ForMessage("Appended rule must have exceptions or condition property"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1225,7 +1233,7 @@ func TestLegacy_SkipUnknownUnspecError(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("Contains Unknown Event And Unspecified").
 		ForMessage("filter_check called with nonexistent field proc.nobody"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1258,7 +1266,7 @@ func TestLegacy_MonitorSyscallDropsExit(t *testing.T) {
 	assert.Regexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.Regexp(t, `Exiting.`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1360,7 +1368,7 @@ func TestLegacy_InvalidNotYaml(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("rules content").
 		ForMessage("Rules content is not yaml"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1382,7 +1390,7 @@ func TestLegacy_InvalidOverwriteMacro(t *testing.T) {
 		ForItemType("macro").
 		ForItemName("some macro").
 		ForMessage("Macro not referred to by any other rule/macro"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1397,7 +1405,7 @@ func TestLegacy_InvalidMissingRuleName(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("rule").
 		ForMessage("Mapping for key 'rule' is empty"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1464,7 +1472,7 @@ func TestLegacy_InvalidAppendRule(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("some rule").
 		ForMessage("unexpected token after 'open', expecting 'or', 'and'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1480,7 +1488,7 @@ func TestLegacy_InvalidAppendRuleMultipleDocs(t *testing.T) {
 		ForItemType("rule").
 		ForItemName("some rule").
 		ForMessage("unexpected token after 'open', expecting 'or', 'and'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1494,7 +1502,7 @@ func TestLegacy_DisabledAndEnabledRules2(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.Regexp(t, `Runtime error: You can not specify both disabled .-D/-T. and enabled .-t. rules. Exiting.`, res.Stderr())
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1571,7 +1579,7 @@ func TestLegacy_InvalidArrayItemNotObject(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("rules content item").
 		ForMessage("Unexpected element type. Each element should be a yaml associative array."))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1587,7 +1595,7 @@ func TestLegacy_InvalidListAppendDangling(t *testing.T) {
 		ForItemType("list").
 		ForItemName("my_list").
 		ForMessage("List has 'append' key but no list by that name already exists"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1667,7 +1675,7 @@ func TestLegacy_RuleExceptionNewAppendNoField(t *testing.T) {
 		ForItemType("exception").
 		ForItemName("proc_cmdline").
 		ForMessage("Rule exception must have fields property with a list of fields"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1763,7 +1771,7 @@ func TestLegacy_RuleExceptionUnknownFields(t *testing.T) {
 		ForItemType("exception").
 		ForItemName("ex1").
 		ForMessage("'not.exist' is not a supported filter field"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1811,7 +1819,7 @@ func TestLegacy_RuleExceptionAppendFieldsValuesLenMismatch(t *testing.T) {
 		ForItemType("exception").
 		ForItemName("ex1").
 		ForMessage("Fields and values lists must have equal length"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1827,7 +1835,7 @@ func TestLegacy_RuleExceptionAppendItemNotInRule(t *testing.T) {
 		ForItemType("exception").
 		ForItemName("ex2").
 		ForMessage("Rule exception must have fields property with a list of fields"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1859,7 +1867,7 @@ func TestLegacy_RuleExceptionNoFields(t *testing.T) {
 		ForItemType("exception").
 		ForItemName("ex1").
 		ForMessage("Item has no mapping for key 'fields'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1874,7 +1882,7 @@ func TestLegacy_RuleExceptionAppendNoName(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("exception").
 		ForMessage("Item has no mapping for key 'name'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1890,7 +1898,7 @@ func TestLegacy_RuleExceptionCompsFieldsLenMismatch(t *testing.T) {
 		ForItemType("exception").
 		ForItemName("ex1").
 		ForMessage("Fields and comps lists must have equal length"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -1937,7 +1945,7 @@ func TestLegacy_RuleExceptionNoName(t *testing.T) {
 		ForCode("LOAD_ERR_YAML_VALIDATE").
 		ForItemType("exception").
 		ForMessage("Item has no mapping for key 'name'"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -2001,7 +2009,7 @@ func TestLegacy_RuleExceptionUnknownComp(t *testing.T) {
 		ForItemType("exception").
 		ForItemName("ex1").
 		ForMessage("'no-comp' is not a supported comparison operator"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -2017,7 +2025,7 @@ func TestLegacy_RuleExceptionFieldsValuesLenMismatch(t *testing.T) {
 		ForItemType("exception").
 		ForItemName("ex1").
 		ForMessage("Fields and values lists must have equal length"))
-	assert.NotNil(t, res.Err())
+	assert.NotNil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -2819,4 +2827,36 @@ func TestLegacy_GrpcUnixSocketOutputs(t *testing.T) {
 	assert.NotZero(t, detections.
 		ForPriority("WARNING").
 		ForRule("open_from_cat").Count())
+}
+
+func TestLegacy_NoPluginsUnknownSource(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRulesValidation(rules.PluginsCloudtrailCreateInstances),
+	)
+	assert.NotNil(t, res.RuleValidation().AllWarnings().
+		ForCode("LOAD_UNKNOWN_SOURCE").
+		ForItemType("rule").
+		ForItemName("Cloudtrail Create Instance").
+		ForMessage("Unknown source aws_cloudtrail, skipping"))
+	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_NoPluginsUnknownSourceRuleException(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRulesValidation(rules.PluginsCloudtrailCreateInstancesExceptions),
+	)
+	assert.NotNil(t, res.RuleValidation().AllWarnings().
+		ForCode("LOAD_UNKNOWN_SOURCE").
+		ForItemType("rule").
+		ForItemName("Cloudtrail Create Instance").
+		ForMessage("Unknown source aws_cloudtrail, skipping"))
+	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.Equal(t, 0, res.ExitCode())
 }
