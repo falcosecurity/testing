@@ -53,6 +53,7 @@ func (e *execRunner) Run(ctx context.Context, options ...RunnerOption) error {
 	defer e.m.Unlock()
 	opts := buildRunOptions(options...)
 	os.RemoveAll(e.WorkDir())
+	defer os.RemoveAll(e.WorkDir())
 	if err := os.MkdirAll(e.WorkDir(), os.ModePerm); err != nil {
 		return err
 	}
