@@ -43,7 +43,7 @@ func TestPlugins_K8SAudit(t *testing.T) {
 		falco.WithEnabledSources("k8s_audit"),
 		falco.WithExtraFiles(input, K8SAuditPluginLibrary, JSONPluginLibrary),
 	)
-	assert.Nil(t, res.Err())
+	assert.Nil(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Privileged Pod").Count())
 }
