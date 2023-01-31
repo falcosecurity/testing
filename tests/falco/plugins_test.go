@@ -5,6 +5,8 @@ import (
 
 	"github.com/jasondellaluce/falco-testing/pkg/falco"
 	"github.com/jasondellaluce/falco-testing/pkg/run"
+	"github.com/jasondellaluce/falco-testing/tests/falco/data/captures"
+	"github.com/jasondellaluce/falco-testing/tests/falco/data/rules"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,8 +17,9 @@ var (
 )
 
 func TestPlugins_K8SAudit(t *testing.T) {
-	input := run.NewLocalFileAccessor("input.json", "/home/vagrant/dev/falcosecurity/falco/test/trace_files/k8s_audit/create_nginx_pod_privileged.json")
-	rules := run.NewLocalFileAccessor("k8saudit_rules.yaml", "/home/vagrant/dev/falcosecurity/falco/test/rules/k8s_audit/engine_v4_k8s_audit_rules.yaml")
+	input := captures.K8SAuditCreateNginxPodPrivileged
+	rules := rules.K8SAuditEngineV4K8SAuditRules
+
 	config, err := falco.NewPluginConfig(
 		&falco.PluginConfigInfo{
 			Name:       "k8saudit",

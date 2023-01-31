@@ -60,7 +60,7 @@ func downloadFalcoCodeTraces() ([]*data.LargeFileVarInfo, error) {
 	}
 	baseDir := "/falco-0.33.1/test/trace_files"
 	for _, s := range files {
-		if path.Ext(s) == ".scap" && strings.Contains(s, baseDir) {
+		if (path.Ext(s) == ".scap" || path.Ext(s) == ".json") && strings.Contains(s, baseDir) {
 			prefix := s[:strings.LastIndex(s, baseDir)] + baseDir + "/"
 			res = append(res, &data.LargeFileVarInfo{
 				VarName:  data.VarNameFromFilePath(s, prefix),
