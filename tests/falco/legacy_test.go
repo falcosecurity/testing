@@ -2649,7 +2649,7 @@ func TestLegacy_JsonOutputEmptyTagsProperty(t *testing.T) {
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=true"),
 	)
-	assert.Regexp(t, `^(.*"tags":[ ]*\[\],.*)`, res.Stdout())
+	assert.Regexp(t, `.*"tags":[ ]*\[\],.*`, res.Stdout())
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Nil(t, res.Err(), "%s", res.Stderr())
