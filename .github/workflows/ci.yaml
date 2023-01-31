@@ -34,10 +34,11 @@ jobs:
 
       - name: Run Go Tests
         run: |
-          go test -json ./tests/... 2>&1 | go-junit-report -parser gojson > report.xml
+          go test -json ./tests/... 2>&1 | go-junit-report -set-exit-code -parser gojson > report.xml
 
       - name: Test Summary
         uses: test-summary/action@v2
         with:
           paths: "report.xml"
+          show: "all"
         if: always()
