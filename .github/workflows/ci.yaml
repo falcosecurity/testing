@@ -6,13 +6,17 @@ on:
         description: Falco Version
         default: master
         required: true
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   build:
     name: Run Tests on Falco
     runs-on: ubuntu-latest
     container:
-      image: falcosecurity/falco:${{ github.event.inputs.version }}
+      image: falcosecurity/falco:${{ github.event.inputs.version || 'master' }}
     steps:
       - name: Setup Go
         uses: actions/setup-go@v3
