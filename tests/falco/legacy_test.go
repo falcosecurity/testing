@@ -14,18 +14,8 @@
 // - falco_tests_exceptions.yaml
 //
 // todo(jasondellaluce): finish porting the following tests manually:
-// EnabledRuleUsingFalseEnabledFlagOnly
-// NullOutputField
-// TimeIso8601
-// JsonOutputNoOutputProperty
-// JsonOutputNoTagsProperty
-// TestWarnings
-// RulesDirectory
+// test_warnings
 // GrpcUnixSocketOutputs
-// JsonOutputEmptyTagsProperty
-// InOperatorNetmasks
-// DetectCounts
-// RuleNamesWithRegexChars
 
 package tests
 
@@ -2491,6 +2481,10 @@ func TestLegacy_GitPush(t *testing.T) {
 }
 
 func TestLegacy_KubeDemo(t *testing.T) {
+	deadline, ok := t.Deadline()
+	if ok && time.Until(deadline) < 40*time.Second {
+		t.Skip("skipping due to short deadline, consider running with -timeout 90s")
+	}
 	t.Parallel()
 	res := falco.Test(
 		newExecutableRunner(t),
@@ -2552,4 +2546,213 @@ func TestLegacy_SystemUserInteractive(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().ForRule("System user interactive").Count())
 	assert.Nil(t, res.Err())
 	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_DetectCounts(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithCaptureFile(captures.TracesPositiveFalcoEventGenerator),
+		falco.WithArgs("-o", "json_include_output_property=false"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("Write below binary dir").Count())
+	assert.Equal(t, 3, res.Detections().ForRule("Read sensitive file untrusted").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("Run shell untrusted").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("Write below rpm database").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("Write below etc").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("System procs network activity").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("Mkdir binary dirs").Count())
+	assert.Equal(t, 0, res.Detections().ForRule("System user interactive").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("DB program spawned process").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("Non sudo setuid").Count())
+	assert.Equal(t, 1, res.Detections().ForRule("Create files below dev").Count())
+	assert.Equal(t, 2, res.Detections().ForRule("Modify binary dirs").Count())
+	assert.Equal(t, 0, res.Detections().ForRule("Change thread namespace").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_RuleNamesWithRegexChars(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.RuleNamesWithRegexChars),
+		falco.WithCaptureFile(captures.CatWrite),
+		falco.WithArgs("-o", "json_include_output_property=false"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Equal(t, 8, res.Detections().ForRule(`Open From Cat ($\.*+?()[]{}|^)`).Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_JsonOutputNoOutputProperty(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.RuleAppend),
+		falco.WithCaptureFile(captures.CatWrite),
+		falco.WithArgs("-o", "json_include_output_property=false"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.NotRegexp(t, `.*Warning An open of /dev/null was seen.*`, res.Stdout())
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_JsonOutputNoTagsProperty(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.RuleAppend),
+		falco.WithCaptureFile(captures.CatWrite),
+		falco.WithArgs("-o", "json_include_output_property=false"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.NotRegexp(t, `.*"tags":[ ]*\[.*\],.*`, res.Stdout())
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_JsonOutputEmptyTagsProperty(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.RuleAppend),
+		falco.WithCaptureFile(captures.CatWrite),
+		falco.WithArgs("-o", "json_include_output_property=false"),
+		falco.WithArgs("-o", "json_include_tags_property=true"),
+	)
+	assert.Regexp(t, `^(.*"tags":[ ]*\[\],.*)`, res.Stdout())
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_RulesDirectory(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.RulesDir000SingleRule, rules.RulesDir001DoubleRule),
+		falco.WithCaptureFile(captures.CatWrite),
+		falco.WithAllEvents(),
+		falco.WithArgs("-o", "json_include_output_property=false"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
+	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_EnabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.EnabledRuleUsingEnabledFlagOnly),
+		falco.WithCaptureFile(captures.CatWrite),
+		falco.WithArgs("-o", "json_include_output_property=false"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.NotZero(t, res.Detections().Count())
+	assert.Equal(t, 8, res.Detections().ForRule("open_from_cat").Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_NullOutputField(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.NullOutputField),
+		falco.WithCaptureFile(captures.CatWrite),
+		falco.WithArgs("-o", "json_include_output_property=true"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.Regexp(t, `Warning An open was seen .cport=<NA> command=cat /dev/null.`, res.Stdout())
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_InOperatorNetmasks(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.DetectConnectUsingIn),
+		falco.WithCaptureFile(captures.ConnectLocalhost),
+		falco.WithArgs("-o", "json_include_output_property=false"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_TimeIso8601(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRules(rules.SingleRule),
+		falco.WithCaptureFile(captures.CatWrite),
+		falco.WithArgs("-o", "time_format_iso_8601=true"),
+		falco.WithArgs("-o", "json_include_output_property=true"),
+		falco.WithArgs("-o", "json_include_tags_property=false"),
+	)
+	assert.Regexp(t, `^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+0000`, res.Stderr())
+	assert.Regexp(t, `2016-08-04T16:17:57.882054739\+0000: Warning An open was seen`, res.Stdout())
+	assert.NotZero(t, res.Detections().Count())
+	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
+func TestLegacy_TestWarnings(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		newExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRulesValidation(rules.FalcoRulesWarnings),
+	)
+	assert.Nil(t, res.Err())
+	assert.Equal(t, 0, res.ExitCode())
+	assert.True(t, res.RuleValidation().ForIndex(0).Successful)
+	warnings := res.RuleValidation().AllWarnings().
+		ForCode("LOAD_NO_EVTTYPE").
+		ForItemType("rule").
+		ForMessage("Rule matches too many evt.type values. This has a significant performance penalty.")
+	assert.NotNil(t, warnings.ForItemName("no_evttype"))
+	assert.NotNil(t, warnings.ForItemName("evttype_not_equals"))
+	assert.NotNil(t, warnings.ForItemName("leading_not"))
+	assert.NotNil(t, warnings.ForItemName("not_equals_at_end"))
+	assert.NotNil(t, warnings.ForItemName("not_at_end"))
+	assert.NotNil(t, warnings.ForItemName("not_equals_and_not"))
+	assert.NotNil(t, warnings.ForItemName("leading_in_not_equals_at_evttype"))
+	assert.NotNil(t, warnings.ForItemName("not_with_evttypes"))
+	assert.NotNil(t, warnings.ForItemName("not_with_evttypes_addl"))
 }
