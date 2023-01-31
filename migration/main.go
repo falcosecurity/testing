@@ -384,7 +384,7 @@ func main() {
 		PackageName: "tests",
 	}
 	for _, fname := range files {
-		config, err := readConfig("./download/falco-0.33.1/test/" + fname)
+		config, err := readConfig("./generated/falco-0.33.1/test/" + fname)
 		die(err)
 		input.Tests = append(input.Tests, config.TestInputs()...)
 	}
