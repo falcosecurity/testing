@@ -231,8 +231,7 @@ func (t *TestOutput) Detections() Detections {
 	for _, line := range lines {
 		alert := Alert{}
 		if err := json.Unmarshal([]byte(line), &alert); err != nil {
-			// todo(jasondellaluce): consider logging this? it is quite noisy
-			// logrus.WithField("line", line).Debugf("TestOutput.Detections: stdout line not JSON")
+			logrus.WithField("line", line).Tracef("TestOutput.Detections: stdout line not JSON")
 			continue
 		}
 		res = append(res, &alert)
