@@ -18,8 +18,9 @@ func TestArtifact_InstallPlugin(t *testing.T) {
 
 	t.Run("fail-missing-arg", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		res := falcoctl.Test(
-			tests.NewFalcoctlExecutableRunner(t),
+			runner,
 			falcoctl.WithArgs("artifact", "install"),
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
@@ -30,8 +31,9 @@ func TestArtifact_InstallPlugin(t *testing.T) {
 
 	t.Run("fail-invalid-artifact", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		res := falcoctl.Test(
-			tests.NewFalcoctlExecutableRunner(t),
+			runner,
 			falcoctl.WithArgs("artifact", "install", "some_invalid_artifact"),
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
@@ -47,6 +49,7 @@ func TestArtifact_InstallPlugin(t *testing.T) {
 				tests.NewFalcoctlExecutableRunner(t),
 				falcoctl.WithArgs("artifact", "install", "dummy"),
 				falcoctl.WithPluginsDir(sharedWorkDir+"/plugins"),
+				falcoctl.WithRulesFilesDir(sharedWorkDir+"/rulesfiles"),
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.Nil(t, res.Err(), "%s", res.Stdout())
@@ -129,9 +132,12 @@ func TestArtifact_Info(t *testing.T) {
 
 	t.Run("fail-missing-arg", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		res := falcoctl.Test(
-			tests.NewFalcoctlExecutableRunner(t),
+			runner,
 			falcoctl.WithArgs("artifact", "info"),
+			falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+			falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
 		assert.NotNil(t, res.Err(), "%s", res.Stderr())
@@ -141,9 +147,10 @@ func TestArtifact_Info(t *testing.T) {
 
 	t.Run("info-plugin", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
 			res := falcoctl.Test(
-				tests.NewFalcoctlExecutableRunner(t),
+				runner,
 				falcoctl.WithArgs("artifact", "info", "dummy"),
 				falcoctl.WithPluginsDir(sharedWorkDir+"/plugins"),
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
@@ -158,9 +165,10 @@ func TestArtifact_Info(t *testing.T) {
 
 	t.Run("info-rules", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
 			res := falcoctl.Test(
-				tests.NewFalcoctlExecutableRunner(t),
+				runner,
 				falcoctl.WithArgs("artifact", "info", "cloudtrail-rules"),
 				falcoctl.WithPluginsDir(sharedWorkDir+"/plugins"),
 				falcoctl.WithRulesFilesDir(sharedWorkDir+"/rulesfiles"),
@@ -181,10 +189,13 @@ func TestArtifact_List(t *testing.T) {
 
 	t.Run("list-all", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
 			res := falcoctl.Test(
-				tests.NewFalcoctlExecutableRunner(t),
+				runner,
 				falcoctl.WithArgs("artifact", "list"),
+				falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+				falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.Nil(t, res.Err(), "%s", res.Stdout())
@@ -197,10 +208,13 @@ func TestArtifact_List(t *testing.T) {
 
 	t.Run("list-plugins", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
 			res := falcoctl.Test(
-				tests.NewFalcoctlExecutableRunner(t),
+				runner,
 				falcoctl.WithArgs("artifact", "list", "--type=plugin"),
+				falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+				falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.Nil(t, res.Err(), "%s", res.Stdout())
@@ -214,10 +228,13 @@ func TestArtifact_List(t *testing.T) {
 
 	t.Run("list-rules", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
 			res := falcoctl.Test(
-				tests.NewFalcoctlExecutableRunner(t),
+				runner,
 				falcoctl.WithArgs("artifact", "list", "--type=rulesfile"),
+				falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+				falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.Nil(t, res.Err(), "%s", res.Stdout())
@@ -235,9 +252,12 @@ func TestArtifact_Search(t *testing.T) {
 
 	t.Run("fail-missing-arg", func(t *testing.T) {
 		t.Parallel()
+		runner := tests.NewFalcoctlExecutableRunner(t)
 		res := falcoctl.Test(
-			tests.NewFalcoctlExecutableRunner(t),
+			runner,
 			falcoctl.WithArgs("artifact", "search"),
+			falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+			falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
 		assert.NotNil(t, res.Err(), "%s", res.Stderr())
@@ -252,6 +272,7 @@ func TestArtifact_Search(t *testing.T) {
 				tests.NewFalcoctlExecutableRunner(t),
 				falcoctl.WithArgs("artifact", "search", "dummy"),
 				falcoctl.WithPluginsDir(sharedWorkDir+"/plugins"),
+				falcoctl.WithRulesFilesDir(sharedWorkDir+"/rulesfiles"),
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.Nil(t, res.Err(), "%s", res.Stdout())
@@ -271,6 +292,7 @@ func TestArtifact_Search(t *testing.T) {
 				tests.NewFalcoctlExecutableRunner(t),
 				falcoctl.WithArgs("artifact", "search", "dummy", "--min-score=1"),
 				falcoctl.WithPluginsDir(sharedWorkDir+"/plugins"),
+				falcoctl.WithRulesFilesDir(sharedWorkDir+"/rulesfiles"),
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.Nil(t, res.Err(), "%s", res.Stdout())
@@ -284,33 +306,35 @@ func TestArtifact_Search(t *testing.T) {
 
 	t.Run("search-all", func(t *testing.T) {
 		t.Parallel()
-		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
-			runner := tests.NewFalcoctlExecutableRunner(t)
-			resList := falcoctl.Test(
-				runner,
-				falcoctl.WithArgs("artifact", "list"),
-				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
-			)
-			resSearch := falcoctl.Test(
-				runner,
-				falcoctl.WithArgs("artifact", "seatch", ""),
-				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
-			)
-			assert.Nil(t, resList.Err(), "%s", resList.Stdout())
-			assert.Nil(t, resSearch.Err(), "%s", resSearch.Stdout())
-			assert.Zero(t, resList.ExitCode())
-			assert.Zero(t, resSearch.ExitCode())
-			listLines := strings.Split(resSearch.Stdout(), "\n")
-			searchLines := strings.Split(resSearch.Stdout(), "\n")
-			for _, line := range listLines {
-				found := false
-				for _, searchline := range searchLines {
-					if line == searchline {
-						found = true
-					}
+		runner := tests.NewFalcoctlExecutableRunner(t)
+		resList := falcoctl.Test(
+			runner,
+			falcoctl.WithArgs("artifact", "list"),
+			falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+			falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
+			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
+		)
+		resSearch := falcoctl.Test(
+			runner,
+			falcoctl.WithArgs("artifact", "search", ""),
+			falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+			falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
+			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
+		)
+		assert.Nil(t, resList.Err(), "%s", resList.Stdout())
+		assert.Nil(t, resSearch.Err(), "%s", resSearch.Stdout())
+		assert.Zero(t, resList.ExitCode())
+		assert.Zero(t, resSearch.ExitCode())
+		listLines := strings.Split(resSearch.Stdout(), "\n")
+		searchLines := strings.Split(resSearch.Stdout(), "\n")
+		for _, line := range listLines {
+			found := false
+			for _, searchline := range searchLines {
+				if line == searchline {
+					found = true
 				}
-				assert.True(t, found, "empty search must have same output as list")
 			}
-		}))
+			assert.True(t, found, "empty search must have same output as list")
+		}
 	})
 }
