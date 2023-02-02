@@ -12,7 +12,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func TestArtifact_Version(t *testing.T) {
+func TestVersion(t *testing.T) {
 	t.Parallel()
 
 	t.Run("invalid-extra-cmd", func(t *testing.T) {
