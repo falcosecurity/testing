@@ -22,6 +22,8 @@ func TestArtifact_InstallPlugin(t *testing.T) {
 		res := falcoctl.Test(
 			runner,
 			falcoctl.WithArgs("artifact", "install"),
+			falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+			falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
 		assert.NotNil(t, res.Err(), "%s", res.Stdout())
@@ -35,6 +37,8 @@ func TestArtifact_InstallPlugin(t *testing.T) {
 		res := falcoctl.Test(
 			runner,
 			falcoctl.WithArgs("artifact", "install", "some_invalid_artifact"),
+			falcoctl.WithPluginsDir(runner.WorkDir()+"/plugins"),
+			falcoctl.WithRulesFilesDir(runner.WorkDir()+"/rulesfiles"),
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
 		assert.NotNil(t, res.Err(), "%s", res.Stdout())
@@ -153,6 +157,7 @@ func TestArtifact_Info(t *testing.T) {
 				runner,
 				falcoctl.WithArgs("artifact", "info", "dummy"),
 				falcoctl.WithPluginsDir(sharedWorkDir+"/plugins"),
+				falcoctl.WithRulesFilesDir(sharedWorkDir+"/rulesfiles"),
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.Nil(t, res.Err(), "%s", res.Stdout())

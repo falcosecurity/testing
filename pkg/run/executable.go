@@ -19,7 +19,7 @@ type execRunner struct {
 	workDir    string
 }
 
-// NewExecutableRunner returns a Falco runner that runs a local executable binary
+// NewExecutableRunner returns a runner that runs a local executable binary
 func NewExecutableRunner(executable string) (Runner, error) {
 	dir, err := os.MkdirTemp("", execRunnerWorkDirPrefix)
 	if err != nil {
@@ -83,9 +83,9 @@ func (e *execRunner) Run(ctx context.Context, options ...RunnerOption) error {
 		}
 	}
 
-	// launch Falco process
+	// launch a process
 	cmdLine := strings.Join(append([]string{e.executable}, opts.args...), " ")
-	logrus.WithField("cmd", cmdLine).Debugf("executing falco command")
+	logrus.WithField("cmd", cmdLine).Debugf("executing command")
 	cmd := exec.CommandContext(ctx, e.executable, opts.args...)
 	cmd.Stdout = opts.stdout
 	cmd.Stderr = opts.stderr
