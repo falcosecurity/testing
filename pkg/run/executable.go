@@ -13,10 +13,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const (
-	execRunnerWorkDirPrefix = "falco-testing-runner-"
-)
-
 type execRunner struct {
 	m          sync.Mutex
 	executable string
@@ -29,7 +25,6 @@ func NewExecutableRunner(executable string) (Runner, error) {
 	if err != nil {
 		return nil, err
 	}
-	os.RemoveAll(dir)
 	return &execRunner{
 		executable: executable,
 		workDir:    dir,
@@ -52,7 +47,6 @@ func (e *execRunner) Run(ctx context.Context, options ...RunnerOption) error {
 	e.m.Lock()
 	defer e.m.Unlock()
 	opts := buildRunOptions(options...)
-	os.RemoveAll(e.WorkDir())
 	defer os.RemoveAll(e.WorkDir())
 	if err := os.MkdirAll(e.WorkDir(), os.ModePerm); err != nil {
 		return err
