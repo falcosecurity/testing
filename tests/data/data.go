@@ -1,5 +1,12 @@
 package data
 
+// NOTE: Since most subpackages of the "tests" package depend on the
+// generation of files under "tests/data", we always need to make sure that
+// "go generate" generates "tests/data" first. "go generate" follows the
+// same order of packages as the one of "go list". For now we are good because
+// "tests/data" is always generated before "tests/falco", "tests/falcoctl", etc,
+// but we need to be mindful of this in the future.
+
 import (
 	"archive/zip"
 	"io"
@@ -24,7 +31,7 @@ var DownloadDir = ""
 
 func init() {
 	var err error
-	DownloadDir, err = filepath.Abs("../../../generated")
+	DownloadDir, err = filepath.Abs("../../../build/data")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
