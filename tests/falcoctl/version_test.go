@@ -12,7 +12,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func TestVersion(t *testing.T) {
+func TestFalcoctl_Version(t *testing.T) {
 	t.Parallel()
 
 	t.Run("invalid-extra-cmd", func(t *testing.T) {

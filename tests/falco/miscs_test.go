@@ -29,7 +29,7 @@ import (
 //   - collection of live events with multiple event sources active at the same
 //   - stress test with event generator, checking memory usage and event drops
 
-func TestMiscs_StartupFail(t *testing.T) {
+func TestFalco_Miscs_StartupFail(t *testing.T) {
 	runner := tests.NewFalcoExecutableRunner(t)
 	t.Run("empty-config", func(t *testing.T) {
 		res := falco.Test(runner, falco.WithConfig(configs.EmptyConfig))

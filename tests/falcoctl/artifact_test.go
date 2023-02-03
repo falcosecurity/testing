@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestArtifact_InstallPlugin(t *testing.T) {
+func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 	t.Parallel()
 
 	t.Run("fail-missing-arg", func(t *testing.T) {
@@ -131,7 +131,7 @@ func TestArtifact_InstallPlugin(t *testing.T) {
 	})
 }
 
-func TestArtifact_Info(t *testing.T) {
+func TestFalcoctl_Artifact_Info(t *testing.T) {
 	t.Parallel()
 
 	t.Run("fail-missing-arg", func(t *testing.T) {
@@ -189,7 +189,7 @@ func TestArtifact_Info(t *testing.T) {
 	})
 }
 
-func TestArtifact_List(t *testing.T) {
+func TestFalcoctl_Artifact_List(t *testing.T) {
 	t.Parallel()
 
 	t.Run("list-all", func(t *testing.T) {
@@ -252,7 +252,7 @@ func TestArtifact_List(t *testing.T) {
 	})
 }
 
-func TestArtifact_Search(t *testing.T) {
+func TestFalcoctl_Artifact_Search(t *testing.T) {
 	t.Parallel()
 
 	t.Run("fail-missing-arg", func(t *testing.T) {

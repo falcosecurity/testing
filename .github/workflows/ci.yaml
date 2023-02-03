@@ -41,9 +41,9 @@ jobs:
 
       - name: Run tests
         run: |
-          ./build/falco.test -test.timeout=90s -test.v 2>&1 > falco_report.txt
-          ./build/falcoctl.test -test.timeout=90s -test.v 2>&1 > falcoctl_report.txt
-          ./build/k8saudit.test -test.timeout=90s -test.v 2>&1 > k8saudit_report.txt
+          ./build/falco.test -test.timeout=90s -test.v &> falco_report.txt
+          ./build/falcoctl.test -test.timeout=90s -test.v &> falcoctl_report.txt
+          ./build/k8saudit.test -test.timeout=90s -test.v &> k8saudit_report.txt
           cat falco_report.txt \
               falcoctl_report.txt \
               k8saudit_report.txt \

@@ -40,7 +40,7 @@ func runFalcoWithK8SAudit(t *testing.T, r run.Runner, input run.FileAccessor, op
 	return falco.Test(r, options...)
 }
 
-func TestLegacy_CreateSensitiveMountPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateSensitiveMountPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -57,7 +57,7 @@ func TestLegacy_CreateSensitiveMountPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateService(t *testing.T) {
+func TestK8SAudit_Legacy_CreateService(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -74,7 +74,7 @@ func TestLegacy_CreateService(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_DeleteConfigmap(t *testing.T) {
+func TestK8SAudit_Legacy_DeleteConfigmap(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -91,7 +91,7 @@ func TestLegacy_DeleteConfigmap(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateNamespace(t *testing.T) {
+func TestK8SAudit_Legacy_CreateNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -110,7 +110,7 @@ func TestLegacy_CreateNamespace(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_DeleteDeployment(t *testing.T) {
+func TestK8SAudit_Legacy_DeleteDeployment(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -127,7 +127,7 @@ func TestLegacy_DeleteDeployment(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_DeleteClusterrolebinding(t *testing.T) {
+func TestK8SAudit_Legacy_DeleteClusterrolebinding(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -144,7 +144,7 @@ func TestLegacy_DeleteClusterrolebinding(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CompatEngineV4CreateDisallowedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CompatEngineV4CreateDisallowedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -162,7 +162,7 @@ func TestLegacy_CompatEngineV4CreateDisallowedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CompatEngineV4CreateHostnetworkPod(t *testing.T) {
+func TestK8SAudit_Legacy_CompatEngineV4CreateHostnetworkPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -179,7 +179,7 @@ func TestLegacy_CompatEngineV4CreateHostnetworkPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreatePodExecClusterRole(t *testing.T) {
+func TestK8SAudit_Legacy_CreatePodExecClusterRole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -196,7 +196,7 @@ func TestLegacy_CreatePodExecClusterRole(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateConfigmap(t *testing.T) {
+func TestK8SAudit_Legacy_CreateConfigmap(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -213,7 +213,7 @@ func TestLegacy_CreateConfigmap(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CompatEngineV4CreatePrivilegedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CompatEngineV4CreatePrivilegedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -230,7 +230,7 @@ func TestLegacy_CompatEngineV4CreatePrivilegedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_NamespaceInAllowedSet(t *testing.T) {
+func TestK8SAudit_Legacy_NamespaceInAllowedSet(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -245,7 +245,7 @@ func TestLegacy_NamespaceInAllowedSet(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateServiceaccountInKubePublicNamespace(t *testing.T) {
+func TestK8SAudit_Legacy_CreateServiceaccountInKubePublicNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -262,7 +262,7 @@ func TestLegacy_CreateServiceaccountInKubePublicNamespace(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateDeployment(t *testing.T) {
+func TestK8SAudit_Legacy_CreateDeployment(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -279,7 +279,7 @@ func TestLegacy_CreateDeployment(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_DeleteNamespace(t *testing.T) {
+func TestK8SAudit_Legacy_DeleteNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -296,7 +296,7 @@ func TestLegacy_DeleteNamespace(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_JsonPointerCorrectParse(t *testing.T) {
+func TestK8SAudit_Legacy_JsonPointerCorrectParse(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -311,7 +311,7 @@ func TestLegacy_JsonPointerCorrectParse(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateDisallowedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateDisallowedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -329,7 +329,7 @@ func TestLegacy_CreateDisallowedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateNohostnetworkPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateNohostnetworkPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -342,7 +342,7 @@ func TestLegacy_CreateNohostnetworkPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateNonodeportService(t *testing.T) {
+func TestK8SAudit_Legacy_CreateNonodeportService(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -356,7 +356,7 @@ func TestLegacy_CreateNonodeportService(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreatePodInKubePublicNamespace(t *testing.T) {
+func TestK8SAudit_Legacy_CreatePodInKubePublicNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -373,7 +373,7 @@ func TestLegacy_CreatePodInKubePublicNamespace(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateClusterRoleWildcardResources(t *testing.T) {
+func TestK8SAudit_Legacy_CreateClusterRoleWildcardResources(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -390,7 +390,7 @@ func TestLegacy_CreateClusterRoleWildcardResources(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_SystemClusterroleDeleted(t *testing.T) {
+func TestK8SAudit_Legacy_SystemClusterroleDeleted(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -407,7 +407,7 @@ func TestLegacy_SystemClusterroleDeleted(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CompatEngineV4CreateAllowedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CompatEngineV4CreateAllowedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -421,7 +421,7 @@ func TestLegacy_CompatEngineV4CreateAllowedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CompatEngineV4CreatePrivilegedTrustedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CompatEngineV4CreatePrivilegedTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -436,7 +436,7 @@ func TestLegacy_CompatEngineV4CreatePrivilegedTrustedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateUnsensitiveMountPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateUnsensitiveMountPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -449,7 +449,7 @@ func TestLegacy_CreateUnsensitiveMountPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateNodeportService(t *testing.T) {
+func TestK8SAudit_Legacy_CreateNodeportService(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -467,7 +467,7 @@ func TestLegacy_CreateNodeportService(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_NamespaceOutsideAllowedSet(t *testing.T) {
+func TestK8SAudit_Legacy_NamespaceOutsideAllowedSet(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -485,7 +485,7 @@ func TestLegacy_NamespaceOutsideAllowedSet(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_DeleteSecret(t *testing.T) {
+func TestK8SAudit_Legacy_DeleteSecret(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -502,7 +502,7 @@ func TestLegacy_DeleteSecret(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateSensitiveMountTrustedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateSensitiveMountTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -516,7 +516,7 @@ func TestLegacy_CreateSensitiveMountTrustedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_PodExec(t *testing.T) {
+func TestK8SAudit_Legacy_PodExec(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -533,7 +533,7 @@ func TestLegacy_PodExec(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_PodAttach(t *testing.T) {
+func TestK8SAudit_Legacy_PodAttach(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -550,7 +550,7 @@ func TestLegacy_PodAttach(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateServiceaccountInKubeSystemNamespace(t *testing.T) {
+func TestK8SAudit_Legacy_CreateServiceaccountInKubeSystemNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -567,7 +567,7 @@ func TestLegacy_CreateServiceaccountInKubeSystemNamespace(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_AttachClusterAdminRole(t *testing.T) {
+func TestK8SAudit_Legacy_AttachClusterAdminRole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -584,7 +584,7 @@ func TestLegacy_AttachClusterAdminRole(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CompatEngineV4CreateUnprivilegedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CompatEngineV4CreateUnprivilegedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -597,7 +597,7 @@ func TestLegacy_CompatEngineV4CreateUnprivilegedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreatePrivilegedNoSecctx1StContainer2NdContainerPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreatePrivilegedNoSecctx1StContainer2NdContainerPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -614,7 +614,7 @@ func TestLegacy_CreatePrivilegedNoSecctx1StContainer2NdContainerPod(t *testing.T
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateUnsensitiveMountTrustedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateUnsensitiveMountTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -628,7 +628,7 @@ func TestLegacy_CreateUnsensitiveMountTrustedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreatePrivileged2NdContainerPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreatePrivileged2NdContainerPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -645,7 +645,7 @@ func TestLegacy_CreatePrivileged2NdContainerPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateHostnetworkTrustedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateHostnetworkTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -659,7 +659,7 @@ func TestLegacy_CreateHostnetworkTrustedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateServiceaccount(t *testing.T) {
+func TestK8SAudit_Legacy_CreateServiceaccount(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -676,7 +676,7 @@ func TestLegacy_CreateServiceaccount(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateKubeSystemSecret(t *testing.T) {
+func TestK8SAudit_Legacy_CreateKubeSystemSecret(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -692,7 +692,7 @@ func TestLegacy_CreateKubeSystemSecret(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_UserInAllowedSet(t *testing.T) {
+func TestK8SAudit_Legacy_UserInAllowedSet(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -708,7 +708,7 @@ func TestLegacy_UserInAllowedSet(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateClusterRoleWildcardVerbs(t *testing.T) {
+func TestK8SAudit_Legacy_CreateClusterRoleWildcardVerbs(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -725,7 +725,7 @@ func TestLegacy_CreateClusterRoleWildcardVerbs(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateWritableClusterRole(t *testing.T) {
+func TestK8SAudit_Legacy_CreateWritableClusterRole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -742,7 +742,7 @@ func TestLegacy_CreateWritableClusterRole(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_DeleteClusterrole(t *testing.T) {
+func TestK8SAudit_Legacy_DeleteClusterrole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -759,7 +759,7 @@ func TestLegacy_DeleteClusterrole(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateSecret(t *testing.T) {
+func TestK8SAudit_Legacy_CreateSecret(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -776,7 +776,7 @@ func TestLegacy_CreateSecret(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CompatEngineV4CreateHostnetworkTrustedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CompatEngineV4CreateHostnetworkTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -791,7 +791,7 @@ func TestLegacy_CompatEngineV4CreateHostnetworkTrustedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateSensitiveMount2NdContainerPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateSensitiveMount2NdContainerPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -808,7 +808,7 @@ func TestLegacy_CreateSensitiveMount2NdContainerPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_DeleteServiceaccount(t *testing.T) {
+func TestK8SAudit_Legacy_DeleteServiceaccount(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -825,7 +825,7 @@ func TestLegacy_DeleteServiceaccount(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateClusterrole(t *testing.T) {
+func TestK8SAudit_Legacy_CreateClusterrole(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -842,7 +842,7 @@ func TestLegacy_CreateClusterrole(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateClusterrolebinding(t *testing.T) {
+func TestK8SAudit_Legacy_CreateClusterrolebinding(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -859,7 +859,7 @@ func TestLegacy_CreateClusterrolebinding(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateAllowedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateAllowedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -873,7 +873,7 @@ func TestLegacy_CreateAllowedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateUnprivilegedTrustedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateUnprivilegedTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -887,7 +887,7 @@ func TestLegacy_CreateUnprivilegedTrustedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateNohostnetworkTrustedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateNohostnetworkTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -901,7 +901,7 @@ func TestLegacy_CreateNohostnetworkTrustedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreatePrivilegedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreatePrivilegedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -918,7 +918,7 @@ func TestLegacy_CreatePrivilegedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateConfigmapPrivateCreds(t *testing.T) {
+func TestK8SAudit_Legacy_CreateConfigmapPrivateCreds(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -936,7 +936,7 @@ func TestLegacy_CreateConfigmapPrivateCreds(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateConfigmapNoPrivateCreds(t *testing.T) {
+func TestK8SAudit_Legacy_CreateConfigmapNoPrivateCreds(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -950,7 +950,7 @@ func TestLegacy_CreateConfigmapNoPrivateCreds(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreatePrivilegedTrustedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreatePrivilegedTrustedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -964,7 +964,7 @@ func TestLegacy_CreatePrivilegedTrustedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateHostnetworkPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateHostnetworkPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -981,7 +981,7 @@ func TestLegacy_CreateHostnetworkPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_AnonymousUser(t *testing.T) {
+func TestK8SAudit_Legacy_AnonymousUser(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -998,7 +998,7 @@ func TestLegacy_AnonymousUser(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_SystemClusterroleModified(t *testing.T) {
+func TestK8SAudit_Legacy_SystemClusterroleModified(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -1015,7 +1015,7 @@ func TestLegacy_SystemClusterroleModified(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_Fal01003(t *testing.T) {
+func TestK8SAudit_Legacy_Fal01003(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -1029,7 +1029,7 @@ func TestLegacy_Fal01003(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_UserOutsideAllowedSet(t *testing.T) {
+func TestK8SAudit_Legacy_UserOutsideAllowedSet(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -1047,7 +1047,7 @@ func TestLegacy_UserOutsideAllowedSet(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateUnprivilegedPod(t *testing.T) {
+func TestK8SAudit_Legacy_CreateUnprivilegedPod(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -1060,7 +1060,7 @@ func TestLegacy_CreateUnprivilegedPod(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreatePodInKubeSystemNamespace(t *testing.T) {
+func TestK8SAudit_Legacy_CreatePodInKubeSystemNamespace(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -1077,7 +1077,7 @@ func TestLegacy_CreatePodInKubeSystemNamespace(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_DeleteService(t *testing.T) {
+func TestK8SAudit_Legacy_DeleteService(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),
@@ -1094,7 +1094,7 @@ func TestLegacy_DeleteService(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestLegacy_CreateServiceAccountTokenSecret(t *testing.T) {
+func TestK8SAudit_Legacy_CreateServiceAccountTokenSecret(t *testing.T) {
 	t.Parallel()
 	res := runFalcoWithK8SAudit(t,
 		tests.NewFalcoExecutableRunner(t),

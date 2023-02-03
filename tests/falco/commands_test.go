@@ -24,7 +24,7 @@ import (
 // Misc Falco features:
 //   -s, --stats-interval, -U, --unbuffered
 
-func TestCmd_Version(t *testing.T) {
+func TestFalco_Cmd_Version(t *testing.T) {
 	runner := tests.NewFalcoExecutableRunner(t)
 	t.Run("text-output", func(t *testing.T) {
 		res := falco.Test(runner, falco.WithArgs("--version"))
@@ -59,7 +59,7 @@ func TestCmd_Version(t *testing.T) {
 	})
 }
 
-func TestCmd_ListPlugins(t *testing.T) {
+func TestFalco_Cmd_ListPlugins(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--list-plugins"),
@@ -87,7 +87,7 @@ func TestCmd_ListPlugins(t *testing.T) {
 		res.Stdout())
 }
 
-func TestCmd_PluginInfo(t *testing.T) {
+func TestFalco_Cmd_PluginInfo(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--plugin-info=cloudtrail"),
