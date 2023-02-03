@@ -53,7 +53,7 @@ func TestK8SAudit_Legacy_CreateSensitiveMountPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Sensitive Mount Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -70,7 +70,7 @@ func TestK8SAudit_Legacy_CreateService(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Service Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -87,7 +87,7 @@ func TestK8SAudit_Legacy_DeleteConfigmap(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s ConfigMap Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -106,7 +106,7 @@ func TestK8SAudit_Legacy_CreateNamespace(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Namespace Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -123,7 +123,7 @@ func TestK8SAudit_Legacy_DeleteDeployment(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Deployment Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -140,7 +140,7 @@ func TestK8SAudit_Legacy_DeleteClusterrolebinding(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Role/Clusterrolebinding Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -158,7 +158,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateDisallowedPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Disallowed Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -175,7 +175,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateHostnetworkPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create HostNetwork Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -192,7 +192,7 @@ func TestK8SAudit_Legacy_CreatePodExecClusterRole(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("ClusterRole With Pod Exec Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -209,7 +209,7 @@ func TestK8SAudit_Legacy_CreateConfigmap(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s ConfigMap Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -226,7 +226,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreatePrivilegedPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Privileged Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -241,7 +241,7 @@ func TestK8SAudit_Legacy_NamespaceInAllowedSet(t *testing.T) {
 			rules.K8SAuditAllowNamespaceFoo,
 			rules.K8SAuditDisallowKactivity),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -258,7 +258,7 @@ func TestK8SAudit_Legacy_CreateServiceaccountInKubePublicNamespace(t *testing.T)
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Service Account Created in Kube Namespace").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -275,7 +275,7 @@ func TestK8SAudit_Legacy_CreateDeployment(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Deployment Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -292,7 +292,7 @@ func TestK8SAudit_Legacy_DeleteNamespace(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Namespace Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -307,7 +307,7 @@ func TestK8SAudit_Legacy_JsonPointerCorrectParse(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("json_pointer_example").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -325,7 +325,7 @@ func TestK8SAudit_Legacy_CreateDisallowedPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Disallowed Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -338,7 +338,7 @@ func TestK8SAudit_Legacy_CreateNohostnetworkPod(t *testing.T) {
 			rules.FalcoRules,
 			rules.K8SAuditRules),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -352,7 +352,7 @@ func TestK8SAudit_Legacy_CreateNonodeportService(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditDisallowKactivity),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -369,7 +369,7 @@ func TestK8SAudit_Legacy_CreatePodInKubePublicNamespace(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Pod Created in Kube Namespace").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -386,7 +386,7 @@ func TestK8SAudit_Legacy_CreateClusterRoleWildcardResources(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("ClusterRole With Wildcard Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -403,7 +403,7 @@ func TestK8SAudit_Legacy_SystemClusterroleDeleted(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("System ClusterRole Modified/Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -417,7 +417,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateAllowedPod(t *testing.T) {
 			rules.K8SAuditEngineV4K8SAuditRules,
 			rules.K8SAuditEngineV4AllowNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -432,7 +432,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreatePrivilegedTrustedPod(t *testing.T) 
 			rules.K8SAuditEngineV4K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -445,7 +445,7 @@ func TestK8SAudit_Legacy_CreateUnsensitiveMountPod(t *testing.T) {
 			rules.FalcoRules,
 			rules.K8SAuditRules),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -463,7 +463,7 @@ func TestK8SAudit_Legacy_CreateNodeportService(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create NodePort Service").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -481,7 +481,7 @@ func TestK8SAudit_Legacy_NamespaceOutsideAllowedSet(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Disallowed Namespace").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -498,7 +498,7 @@ func TestK8SAudit_Legacy_DeleteSecret(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Secret Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -512,7 +512,7 @@ func TestK8SAudit_Legacy_CreateSensitiveMountTrustedPod(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -529,7 +529,7 @@ func TestK8SAudit_Legacy_PodExec(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Attach/Exec Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -546,7 +546,7 @@ func TestK8SAudit_Legacy_PodAttach(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Attach/Exec Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -563,7 +563,7 @@ func TestK8SAudit_Legacy_CreateServiceaccountInKubeSystemNamespace(t *testing.T)
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Service Account Created in Kube Namespace").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -580,7 +580,7 @@ func TestK8SAudit_Legacy_AttachClusterAdminRole(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Attach to cluster-admin Role").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -593,7 +593,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateUnprivilegedPod(t *testing.T) {
 			rules.FalcoRules,
 			rules.K8SAuditEngineV4K8SAuditRules),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -610,7 +610,7 @@ func TestK8SAudit_Legacy_CreatePrivilegedNoSecctx1StContainer2NdContainerPod(t *
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Privileged Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -624,7 +624,7 @@ func TestK8SAudit_Legacy_CreateUnsensitiveMountTrustedPod(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -641,7 +641,7 @@ func TestK8SAudit_Legacy_CreatePrivileged2NdContainerPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Privileged Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -655,7 +655,7 @@ func TestK8SAudit_Legacy_CreateHostnetworkTrustedPod(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -672,7 +672,7 @@ func TestK8SAudit_Legacy_CreateServiceaccount(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Serviceaccount Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -688,7 +688,7 @@ func TestK8SAudit_Legacy_CreateKubeSystemSecret(t *testing.T) {
 	)
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().ForPriority("INFO").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -704,7 +704,7 @@ func TestK8SAudit_Legacy_UserInAllowedSet(t *testing.T) {
 			rules.K8SAuditAllowUserSomeUser,
 			rules.K8SAuditDisallowKactivity),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -721,7 +721,7 @@ func TestK8SAudit_Legacy_CreateClusterRoleWildcardVerbs(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("ClusterRole With Wildcard Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -738,7 +738,7 @@ func TestK8SAudit_Legacy_CreateWritableClusterRole(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("ClusterRole With Write Privileges Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -755,7 +755,7 @@ func TestK8SAudit_Legacy_DeleteClusterrole(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Role/Clusterrole Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -772,7 +772,7 @@ func TestK8SAudit_Legacy_CreateSecret(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Secret Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -787,7 +787,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateHostnetworkTrustedPod(t *testing.T)
 			rules.K8SAuditEngineV4K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -804,7 +804,7 @@ func TestK8SAudit_Legacy_CreateSensitiveMount2NdContainerPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Sensitive Mount Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -821,7 +821,7 @@ func TestK8SAudit_Legacy_DeleteServiceaccount(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Serviceaccount Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -838,7 +838,7 @@ func TestK8SAudit_Legacy_CreateClusterrole(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Role/Clusterrole Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -855,7 +855,7 @@ func TestK8SAudit_Legacy_CreateClusterrolebinding(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Role/Clusterrolebinding Created").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -869,7 +869,7 @@ func TestK8SAudit_Legacy_CreateAllowedPod(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditAllowNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -883,7 +883,7 @@ func TestK8SAudit_Legacy_CreateUnprivilegedTrustedPod(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -897,7 +897,7 @@ func TestK8SAudit_Legacy_CreateNohostnetworkTrustedPod(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -914,7 +914,7 @@ func TestK8SAudit_Legacy_CreatePrivilegedPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create Privileged Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -932,7 +932,7 @@ func TestK8SAudit_Legacy_CreateConfigmapPrivateCreds(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 6, res.Detections().ForRule("Create/Modify Configmap With Private Credentials").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -946,7 +946,7 @@ func TestK8SAudit_Legacy_CreateConfigmapNoPrivateCreds(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditDisallowKactivity),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -960,7 +960,7 @@ func TestK8SAudit_Legacy_CreatePrivilegedTrustedPod(t *testing.T) {
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -977,7 +977,7 @@ func TestK8SAudit_Legacy_CreateHostnetworkPod(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Create HostNetwork Pod").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -994,7 +994,7 @@ func TestK8SAudit_Legacy_AnonymousUser(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Anonymous Request Allowed").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -1011,7 +1011,7 @@ func TestK8SAudit_Legacy_SystemClusterroleModified(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("System ClusterRole Modified/Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -1025,7 +1025,7 @@ func TestK8SAudit_Legacy_Fal01003(t *testing.T) {
 			rules.K8SAuditRules),
 	)
 	assert.Regexp(t, `data not recognized as a k8s audit event`, res.Stderr())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -1043,7 +1043,7 @@ func TestK8SAudit_Legacy_UserOutsideAllowedSet(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Disallowed K8s User").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -1056,7 +1056,7 @@ func TestK8SAudit_Legacy_CreateUnprivilegedPod(t *testing.T) {
 			rules.FalcoRules,
 			rules.K8SAuditRules),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -1073,7 +1073,7 @@ func TestK8SAudit_Legacy_CreatePodInKubeSystemNamespace(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("Pod Created in Kube Namespace").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -1090,7 +1090,7 @@ func TestK8SAudit_Legacy_DeleteService(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().ForRule("K8s Service Deleted").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
 
@@ -1106,6 +1106,6 @@ func TestK8SAudit_Legacy_CreateServiceAccountTokenSecret(t *testing.T) {
 	)
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().ForPriority("INFO").Count())
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }

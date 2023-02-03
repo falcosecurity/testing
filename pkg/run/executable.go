@@ -21,6 +21,9 @@ type execRunner struct {
 
 // NewExecutableRunner returns a runner that runs a local executable binary
 func NewExecutableRunner(executable string) (Runner, error) {
+	if _, err := os.Stat(executable); err != nil {
+		return nil, fmt.Errorf("can't access executable '%s': %s", executable, err.Error())
+	}
 	dir, err := os.MkdirTemp("", execRunnerWorkDirPrefix)
 	if err != nil {
 		return nil, err

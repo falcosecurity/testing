@@ -28,7 +28,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 	runner := tests.NewFalcoExecutableRunner(t)
 	t.Run("text-output", func(t *testing.T) {
 		res := falco.Test(runner, falco.WithArgs("--version"))
-		assert.Nil(t, res.Err(), "%s", res.Stderr())
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
 		assert.Equal(t, res.ExitCode(), 0)
 		assert.Regexp(t, regexp.MustCompile(
 			`Falco version:[\s]+[0-9]+\.[0-9]+\.[0-9](\-[0-9]+\+[a-f0-9]+)?[\s]+`+
@@ -47,7 +47,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 			falco.WithOutputJSON(),
 		)
 		out := res.StdoutJSON()
-		assert.Nil(t, res.Err(), "%s", res.Stderr())
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
 		assert.Equal(t, res.ExitCode(), 0)
 		assert.Contains(t, out, "default_driver_version")
 		assert.Contains(t, out, "driver_api_version")
@@ -66,7 +66,7 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 		falco.WithArgs("-o", "load_plugins[0]=cloudtrail"),
 		falco.WithArgs("-o", "load_plugins[1]=json"),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
 	assert.Regexp(t, regexp.MustCompile(
 		`2 Plugins Loaded:[\s]+`+
@@ -93,7 +93,7 @@ func TestFalco_Cmd_PluginInfo(t *testing.T) {
 		falco.WithArgs("--plugin-info=cloudtrail"),
 		falco.WithArgs("-o", "load_plugins[0]=cloudtrail"),
 	)
-	assert.Nil(t, res.Err(), "%s", res.Stderr())
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
 	assert.Regexp(t, regexp.MustCompile(
 		`Name: cloudtrail[\s]+`+

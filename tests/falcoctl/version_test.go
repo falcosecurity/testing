@@ -21,7 +21,7 @@ func TestFalcoctl_Version(t *testing.T) {
 			tests.NewFalcoctlExecutableRunner(t),
 			falcoctl.WithArgs("version", "some_other_cmd"),
 		)
-		assert.NotNil(t, res.Err(), "%s", res.Stderr())
+		assert.Error(t, res.Err(), "%s", res.Stderr())
 		assert.NotZero(t, res.ExitCode())
 		assert.Contains(t, res.Stderr(), `Error: unknown command "some_other_cmd"`)
 	})
@@ -32,7 +32,7 @@ func TestFalcoctl_Version(t *testing.T) {
 			tests.NewFalcoctlExecutableRunner(t),
 			falcoctl.WithArgs("version"),
 		)
-		assert.Nil(t, res.Err(), "%s", res.Stderr())
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
 		assert.Zero(t, res.ExitCode())
 		assert.Regexp(t, `Client Version:[\s]+[0-9]+.[0-9]+.[0-9]+(-[a-z]+[0-9]+)?`, res.Stdout())
 	})
@@ -43,7 +43,7 @@ func TestFalcoctl_Version(t *testing.T) {
 			tests.NewFalcoctlExecutableRunner(t),
 			falcoctl.WithArgs("version", "--output=json"),
 		)
-		assert.Nil(t, res.Err(), "%s", res.Stderr())
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
 		assert.Equal(t, res.ExitCode(), 0)
 		out := make(map[string]interface{})
 		require.Nil(t, json.Unmarshal([]byte(res.Stdout()[strings.Index(res.Stdout(), "{"):]), &out))
@@ -61,7 +61,7 @@ func TestFalcoctl_Version(t *testing.T) {
 			tests.NewFalcoctlExecutableRunner(t),
 			falcoctl.WithArgs("version", "--output=yaml"),
 		)
-		assert.Nil(t, res.Err(), "%s", res.Stderr())
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
 		assert.Equal(t, res.ExitCode(), 0)
 		out := make(map[string]interface{})
 		require.Nil(t, yaml.Unmarshal([]byte(res.Stdout()[strings.Index(res.Stdout(), ":\n")+1:]), &out))

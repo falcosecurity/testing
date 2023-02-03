@@ -41,13 +41,10 @@ jobs:
 
       - name: Run tests
         run: |
-          ./build/falco.test -test.timeout=90s -test.v &> falco_report.txt
-          ./build/falcoctl.test -test.timeout=90s -test.v &> falcoctl_report.txt
-          ./build/k8saudit.test -test.timeout=90s -test.v &> k8saudit_report.txt
-          cat falco_report.txt \
-              falcoctl_report.txt \
-              k8saudit_report.txt \
-            | go-junit-report -set-exit-code > report.xml
+          ./build/falco.test -test.timeout=90s -test.v 2>&1 > falco.txt
+          ./build/falcoctl.test -test.timeout=90s -test.v 2>&1 > falcoctl.txt
+          ./build/k8saudit.test -test.timeout=90s -test.v 2>&1 > k8saudit.txt
+          cat falco.txt falcoctl.txt k8saudit.txt | go-junit-report -set-exit-code > report.xml
 
       - name: Test Summary
         uses: test-summary/action@v2
