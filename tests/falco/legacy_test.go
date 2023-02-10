@@ -297,7 +297,7 @@ func TestFalco_Legacy_InvalidAppendMacro(t *testing.T) {
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidBaseMacro, rules.InvalidAppendMacro),
 	)
-	assert.True(t, res.RuleValidation().ForIndex(0).Successful)
+	assert.True(t, res.RuleValidation().At(0).Successful)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		ForCode("LOAD_ERR_COMPILE_CONDITION").
 		ForItemType("macro").
@@ -1028,7 +1028,7 @@ func TestFalco_Legacy_InvalidOverwriteRule(t *testing.T) {
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidBaseRule, rules.InvalidOverwriteRule),
 	)
-	assert.True(t, res.RuleValidation().ForIndex(0).Successful)
+	assert.True(t, res.RuleValidation().At(0).Successful)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		ForCode("LOAD_ERR_VALIDATE").
 		ForItemType("rule").
@@ -1376,7 +1376,7 @@ func TestFalco_Legacy_InvalidOverwriteMacro(t *testing.T) {
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidBaseMacro, rules.InvalidOverwriteMacro),
 	)
-	assert.True(t, res.RuleValidation().ForIndex(0).Successful)
+	assert.True(t, res.RuleValidation().At(0).Successful)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		ForCode("LOAD_ERR_VALIDATE").
 		ForItemType("macro").
@@ -1463,7 +1463,7 @@ func TestFalco_Legacy_InvalidAppendRule(t *testing.T) {
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.InvalidBaseRule, rules.InvalidAppendRule),
 	)
-	assert.True(t, res.RuleValidation().ForIndex(0).Successful)
+	assert.True(t, res.RuleValidation().At(0).Successful)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		ForCode("LOAD_ERR_COMPILE_CONDITION").
 		ForItemType("rule").
@@ -2746,7 +2746,7 @@ func TestFalco_Legacy_TestWarnings(t *testing.T) {
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
-	assert.True(t, res.RuleValidation().ForIndex(0).Successful)
+	assert.True(t, res.RuleValidation().At(0).Successful)
 	warnings := res.RuleValidation().AllWarnings().
 		ForCode("LOAD_NO_EVTTYPE").
 		ForItemType("rule").

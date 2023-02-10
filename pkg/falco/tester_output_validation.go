@@ -54,7 +54,7 @@ func (t *TestOutput) RuleValidation() *RuleValidation {
 	return res
 }
 
-func (r RuleValidation) ForIndex(index int) *RuleValidationResult {
+func (r RuleValidation) At(index int) *RuleValidationResult {
 	if index >= len(r.Results) {
 		return &emptyRuleValidationResult
 	}

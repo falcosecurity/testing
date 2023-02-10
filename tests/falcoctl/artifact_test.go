@@ -125,7 +125,7 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 			)
 			assert.Nil(t, resFalco.Err(), "%s", resFalco.Stderr())
 			assert.Equal(t, 0, resFalco.ExitCode())
-			assert.True(t, resFalco.RuleValidation().ForIndex(0).Successful)
+			assert.True(t, resFalco.RuleValidation().At(0).Successful)
 			assert.Zero(t, resFalco.RuleValidation().AllWarnings().Count())
 		}))
 	})
