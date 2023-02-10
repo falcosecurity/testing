@@ -30,7 +30,7 @@ type testOptions struct {
 	files    []run.FileAccessor
 }
 
-// TestOutput is the output of a falcoctl run for testing purposes
+// TestOutput is the output of a falcoctl test run
 type TestOutput struct {
 	opts   *testOptions
 	err    error
@@ -41,6 +41,8 @@ type TestOutput struct {
 // TestOption is an option for testing falcoctl
 type TestOption func(*testOptions)
 
+// Test runs a Falco runner with the given test options, and produces
+// an output representing the outcome of the run.
 func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	res := &TestOutput{
 		opts: &testOptions{
@@ -58,7 +60,7 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	res.opts.args = removeFromArgs(res.opts.args, "--verbose", 1)
 	res.opts.args = removeFromArgs(res.opts.args, "--disable-styling", 1)
 	res.opts.args = append(res.opts.args, "--verbose=true", "--disable-styling=true")
-	logrus.WithField("deadline", res.opts.duration).Info("running falcoctl with tester")
+	logrus.WithField("deadline", res.opts.duration).Info("running falcoctl with runner")
 	ctx, cancel := context.WithTimeout(context.Background(), skewedDuration(res.opts.duration))
 	defer cancel()
 	res.err = runner.Run(ctx,
@@ -68,7 +70,7 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 		run.WithStderr(&res.stderr),
 	)
 	if res.err != nil {
-		logrus.WithError(res.err).Warn("error in running falcoctl with tester")
+		logrus.WithError(res.err).Warn("error running falcoctl with runner")
 	}
 	return res
 }

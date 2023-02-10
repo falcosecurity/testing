@@ -45,8 +45,8 @@ func TestFalco_Legacy_EngineVersionMismatch(t *testing.T) {
 		falco.WithRulesValidation(rules.EngineVersionMismatch),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("required_engine_version"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("required_engine_version"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -73,7 +73,7 @@ func TestFalco_Legacy_Endswith(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -105,7 +105,7 @@ func TestFalco_Legacy_StdoutOutputStrict(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -123,7 +123,7 @@ func TestFalco_Legacy_StdoutOutputJsonStrict(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -150,7 +150,7 @@ func TestFalco_Legacy_MacroAppend(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -174,9 +174,9 @@ func TestFalco_Legacy_InvalidNotArray(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidNotArray),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("rules content").
-		ForMessage("Rules content is not yaml array of objects"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("rules content").
+		OfMessage("Rules content is not yaml array of objects"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -189,9 +189,9 @@ func TestFalco_Legacy_InvalidEngineVersionNotNumber(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidEngineVersionNotNumber),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("required_engine_version").
-		ForMessage("Can't decode YAML scalar value"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("required_engine_version").
+		OfMessage("Can't decode YAML scalar value"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -204,10 +204,10 @@ func TestFalco_Legacy_InvalidOverwriteRuleMultipleDocs(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidOverwriteRuleMultipleDocs),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("rule").
-		ForItemName("some rule").
-		ForMessage("Undefined macro 'bar' used in filter."))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("rule").
+		OfItemName("some rule").
+		OfMessage("Undefined macro 'bar' used in filter."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -246,7 +246,7 @@ func TestFalco_Legacy_ListAppend(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -271,10 +271,10 @@ func TestFalco_Legacy_SkipUnknownError(t *testing.T) {
 		falco.WithRulesValidation(rules.SkipUnknownError),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_COMPILE_CONDITION").
-		ForItemType("rule").
-		ForItemName("Contains Unknown Event And Not Skipping").
-		ForMessage("filter_check called with nonexistent field proc.nobody"))
+		OfCode("LOAD_ERR_COMPILE_CONDITION").
+		OfItemType("rule").
+		OfItemName("Contains Unknown Event And Not Skipping").
+		OfMessage("filter_check called with nonexistent field proc.nobody"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -299,15 +299,15 @@ func TestFalco_Legacy_InvalidAppendMacro(t *testing.T) {
 	)
 	assert.True(t, res.RuleValidation().At(0).Successful)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_COMPILE_CONDITION").
-		ForItemType("macro").
-		ForItemName("some macro").
-		ForMessage("unexpected token after 'execve', expecting 'or', 'and'"))
+		OfCode("LOAD_ERR_COMPILE_CONDITION").
+		OfItemType("macro").
+		OfItemName("some macro").
+		OfMessage("unexpected token after 'execve', expecting 'or', 'and'"))
 	assert.NotNil(t, res.RuleValidation().AllWarnings().
-		ForCode("LOAD_UNUSED_MACRO").
-		ForItemType("macro").
-		ForItemName("some macro").
-		ForMessage("Macro not referred to by any other rule/macro"))
+		OfCode("LOAD_UNUSED_MACRO").
+		OfItemType("macro").
+		OfItemName("some macro").
+		OfMessage("Macro not referred to by any other rule/macro"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -320,9 +320,9 @@ func TestFalco_Legacy_InvalidMissingListName(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidMissingListName),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("list").
-		ForMessage("Mapping for key 'list' is empty"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("list").
+		OfMessage("Mapping for key 'list' is empty"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -339,20 +339,20 @@ func TestFalco_Legacy_DisabledTagsB(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -369,20 +369,20 @@ func TestFalco_Legacy_RunTagsC(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -399,20 +399,20 @@ func TestFalco_Legacy_RunTagsAbc(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -428,7 +428,7 @@ func TestFalco_Legacy_RuleAppend(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -455,7 +455,7 @@ func TestFalco_Legacy_ListSubBare(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -468,10 +468,10 @@ func TestFalco_Legacy_InvalidAppendMacroDangling(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidAppendMacroDangling),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("macro").
-		ForItemName("dangling append").
-		ForMessage("Macro has 'append' key but no macro by that name already exists"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("macro").
+		OfItemName("dangling append").
+		OfMessage("Macro has 'append' key but no macro by that name already exists"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -484,10 +484,10 @@ func TestFalco_Legacy_InvalidOverwriteMacroMultipleDocs(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidOverwriteMacroMultipleDocs),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("macro").
-		ForItemName("some macro").
-		ForMessage("Undefined macro 'foo' used in filter."))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("macro").
+		OfItemName("some macro").
+		OfMessage("Undefined macro 'foo' used in filter."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -504,20 +504,20 @@ func TestFalco_Legacy_DisabledTagsA(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -530,9 +530,9 @@ func TestFalco_Legacy_InvalidYamlParseError(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidYamlParseError),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_PARSE").
-		ForItemType("rules content").
-		ForMessage("yaml-cpp: error at line 1, column 11: illegal map value"))
+		OfCode("LOAD_ERR_YAML_PARSE").
+		OfItemType("rules content").
+		OfMessage("yaml-cpp: error at line 1, column 11: illegal map value"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -545,10 +545,10 @@ func TestFalco_Legacy_InvalidRuleWithoutOutput(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidRuleWithoutOutput),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("rule").
-		ForItemName("no output rule").
-		ForMessage("Item has no mapping for key 'output'"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("rule").
+		OfItemName("no output rule").
+		OfMessage("Item has no mapping for key 'output'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -565,9 +565,9 @@ func TestFalco_Legacy_Syscalls(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
-	assert.Equal(t, 2, res.Detections().ForRule("detect_madvise").Count())
-	assert.Equal(t, 2, res.Detections().ForRule("detect_open").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
+	assert.Equal(t, 2, res.Detections().OfRule("detect_madvise").Count())
+	assert.Equal(t, 2, res.Detections().OfRule("detect_open").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -594,20 +594,20 @@ func TestFalco_Legacy_RunTagsA(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -674,11 +674,11 @@ func TestFalco_Legacy_MultipleRulesSuppressInfo(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
-	assert.Equal(t, 8, res.Detections().ForRule("open_from_cat").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("exec_from_cat").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("access_from_cat").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
+	assert.Equal(t, 8, res.Detections().OfRule("open_from_cat").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("exec_from_cat").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("access_from_cat").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -694,7 +694,7 @@ func TestFalco_Legacy_ListSubMid(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -707,10 +707,10 @@ func TestFalco_Legacy_InvalidListWithoutItems(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidListWithoutItems),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("list").
-		ForItemName("bad_list").
-		ForMessage("Item has no mapping for key 'items'"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("list").
+		OfItemName("bad_list").
+		OfMessage("Item has no mapping for key 'items'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -745,10 +745,10 @@ func TestFalco_Legacy_InvalidRuleOutput(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidRuleOutput),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_COMPILE_OUTPUT").
-		ForItemType("rule").
-		ForItemName("rule_with_invalid_output").
-		ForMessage("invalid formatting token not_a_real_field"))
+		OfCode("LOAD_ERR_COMPILE_OUTPUT").
+		OfItemType("rule").
+		OfItemName("rule_with_invalid_output").
+		OfMessage("invalid formatting token not_a_real_field"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -766,7 +766,7 @@ func TestFalco_Legacy_FileOutputStrict(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -783,20 +783,20 @@ func TestFalco_Legacy_RunTagsBc(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -846,7 +846,7 @@ func TestFalco_Legacy_MultipleRulesLastEmpty(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -862,7 +862,7 @@ func TestFalco_Legacy_ListSubWhitespace(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -875,10 +875,10 @@ func TestFalco_Legacy_InvalidMacroWithoutCondition(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidMacroWithoutCondition),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("macro").
-		ForItemName("bad_macro").
-		ForMessage("Item has no mapping for key 'condition'"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("macro").
+		OfItemName("bad_macro").
+		OfMessage("Item has no mapping for key 'condition'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -894,9 +894,9 @@ func TestFalco_Legacy_CatchallOrder(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_dev_null").Count())
-	assert.Equal(t, 6, res.Detections().ForRule("dev_null").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_dev_null").Count())
+	assert.Equal(t, 6, res.Detections().OfRule("dev_null").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -912,7 +912,7 @@ func TestFalco_Legacy_ListSubFront(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -928,7 +928,7 @@ func TestFalco_Legacy_ListOrder(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -941,9 +941,9 @@ func TestFalco_Legacy_InvalidMissingMacroName(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidMissingMacroName),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("macro").
-		ForMessage("Mapping for key 'macro' is empty"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("macro").
+		OfMessage("Mapping for key 'macro' is empty"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -960,20 +960,20 @@ func TestFalco_Legacy_DisabledTagsAbc(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1013,10 +1013,10 @@ func TestFalco_Legacy_InvalidRuleAppendDangling(t *testing.T) {
 		falco.WithRulesValidation(rules.RuleAppendFailure),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("rule").
-		ForItemName("my_rule").
-		ForMessage("Rule has 'append' key but no rule by that name already exists"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("rule").
+		OfItemName("my_rule").
+		OfMessage("Rule has 'append' key but no rule by that name already exists"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1030,10 +1030,10 @@ func TestFalco_Legacy_InvalidOverwriteRule(t *testing.T) {
 	)
 	assert.True(t, res.RuleValidation().At(0).Successful)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("rule").
-		ForItemName("some rule").
-		ForMessage("Undefined macro 'bar' used in filter."))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("rule").
+		OfItemName("some rule").
+		OfMessage("Undefined macro 'bar' used in filter."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1050,20 +1050,20 @@ func TestFalco_Legacy_DisabledTagsC(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1080,20 +1080,20 @@ func TestFalco_Legacy_RunTagsD(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1117,10 +1117,10 @@ func TestFalco_Legacy_InvalidAppendMacroMultipleDocs(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidAppendMacroMultipleDocs),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_COMPILE_CONDITION").
-		ForItemType("macro").
-		ForItemName("some macro").
-		ForMessage("unexpected token after 'execve', expecting 'or', 'and'"))
+		OfCode("LOAD_ERR_COMPILE_CONDITION").
+		OfItemType("macro").
+		OfItemName("some macro").
+		OfMessage("unexpected token after 'execve', expecting 'or', 'and'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1149,9 +1149,9 @@ func TestFalco_Legacy_MultipleRules(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1168,9 +1168,9 @@ func TestFalco_Legacy_MultipleDocs(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1197,7 +1197,7 @@ func TestFalco_Legacy_MacroOrder(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1210,10 +1210,10 @@ func TestFalco_Legacy_InvalidAppendRuleWithoutCondition(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidAppendRuleWithoutCondition),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("rule").
-		ForItemName("no condition rule").
-		ForMessage("Appended rule must have exceptions or condition property"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("rule").
+		OfItemName("no condition rule").
+		OfMessage("Appended rule must have exceptions or condition property"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1226,10 +1226,10 @@ func TestFalco_Legacy_SkipUnknownUnspecError(t *testing.T) {
 		falco.WithRulesValidation(rules.SkipUnknownUnspec),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_COMPILE_CONDITION").
-		ForItemType("rule").
-		ForItemName("Contains Unknown Event And Unspecified").
-		ForMessage("filter_check called with nonexistent field proc.nobody"))
+		OfCode("LOAD_ERR_COMPILE_CONDITION").
+		OfItemType("rule").
+		OfItemName("Contains Unknown Event And Unspecified").
+		OfMessage("filter_check called with nonexistent field proc.nobody"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1279,20 +1279,20 @@ func TestFalco_Legacy_DisabledTagsAb(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1309,20 +1309,20 @@ func TestFalco_Legacy_RunTagsB(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1349,7 +1349,7 @@ func TestFalco_Legacy_RuleOrder(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1362,9 +1362,9 @@ func TestFalco_Legacy_InvalidNotYaml(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidNotYaml),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("rules content").
-		ForMessage("Rules content is not yaml"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("rules content").
+		OfMessage("Rules content is not yaml"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1378,15 +1378,15 @@ func TestFalco_Legacy_InvalidOverwriteMacro(t *testing.T) {
 	)
 	assert.True(t, res.RuleValidation().At(0).Successful)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("macro").
-		ForItemName("some macro").
-		ForMessage("Undefined macro 'foo' used in filter."))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("macro").
+		OfItemName("some macro").
+		OfMessage("Undefined macro 'foo' used in filter."))
 	assert.NotNil(t, res.RuleValidation().AllWarnings().
-		ForCode("LOAD_UNUSED_MACRO").
-		ForItemType("macro").
-		ForItemName("some macro").
-		ForMessage("Macro not referred to by any other rule/macro"))
+		OfCode("LOAD_UNUSED_MACRO").
+		OfItemType("macro").
+		OfItemName("some macro").
+		OfMessage("Macro not referred to by any other rule/macro"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1399,9 +1399,9 @@ func TestFalco_Legacy_InvalidMissingRuleName(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidMissingRuleName),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("rule").
-		ForMessage("Mapping for key 'rule' is empty"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("rule").
+		OfMessage("Mapping for key 'rule' is empty"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1417,7 +1417,7 @@ func TestFalco_Legacy_RuleNamesWithSpaces(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1433,7 +1433,7 @@ func TestFalco_Legacy_MultipleRulesFirstEmpty(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1451,7 +1451,7 @@ func TestFalco_Legacy_ProgramOutputStrict(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1465,10 +1465,10 @@ func TestFalco_Legacy_InvalidAppendRule(t *testing.T) {
 	)
 	assert.True(t, res.RuleValidation().At(0).Successful)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_COMPILE_CONDITION").
-		ForItemType("rule").
-		ForItemName("some rule").
-		ForMessage("unexpected token after 'open', expecting 'or', 'and'"))
+		OfCode("LOAD_ERR_COMPILE_CONDITION").
+		OfItemType("rule").
+		OfItemName("some rule").
+		OfMessage("unexpected token after 'open', expecting 'or', 'and'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1481,10 +1481,10 @@ func TestFalco_Legacy_InvalidAppendRuleMultipleDocs(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidAppendRuleMultipleDocs),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_COMPILE_CONDITION").
-		ForItemType("rule").
-		ForItemName("some rule").
-		ForMessage("unexpected token after 'open', expecting 'or', 'and'"))
+		OfCode("LOAD_ERR_COMPILE_CONDITION").
+		OfItemType("rule").
+		OfItemName("some rule").
+		OfMessage("unexpected token after 'open', expecting 'or', 'and'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1515,20 +1515,20 @@ func TestFalco_Legacy_RunTagsAb(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_1").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_2").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_3").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_4").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_5").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_6").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_7").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_8").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_9").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("open_10").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_11").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_12").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("open_13").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_1").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_2").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_3").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_4").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_5").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_6").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_7").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_8").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_9").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("open_10").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_11").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1541,10 +1541,10 @@ func TestFalco_Legacy_ValidateSkipUnknownNoevt(t *testing.T) {
 		falco.WithRulesValidation(rules.SkipUnknownEvt),
 	)
 	assert.NotNil(t, res.RuleValidation().AllWarnings().
-		ForCode("LOAD_UNKNOWN_FIELD").
-		ForItemType("rule").
-		ForItemName("Contains Unknown Event And Skipping").
-		ForMessage("filter_check called with nonexistent field proc.nobody"))
+		OfCode("LOAD_UNKNOWN_FIELD").
+		OfItemType("rule").
+		OfItemName("Contains Unknown Event And Skipping").
+		OfMessage("filter_check called with nonexistent field proc.nobody"))
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1560,7 +1560,7 @@ func TestFalco_Legacy_ListSubEnd(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1573,9 +1573,9 @@ func TestFalco_Legacy_InvalidArrayItemNotObject(t *testing.T) {
 		falco.WithRulesValidation(rules.InvalidArrayItemNotObject),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("rules content item").
-		ForMessage("Unexpected element type. Each element should be a yaml associative array."))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("rules content item").
+		OfMessage("Unexpected element type. Each element should be a yaml associative array."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1588,10 +1588,10 @@ func TestFalco_Legacy_InvalidListAppendDangling(t *testing.T) {
 		falco.WithRulesValidation(rules.ListAppendFailure),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("list").
-		ForItemName("my_list").
-		ForMessage("List has 'append' key but no list by that name already exists"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("list").
+		OfItemName("my_list").
+		OfMessage("List has 'append' key but no list by that name already exists"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1607,7 +1607,7 @@ func TestFalco_Legacy_RuleExceptionSecondItem(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1623,7 +1623,7 @@ func TestFalco_Legacy_RuleExceptionAppendMultipleValues(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1639,7 +1639,7 @@ func TestFalco_Legacy_RuleExceptionAppendComp(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1655,7 +1655,7 @@ func TestFalco_Legacy_RuleExceptionSingleField(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1668,10 +1668,10 @@ func TestFalco_Legacy_RuleExceptionNewAppendNoField(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsRuleExceptionNewNoFieldAppend),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("exception").
-		ForItemName("proc_cmdline").
-		ForMessage("Rule exception must have fields property with a list of fields"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("exception").
+		OfItemName("proc_cmdline").
+		OfMessage("Rule exception must have fields property with a list of fields"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1687,7 +1687,7 @@ func TestFalco_Legacy_RuleExceptionAppendOneValue(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1703,7 +1703,7 @@ func TestFalco_Legacy_RuleExceptionQuoted(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1719,7 +1719,7 @@ func TestFalco_Legacy_RuleExceptionAppendThirdItem(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1735,7 +1735,7 @@ func TestFalco_Legacy_RuleExceptionSingleFieldAppend(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1751,7 +1751,7 @@ func TestFalco_Legacy_RuleExceptionNewSingleFieldAppend(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1764,10 +1764,10 @@ func TestFalco_Legacy_RuleExceptionUnknownFields(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsItemUnknownFields),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("exception").
-		ForItemName("ex1").
-		ForMessage("'not.exist' is not a supported filter field"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("exception").
+		OfItemName("ex1").
+		OfMessage("'not.exist' is not a supported filter field"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1783,7 +1783,7 @@ func TestFalco_Legacy_RuleExceptionSecondValue(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1799,7 +1799,7 @@ func TestFalco_Legacy_RuleExceptionValuesList(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1812,10 +1812,10 @@ func TestFalco_Legacy_RuleExceptionAppendFieldsValuesLenMismatch(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsAppendItemFieldsValuesLenMismatch),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("exception").
-		ForItemName("ex1").
-		ForMessage("Fields and values lists must have equal length"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("exception").
+		OfItemName("ex1").
+		OfMessage("Fields and values lists must have equal length"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1828,10 +1828,10 @@ func TestFalco_Legacy_RuleExceptionAppendItemNotInRule(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsAppendItemNotInRule),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("exception").
-		ForItemName("ex2").
-		ForMessage("Rule exception must have fields property with a list of fields"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("exception").
+		OfItemName("ex2").
+		OfMessage("Rule exception must have fields property with a list of fields"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1847,7 +1847,7 @@ func TestFalco_Legacy_RuleExceptionThirdItem(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1860,10 +1860,10 @@ func TestFalco_Legacy_RuleExceptionNoFields(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsItemNoFields),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("exception").
-		ForItemName("ex1").
-		ForMessage("Item has no mapping for key 'fields'"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("exception").
+		OfItemName("ex1").
+		OfMessage("Item has no mapping for key 'fields'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1876,9 +1876,9 @@ func TestFalco_Legacy_RuleExceptionAppendNoName(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsAppendItemNoName),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("exception").
-		ForMessage("Item has no mapping for key 'name'"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("exception").
+		OfMessage("Item has no mapping for key 'name'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1891,10 +1891,10 @@ func TestFalco_Legacy_RuleExceptionCompsFieldsLenMismatch(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsItemCompsFieldsLenMismatch),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("exception").
-		ForItemName("ex1").
-		ForMessage("Fields and comps lists must have equal length"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("exception").
+		OfItemName("ex1").
+		OfMessage("Fields and comps lists must have equal length"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1910,7 +1910,7 @@ func TestFalco_Legacy_RuleExceptionNoValues(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1926,7 +1926,7 @@ func TestFalco_Legacy_RuleExceptionAppendSecondValue(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1939,9 +1939,9 @@ func TestFalco_Legacy_RuleExceptionNoName(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsItemNoName),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_YAML_VALIDATE").
-		ForItemType("exception").
-		ForMessage("Item has no mapping for key 'name'"))
+		OfCode("LOAD_ERR_YAML_VALIDATE").
+		OfItemType("exception").
+		OfMessage("Item has no mapping for key 'name'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1957,7 +1957,7 @@ func TestFalco_Legacy_RuleExceptionComp(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1973,7 +1973,7 @@ func TestFalco_Legacy_RuleExceptionValuesListref(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -1989,7 +1989,7 @@ func TestFalco_Legacy_RuleExceptionNewSecondFieldAppend(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2002,10 +2002,10 @@ func TestFalco_Legacy_RuleExceptionUnknownComp(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsItemUnknownComp),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("exception").
-		ForItemName("ex1").
-		ForMessage("'no-comp' is not a supported comparison operator"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("exception").
+		OfItemName("ex1").
+		OfMessage("'no-comp' is not a supported comparison operator"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -2018,10 +2018,10 @@ func TestFalco_Legacy_RuleExceptionFieldsValuesLenMismatch(t *testing.T) {
 		falco.WithRulesValidation(rules.ExceptionsItemFieldsValuesLenMismatch),
 	)
 	assert.NotNil(t, res.RuleValidation().AllErrors().
-		ForCode("LOAD_ERR_VALIDATE").
-		ForItemType("exception").
-		ForItemName("ex1").
-		ForMessage("Fields and values lists must have equal length"))
+		OfCode("LOAD_ERR_VALIDATE").
+		OfItemType("exception").
+		OfItemName("ex1").
+		OfMessage("Fields and values lists must have equal length"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -2037,7 +2037,7 @@ func TestFalco_Legacy_RuleExceptionOneValue(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2053,7 +2053,7 @@ func TestFalco_Legacy_RuleExceptionAppendSecondItem(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2069,7 +2069,7 @@ func TestFalco_Legacy_RuleExceptionValuesListrefNoparens(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2084,8 +2084,8 @@ func TestFalco_Legacy_ReadSensitiveFileUntrusted(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Read sensitive file untrusted").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Read sensitive file untrusted").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2100,7 +2100,7 @@ func TestFalco_Legacy_KernelUpgrade(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2115,8 +2115,8 @@ func TestFalco_Legacy_CreateFilesBelowDev(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Create files below dev").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Create files below dev").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2131,9 +2131,9 @@ func TestFalco_Legacy_ReadSensitiveFileAfterStartup(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Read sensitive file untrusted").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Read sensitive file trusted after startup").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Read sensitive file untrusted").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Read sensitive file trusted after startup").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2148,8 +2148,8 @@ func TestFalco_Legacy_RunShellUntrusted(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("DEBUG").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Run shell untrusted").Count())
+	assert.NotZero(t, res.Detections().OfPriority("DEBUG").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Run shell untrusted").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2164,8 +2164,8 @@ func TestFalco_Legacy_ChangeThreadNamespace(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("NOTICE").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("Change thread namespace").Count())
+	assert.Zero(t, res.Detections().OfPriority("NOTICE").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("Change thread namespace").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2180,8 +2180,8 @@ func TestFalco_Legacy_MkdirBinaryDirs(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Mkdir binary dirs").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Mkdir binary dirs").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2196,8 +2196,8 @@ func TestFalco_Legacy_SystemBinariesNetworkActivity(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("System procs network activity").Count())
+	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("System procs network activity").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2212,8 +2212,8 @@ func TestFalco_Legacy_WriteRpmDatabase(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Write below rpm database").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Write below rpm database").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2229,8 +2229,8 @@ func TestFalco_Legacy_DockerCompose(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
-	assert.Equal(t, 2, res.Detections().ForRule("Redirect STDOUT/STDIN to Network Connection in Container").Count())
+	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
+	assert.Equal(t, 2, res.Detections().OfRule("Redirect STDOUT/STDIN to Network Connection in Container").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2245,7 +2245,7 @@ func TestFalco_Legacy_CurlUninstall(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2260,7 +2260,7 @@ func TestFalco_Legacy_DhcpclientRenew(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2275,7 +2275,7 @@ func TestFalco_Legacy_StagingWorker(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2291,8 +2291,8 @@ func TestFalco_Legacy_DbProgramSpawnedProcess(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("DB program spawned process").Count())
+	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("DB program spawned process").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2308,8 +2308,8 @@ func TestFalco_Legacy_UserMgmtBinaries(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("User mgmt binaries").Count())
+	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("User mgmt binaries").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2324,7 +2324,7 @@ func TestFalco_Legacy_Exim4(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2339,8 +2339,8 @@ func TestFalco_Legacy_WriteEtc(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Write below etc").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Write below etc").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2355,7 +2355,7 @@ func TestFalco_Legacy_StagingCollector(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2371,8 +2371,8 @@ func TestFalco_Legacy_ContainerPrivileged(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
-	assert.Equal(t, 3, res.Detections().ForRule("Launch Privileged Container").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
+	assert.Equal(t, 3, res.Detections().OfRule("Launch Privileged Container").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2388,8 +2388,8 @@ func TestFalco_Legacy_ContainerSensitiveMount(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
-	assert.Equal(t, 3, res.Detections().ForRule("Launch Sensitive Mount Container").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
+	assert.Equal(t, 3, res.Detections().OfRule("Launch Sensitive Mount Container").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2404,8 +2404,8 @@ func TestFalco_Legacy_WriteBinaryDir(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
-	assert.Equal(t, 4, res.Detections().ForRule("Write below binary dir").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
+	assert.Equal(t, 4, res.Detections().OfRule("Write below binary dir").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2420,7 +2420,7 @@ func TestFalco_Legacy_CurlInstall(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2435,7 +2435,7 @@ func TestFalco_Legacy_StagingDb(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2450,8 +2450,8 @@ func TestFalco_Legacy_ModifyBinaryDirs(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Modify binary dirs").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Modify binary dirs").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2466,8 +2466,8 @@ func TestFalco_Legacy_NonSudoSetuid(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Non sudo setuid").Count())
+	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Non sudo setuid").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2482,7 +2482,7 @@ func TestFalco_Legacy_GitPush(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2500,7 +2500,7 @@ func TestFalco_Legacy_KubeDemo(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.Zero(t, res.Detections().Count())
-	assert.Zero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2515,23 +2515,23 @@ func TestFalco_Legacy_FalcoEventGenerator(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.NotZero(t, res.Detections().ForPriority("NOTICE").Count())
-	assert.NotZero(t, res.Detections().ForPriority("DEBUG").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Write below binary dir").Count())
-	assert.Equal(t, 3, res.Detections().ForRule("Read sensitive file untrusted").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Run shell untrusted").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Write below rpm database").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Write below etc").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("System procs network activity").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Mkdir binary dirs").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("System user interactive").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("DB program spawned process").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Non sudo setuid").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Create files below dev").Count())
-	assert.Equal(t, 2, res.Detections().ForRule("Modify binary dirs").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("Change thread namespace").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
+	assert.NotZero(t, res.Detections().OfPriority("DEBUG").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Write below binary dir").Count())
+	assert.Equal(t, 3, res.Detections().OfRule("Read sensitive file untrusted").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Run shell untrusted").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Write below rpm database").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Write below etc").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("System procs network activity").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Mkdir binary dirs").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("System user interactive").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("DB program spawned process").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Non sudo setuid").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Create files below dev").Count())
+	assert.Equal(t, 2, res.Detections().OfRule("Modify binary dirs").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("Change thread namespace").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2547,8 +2547,8 @@ func TestFalco_Legacy_SystemUserInteractive(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("System user interactive").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("System user interactive").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2563,20 +2563,20 @@ func TestFalco_Legacy_DetectCounts(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Write below binary dir").Count())
-	assert.Equal(t, 3, res.Detections().ForRule("Read sensitive file untrusted").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Run shell untrusted").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Write below rpm database").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Write below etc").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("System procs network activity").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Mkdir binary dirs").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("System user interactive").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("DB program spawned process").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Non sudo setuid").Count())
-	assert.Equal(t, 1, res.Detections().ForRule("Create files below dev").Count())
-	assert.Equal(t, 2, res.Detections().ForRule("Modify binary dirs").Count())
-	assert.Equal(t, 0, res.Detections().ForRule("Change thread namespace").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Write below binary dir").Count())
+	assert.Equal(t, 3, res.Detections().OfRule("Read sensitive file untrusted").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Run shell untrusted").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Write below rpm database").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Write below etc").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("System procs network activity").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Mkdir binary dirs").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("System user interactive").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("DB program spawned process").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Non sudo setuid").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("Create files below dev").Count())
+	assert.Equal(t, 2, res.Detections().OfRule("Modify binary dirs").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("Change thread namespace").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2592,8 +2592,8 @@ func TestFalco_Legacy_RuleNamesWithRegexChars(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.Equal(t, 8, res.Detections().ForRule(`Open From Cat ($\.*+?()[]{}|^)`).Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.Equal(t, 8, res.Detections().OfRule(`Open From Cat ($\.*+?()[]{}|^)`).Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2610,7 +2610,7 @@ func TestFalco_Legacy_JsonOutputNoOutputProperty(t *testing.T) {
 	)
 	assert.NotRegexp(t, `.*Warning An open of /dev/null was seen.*`, res.Stdout())
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2627,7 +2627,7 @@ func TestFalco_Legacy_JsonOutputNoTagsProperty(t *testing.T) {
 	)
 	assert.NotRegexp(t, `.*"tags":[ ]*\[.*\],.*`, res.Stdout())
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2644,7 +2644,7 @@ func TestFalco_Legacy_JsonOutputEmptyTagsProperty(t *testing.T) {
 	)
 	assert.Regexp(t, `.*"tags":[ ]*\[\],.*`, res.Stdout())
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2661,9 +2661,9 @@ func TestFalco_Legacy_RulesDirectory(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
-	assert.NotZero(t, res.Detections().ForPriority("ERROR").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
+	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2679,8 +2679,8 @@ func TestFalco_Legacy_EnabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.Equal(t, 8, res.Detections().ForRule("open_from_cat").Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.Equal(t, 8, res.Detections().OfRule("open_from_cat").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2697,7 +2697,7 @@ func TestFalco_Legacy_NullOutputField(t *testing.T) {
 	)
 	assert.Regexp(t, `Warning An open was seen .cport=<NA> command=cat /dev/null.`, res.Stdout())
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2713,7 +2713,7 @@ func TestFalco_Legacy_InOperatorNetmasks(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("INFO").Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2732,7 +2732,7 @@ func TestFalco_Legacy_TimeIso8601(t *testing.T) {
 	assert.Regexp(t, `^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+0000`, res.Stderr())
 	assert.Regexp(t, `2016-08-04T16:17:57.882054739\+0000: Warning An open was seen`, res.Stdout())
 	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().ForPriority("WARNING").Count())
+	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2748,18 +2748,18 @@ func TestFalco_Legacy_TestWarnings(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 	assert.True(t, res.RuleValidation().At(0).Successful)
 	warnings := res.RuleValidation().AllWarnings().
-		ForCode("LOAD_NO_EVTTYPE").
-		ForItemType("rule").
-		ForMessage("Rule matches too many evt.type values. This has a significant performance penalty.")
-	assert.NotNil(t, warnings.ForItemName("no_evttype"))
-	assert.NotNil(t, warnings.ForItemName("evttype_not_equals"))
-	assert.NotNil(t, warnings.ForItemName("leading_not"))
-	assert.NotNil(t, warnings.ForItemName("not_equals_at_end"))
-	assert.NotNil(t, warnings.ForItemName("not_at_end"))
-	assert.NotNil(t, warnings.ForItemName("not_equals_and_not"))
-	assert.NotNil(t, warnings.ForItemName("leading_in_not_equals_at_evttype"))
-	assert.NotNil(t, warnings.ForItemName("not_with_evttypes"))
-	assert.NotNil(t, warnings.ForItemName("not_with_evttypes_addl"))
+		OfCode("LOAD_NO_EVTTYPE").
+		OfItemType("rule").
+		OfMessage("Rule matches too many evt.type values. This has a significant performance penalty.")
+	assert.NotNil(t, warnings.OfItemName("no_evttype"))
+	assert.NotNil(t, warnings.OfItemName("evttype_not_equals"))
+	assert.NotNil(t, warnings.OfItemName("leading_not"))
+	assert.NotNil(t, warnings.OfItemName("not_equals_at_end"))
+	assert.NotNil(t, warnings.OfItemName("not_at_end"))
+	assert.NotNil(t, warnings.OfItemName("not_equals_and_not"))
+	assert.NotNil(t, warnings.OfItemName("leading_in_not_equals_at_evttype"))
+	assert.NotNil(t, warnings.OfItemName("not_with_evttypes"))
+	assert.NotNil(t, warnings.OfItemName("not_with_evttypes_addl"))
 }
 
 func grpcOutputResponseToFalcoAlert(res *outputs.Response) *falco.Alert {
@@ -2831,8 +2831,8 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 	require.Nil(t, err)
 	assert.NotZero(t, detections.Count())
 	assert.NotZero(t, detections.
-		ForPriority("WARNING").
-		ForRule("open_from_cat").Count())
+		OfPriority("WARNING").
+		OfRule("open_from_cat").Count())
 }
 
 func TestFalco_Legacy_NoPluginsUnknownSource(t *testing.T) {
@@ -2843,10 +2843,10 @@ func TestFalco_Legacy_NoPluginsUnknownSource(t *testing.T) {
 		falco.WithRulesValidation(rules.PluginsCloudtrailCreateInstances),
 	)
 	assert.NotNil(t, res.RuleValidation().AllWarnings().
-		ForCode("LOAD_UNKNOWN_SOURCE").
-		ForItemType("rule").
-		ForItemName("Cloudtrail Create Instance").
-		ForMessage("Unknown source aws_cloudtrail, skipping"))
+		OfCode("LOAD_UNKNOWN_SOURCE").
+		OfItemType("rule").
+		OfItemName("Cloudtrail Create Instance").
+		OfMessage("Unknown source aws_cloudtrail, skipping"))
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2859,10 +2859,10 @@ func TestFalco_Legacy_NoPluginsUnknownSourceRuleException(t *testing.T) {
 		falco.WithRulesValidation(rules.PluginsCloudtrailCreateInstancesExceptions),
 	)
 	assert.NotNil(t, res.RuleValidation().AllWarnings().
-		ForCode("LOAD_UNKNOWN_SOURCE").
-		ForItemType("rule").
-		ForItemName("Cloudtrail Create Instance").
-		ForMessage("Unknown source aws_cloudtrail, skipping"))
+		OfCode("LOAD_UNKNOWN_SOURCE").
+		OfItemType("rule").
+		OfItemName("Cloudtrail Create Instance").
+		OfMessage("Unknown source aws_cloudtrail, skipping"))
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }

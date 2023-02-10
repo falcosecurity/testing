@@ -100,6 +100,7 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 
 			// craft a configuration for the plugin
 			config, err := falco.NewPluginConfig(
+				"plugin-config.yaml",
 				&falco.PluginConfigInfo{
 					Name:    "cloudtrail",
 					Library: plugins.CloudtrailPlugin.Name(),

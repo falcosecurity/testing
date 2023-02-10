@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Alert represent an alert produced by a Falco rule.
 type Alert struct {
 	Time         time.Time              `json:"time"`
 	Rule         string                 `json:"rule"`
@@ -20,8 +21,11 @@ type Alert struct {
 	OutputFields map[string]interface{} `json:"output_fields"`
 }
 
+// Detections represents a list of Falco alerts.
 type Detections []*Alert
 
+// Detections converts the output of the Falco run into a list of rule detections.
+// Returns nil if Falco wasn't run for rules detection.
 func (t *TestOutput) Detections() Detections {
 	if !t.hasOutputJSON() {
 		logrus.Errorf("TestOutput.Detections: must use WithOutputJSON")
@@ -54,7 +58,8 @@ func (d Detections) filter(f func(*Alert) bool) Detections {
 	return res
 }
 
-func (d Detections) ForPriority(p string) Detections {
+// OfPriority returns the list of detections that have a given priority.
+func (d Detections) OfPriority(p string) Detections {
 	return d.filter(func(a *Alert) bool {
 		// note: we need to use "CONTAINS" because of
 		// the INFO -> INFORMATIONAL changes we had in the past
@@ -62,7 +67,9 @@ func (d Detections) ForPriority(p string) Detections {
 	})
 }
 
-func (d Detections) ForRule(v interface{}) Detections {
+// OfRule returns the list of detections that have a given rule name.
+// The rule name can either be a string or a *regexp.Regexp.
+func (d Detections) OfRule(v interface{}) Detections {
 	return d.filter(func(a *Alert) bool {
 		if rgx, ok := v.(*regexp.Regexp); ok {
 			return rgx.MatchString(a.Rule)
@@ -74,6 +81,7 @@ func (d Detections) ForRule(v interface{}) Detections {
 	})
 }
 
+// Count returns the amount of alerts in the list of detections.
 func (d Detections) Count() int {
 	return len(d)
 }

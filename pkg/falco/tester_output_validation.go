@@ -10,6 +10,8 @@ import (
 
 var emptyRuleValidationResult = RuleValidationResult{}
 
+// RuleValidationInfo represent a single error or warning resulting from
+// the validation of a Falco rules file.
 type RuleValidationInfo struct {
 	Code     string `json:"code"`
 	Codedesc string `json:"codedesc"`
@@ -28,8 +30,11 @@ type RuleValidationInfo struct {
 	} `json:"context"`
 }
 
+// RuleValidationInfos represent group of errors or warnings resulting from
+// the validation of a Falco rules file.
 type RuleValidationInfos []*RuleValidationInfo
 
+// RuleValidationResult represents the validation result of a Falco rules file.
 type RuleValidationResult struct {
 	Successful bool                `json:"successful"`
 	Name       string              `json:"name"`
@@ -37,10 +42,14 @@ type RuleValidationResult struct {
 	Warnings   RuleValidationInfos `json:"warnings"`
 }
 
+// RuleValidation represents a list of validation results of Falco rules files.
 type RuleValidation struct {
 	Results []*RuleValidationResult `json:"falco_load_results"`
 }
 
+// RuleValidation converts the output of the Falco run into a list of
+// validation results of Falco rules files. Returns nil if Falco wasn't run
+// for rules files validation.
 func (t *TestOutput) RuleValidation() *RuleValidation {
 	if !t.hasOutputJSON() {
 		logrus.Errorf("TestOutput.Detections: must use WithOutputJSON")
@@ -54,6 +63,9 @@ func (t *TestOutput) RuleValidation() *RuleValidation {
 	return res
 }
 
+// At returns the validation result at the given index in the set.
+// Returns an empty validation result if the index is out of bounds.
+// todo(jasondellaluce): should we panic/fatal in this case?
 func (r RuleValidation) At(index int) *RuleValidationResult {
 	if index >= len(r.Results) {
 		return &emptyRuleValidationResult
@@ -61,6 +73,7 @@ func (r RuleValidation) At(index int) *RuleValidationResult {
 	return r.Results[index]
 }
 
+// AllWarnings returns the merged list of warnings from all the validated Falco rules files.
 func (r RuleValidation) AllWarnings() RuleValidationInfos {
 	var res RuleValidationInfos
 	for _, result := range r.Results {
@@ -69,6 +82,7 @@ func (r RuleValidation) AllWarnings() RuleValidationInfos {
 	return res
 }
 
+// AllErrors returns the merged list of errors from all the validated Falco rules files.
 func (r RuleValidation) AllErrors() RuleValidationInfos {
 	var res RuleValidationInfos
 	for _, result := range r.Results {
@@ -87,13 +101,15 @@ func (d RuleValidationInfos) filter(f func(*RuleValidationInfo) bool) RuleValida
 	return res
 }
 
-func (d RuleValidationInfos) ForCode(v string) RuleValidationInfos {
+// OfCode returns the validation info entries with the given code.
+func (d RuleValidationInfos) OfCode(v string) RuleValidationInfos {
 	return d.filter(func(a *RuleValidationInfo) bool {
 		return strings.EqualFold(a.Code, v)
 	})
 }
 
-func (d RuleValidationInfos) ForItemName(v string) RuleValidationInfos {
+// OfItemName returns the validation info entries with the given item name.
+func (d RuleValidationInfos) OfItemName(v string) RuleValidationInfos {
 	return d.filter(func(a *RuleValidationInfo) bool {
 		for _, loc := range a.Context.Locations {
 			if loc.ItemName == v {
@@ -104,7 +120,8 @@ func (d RuleValidationInfos) ForItemName(v string) RuleValidationInfos {
 	})
 }
 
-func (d RuleValidationInfos) ForItemType(v string) RuleValidationInfos {
+// OfItemType returns the validation info entries with the given item type.
+func (d RuleValidationInfos) OfItemType(v string) RuleValidationInfos {
 	return d.filter(func(a *RuleValidationInfo) bool {
 		for _, loc := range a.Context.Locations {
 			if strings.EqualFold(loc.ItemType, v) {
@@ -115,7 +132,9 @@ func (d RuleValidationInfos) ForItemType(v string) RuleValidationInfos {
 	})
 }
 
-func (d RuleValidationInfos) ForMessage(v interface{}) RuleValidationInfos {
+// OfMessage returns the validation info entries with the given message.
+// The message can either be a string or a *regexp.Regexp.
+func (d RuleValidationInfos) OfMessage(v interface{}) RuleValidationInfos {
 	return d.filter(func(a *RuleValidationInfo) bool {
 		if rgx, ok := v.(*regexp.Regexp); ok {
 			return rgx.MatchString(a.Message)
@@ -127,6 +146,7 @@ func (d RuleValidationInfos) ForMessage(v interface{}) RuleValidationInfos {
 	})
 }
 
+// Count returns the amount of validation infos in the list.
 func (d RuleValidationInfos) Count() int {
 	return len(d)
 }

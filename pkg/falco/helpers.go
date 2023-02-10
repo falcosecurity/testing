@@ -8,7 +8,7 @@ import (
 	"github.com/jasondellaluce/falco-testing/pkg/run"
 )
 
-// PluginInfo is a struct representing the info about a single plugin
+// PluginConfigInfo represents the info about a single plugin
 // in a Falco configuration file (i.e. falco.yaml). InitConfig can
 // be either a string or a json-serializable object.
 type PluginConfigInfo struct {
@@ -18,6 +18,7 @@ type PluginConfigInfo struct {
 	InitConfig interface{}
 }
 
+//lint:ignore U1000 this receiver is invoked in a tamplete and is not actually unused
 func (p *PluginConfigInfo) initConfigString() string {
 	if p.InitConfig == nil {
 		return ""
@@ -34,7 +35,7 @@ func (p *PluginConfigInfo) initConfigString() string {
 
 // NewPluginConfig helps creating valid Falco configuration files
 // (i.e. falco.yaml) loading one or more plugins.
-func NewPluginConfig(plugins ...*PluginConfigInfo) (run.FileAccessor, error) {
+func NewPluginConfig(configName string, plugins ...*PluginConfigInfo) (run.FileAccessor, error) {
 	var buf bytes.Buffer
 	err := template.Must(template.New("").Parse(`
 stdout_output:
@@ -51,5 +52,5 @@ plugins:
 	if err != nil {
 		return nil, err
 	}
-	return run.NewStringFileAccessor("plugin-config.yaml", buf.String()), err
+	return run.NewStringFileAccessor(configName, buf.String()), err
 }

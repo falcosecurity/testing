@@ -34,7 +34,7 @@ type testOptions struct {
 	duration time.Duration
 }
 
-// TestOutput is the output of a Falco run for testing purposes
+// TestOutput is the output of a Falco test run
 type TestOutput struct {
 	opts   *testOptions
 	err    error
@@ -45,6 +45,8 @@ type TestOutput struct {
 // TestOption is an option for testing Falco
 type TestOption func(*testOptions)
 
+// Test runs a Falco runner with the given test options, and produces
+// an output representing the outcome of the run.
 func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	res := &TestOutput{
 		opts: &testOptions{
@@ -63,7 +65,7 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	res.opts.args = append(res.opts.args, "-o", "log_stderr=true")
 	res.opts.args = append(res.opts.args, "-o", "log_syslog=false")
 	res.opts.args = append(res.opts.args, "-o", "stdout_output.enabled=true")
-	logrus.WithField("deadline", res.opts.duration).Info("running falco with tester")
+	logrus.WithField("deadline", res.opts.duration).Info("running falco with runner")
 	ctx, cancel := context.WithTimeout(context.Background(), skewedDuration(res.opts.duration))
 	defer cancel()
 	res.err = runner.Run(ctx,
@@ -73,7 +75,7 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 		run.WithStderr(&res.stderr),
 	)
 	if res.err != nil {
-		logrus.WithError(res.err).Warn("error in running Falco with tester")
+		logrus.WithError(res.err).Warn("error running falco with runner")
 	}
 	return res
 }

@@ -7,10 +7,12 @@ import (
 	"github.com/jasondellaluce/falco-testing/pkg/run"
 )
 
+// WithArgs runs falcoctl with the given arguments.
 func WithArgs(args ...string) TestOption {
 	return func(ro *testOptions) { ro.args = append(ro.args, args...) }
 }
 
+// WithConfig runs falcoctl with the given config file through the `--config` option.
 func WithConfig(config run.FileAccessor) TestOption {
 	return func(ro *testOptions) {
 		ro.args = removeFromArgs(ro.args, "--config", 1)
@@ -19,6 +21,7 @@ func WithConfig(config run.FileAccessor) TestOption {
 	}
 }
 
+// WithPluginsDir runs falcoctl with the given custom plugins dir file through the `--plugins-dir` option.
 func WithPluginsDir(dir string) TestOption {
 	return func(ro *testOptions) {
 		for i := 0; i < len(ro.args)-1; i++ {
@@ -31,6 +34,7 @@ func WithPluginsDir(dir string) TestOption {
 	}
 }
 
+// WithRulesFilesDir runs falcoctl with the given custom rules files dir file through the `--rulesfiles-dir` option.
 func WithRulesFilesDir(dir string) TestOption {
 	return func(ro *testOptions) {
 		for i := 0; i < len(ro.args)-1; i++ {
