@@ -2762,6 +2762,23 @@ func TestFalco_Legacy_TestWarnings(t *testing.T) {
 	assert.NotNil(t, warnings.ForItemName("not_with_evttypes_addl"))
 }
 
+func grpcOutputResponseToFalcoAlert(res *outputs.Response) *falco.Alert {
+	outputFields := make(map[string]interface{})
+	for k, v := range res.OutputFields {
+		outputFields[k] = v
+	}
+	return &falco.Alert{
+		Time:         res.Time.AsTime(),
+		Rule:         res.Rule,
+		Output:       res.Output,
+		Priority:     res.Priority.String(),
+		Source:       res.Source,
+		Hostname:     res.Hostname,
+		Tags:         res.Tags,
+		OutputFields: outputFields,
+	}
+}
+
 func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 	var wg sync.WaitGroup
 	defer wg.Wait()
@@ -2788,32 +2805,24 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 		// require.Nil(t, res.Err())
 	}()
 
-	// wait for Falco to create the unix socket
+	// wait up until Falco creates the unix socket
 	for i := 0; i < 5; i++ {
-		if _, err := os.Stat(socketName); err == nil {
-			break
+		if _, err := os.Stat(socketName); err != nil {
+			time.Sleep(100 * time.Millisecond)
+			continue
 		}
-		time.Sleep(100 * time.Millisecond)
+		break
 	}
 
 	// connect using the Falco grpc client and collect detection
-	var detections falco.Detections
 	grpcClient, err := client.NewForConfig(
 		context.Background(),
 		&client.Config{UnixSocketPath: "unix://" + socketName},
 	)
 	require.Nil(t, err)
+	var detections falco.Detections
 	err = grpcClient.OutputsWatch(context.Background(), func(res *outputs.Response) error {
-		detections = append(detections, &falco.Alert{
-			Time:     res.Time.AsTime(),
-			Rule:     res.Rule,
-			Output:   res.Output,
-			Priority: res.Priority.String(),
-			Source:   res.Source,
-			Hostname: res.Hostname,
-			Tags:     res.Tags,
-			// OutputFields: res.OutputFields,
-		})
+		detections = append(detections, grpcOutputResponseToFalcoAlert(res))
 		return nil
 	}, 100*time.Millisecond)
 
