@@ -40,12 +40,6 @@ func (e *execRunner) WorkDir() string {
 	return e.workDir
 }
 
-// contract:
-// if a file is a relpath, or is within the work dir, it's moved in the
-// workdir
-// if file is an absolute path, it is accessed as-is (note: this can have issues
-// for docker (let's see, maybe mounting will be enough))
-
 func (e *execRunner) Run(ctx context.Context, options ...RunnerOption) error {
 	e.m.Lock()
 	defer e.m.Unlock()
@@ -55,11 +49,9 @@ func (e *execRunner) Run(ctx context.Context, options ...RunnerOption) error {
 		return err
 	}
 
-	// if path is a relative path, or is within workdir:
-	// - if is a local file, create a symlink
-	// - else write it in workdir with its rel name
-	// if path is an absolute path, do nothing
+	// make sure all files are accessible
 	for _, f := range opts.files {
+		// if file's name is a relative path, copy it in the workdir
 		if !path.IsAbs(f.Name()) {
 			newAbsPath := e.WorkDir() + "/" + f.Name()
 			if err := os.MkdirAll(filepath.Dir(newAbsPath), os.ModePerm); err != nil {
@@ -83,6 +75,8 @@ func (e *execRunner) Run(ctx context.Context, options ...RunnerOption) error {
 			if _, ok := f.(*localFileAccessor); !ok {
 				return fmt.Errorf("executable runner does not support in-memory files with an absolute path as name")
 			}
+			// the file's name is an absolute path, so it should be already
+			// be accessible as-is without further path mangling
 		}
 	}
 

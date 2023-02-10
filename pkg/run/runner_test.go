@@ -15,7 +15,7 @@ const (
 
 func TestFileAccess(t *testing.T) {
 	runners := map[string]func() (Runner, error){
-		"executable": func() (Runner, error) { return NewExecutableRunner("cat") },
+		"executable": func() (Runner, error) { return NewExecutableRunner("/bin/cat") },
 		"docker":     func() (Runner, error) { return NewDockerRunner(testDockerImage, "/bin/cat", nil) },
 	}
 	for rName, rCons := range runners {
@@ -40,7 +40,7 @@ func TestFileAccess(t *testing.T) {
 func TestInputOutput(t *testing.T) {
 	logrus.SetLevel(logrus.DebugLevel)
 	runners := map[string]func() (Runner, error){
-		"executable": func() (Runner, error) { return NewExecutableRunner("echo") },
+		"executable": func() (Runner, error) { return NewExecutableRunner("/bin/echo") },
 		"docker":     func() (Runner, error) { return NewDockerRunner(testDockerImage, "/bin/echo", nil) },
 	}
 	for rName, rCons := range runners {
