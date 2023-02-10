@@ -7,12 +7,12 @@ package testk8saudit
 import (
 	"testing"
 
-	"github.com/jasondellaluce/falco-testing/pkg/falco"
-	"github.com/jasondellaluce/falco-testing/pkg/run"
-	"github.com/jasondellaluce/falco-testing/tests"
-	"github.com/jasondellaluce/falco-testing/tests/data/captures"
-	"github.com/jasondellaluce/falco-testing/tests/data/plugins"
-	"github.com/jasondellaluce/falco-testing/tests/data/rules"
+	"github.com/falcosecurity/testing/pkg/falco"
+	"github.com/falcosecurity/testing/pkg/run"
+	"github.com/falcosecurity/testing/tests"
+	"github.com/falcosecurity/testing/tests/data/captures"
+	"github.com/falcosecurity/testing/tests/data/plugins"
+	"github.com/falcosecurity/testing/tests/data/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

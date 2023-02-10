@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jasondellaluce/falco-testing/pkg/falcoctl"
-	"github.com/jasondellaluce/falco-testing/tests"
+	"github.com/falcosecurity/testing/pkg/falcoctl"
+	"github.com/falcosecurity/testing/tests"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"

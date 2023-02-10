@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jasondellaluce/falco-testing/tests/data"
+	"github.com/falcosecurity/testing/tests/data"
 )
 
 func die(err error) {

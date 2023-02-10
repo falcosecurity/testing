@@ -4,11 +4,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jasondellaluce/falco-testing/pkg/falco"
-	"github.com/jasondellaluce/falco-testing/pkg/falcoctl"
-	"github.com/jasondellaluce/falco-testing/pkg/run"
-	"github.com/jasondellaluce/falco-testing/tests"
-	"github.com/jasondellaluce/falco-testing/tests/data/plugins"
+	"github.com/falcosecurity/testing/pkg/falco"
+	"github.com/falcosecurity/testing/pkg/falcoctl"
+	"github.com/falcosecurity/testing/pkg/run"
+	"github.com/falcosecurity/testing/tests"
+	"github.com/falcosecurity/testing/tests/data/plugins"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

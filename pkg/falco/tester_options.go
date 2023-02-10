@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jasondellaluce/falco-testing/pkg/run"
+	"github.com/falcosecurity/testing/pkg/run"
 )
 
 func withMultipleArgValues(arg string, values ...string) TestOption {

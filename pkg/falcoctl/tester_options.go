@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jasondellaluce/falco-testing/pkg/run"
+	"github.com/falcosecurity/testing/pkg/run"
 )
 
 // WithArgs runs falcoctl with the given arguments.

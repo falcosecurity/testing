@@ -1,4 +1,4 @@
-module github.com/jasondellaluce/falco-testing
+module github.com/falcosecurity/testing
 
 go 1.17
 

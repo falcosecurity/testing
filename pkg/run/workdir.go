@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	execRunnerWorkDirPrefix = "falco-testing-workdir-"
+	execRunnerWorkDirPrefix = "falcosecurity-testing-workdir-"
 )
 
 // WorkDir creates a temporary work directory, runs an action, and removes

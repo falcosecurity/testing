@@ -3,7 +3,7 @@ package falcoctl
 import (
 	"context"
 
-	"github.com/jasondellaluce/falco-testing/pkg/run"
+	"github.com/falcosecurity/testing/pkg/run"
 	"go.uber.org/multierr"
 )
 

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"text/template"
 
-	"github.com/jasondellaluce/falco-testing/pkg/run"
+	"github.com/falcosecurity/testing/pkg/run"
 )
 
 // PluginConfigInfo represents the info about a single plugin

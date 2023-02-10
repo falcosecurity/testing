@@ -5,7 +5,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/jasondellaluce/falco-testing/pkg/run"
+	"github.com/falcosecurity/testing/pkg/run"
 	"github.com/sirupsen/logrus"
 )
 

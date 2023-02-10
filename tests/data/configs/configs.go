@@ -1,6 +1,6 @@
 package configs
 
-import "github.com/jasondellaluce/falco-testing/pkg/run"
+import "github.com/falcosecurity/testing/pkg/run"
 
 //go:generate go run generate.go
 

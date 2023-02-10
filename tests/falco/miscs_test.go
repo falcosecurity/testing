@@ -3,9 +3,9 @@ package testfalco
 import (
 	"testing"
 
-	"github.com/jasondellaluce/falco-testing/pkg/falco"
-	"github.com/jasondellaluce/falco-testing/tests"
-	"github.com/jasondellaluce/falco-testing/tests/data/configs"
+	"github.com/falcosecurity/testing/pkg/falco"
+	"github.com/falcosecurity/testing/tests"
+	"github.com/falcosecurity/testing/tests/data/configs"
 
 	"github.com/stretchr/testify/assert"
 )

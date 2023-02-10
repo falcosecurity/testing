@@ -1,6 +1,6 @@
 package plugins
 
-import "github.com/jasondellaluce/falco-testing/pkg/run"
+import "github.com/falcosecurity/testing/pkg/run"
 
 var K8SAuditPlugin = run.NewLocalFileAccessor(
 	"libk8saudit.so",

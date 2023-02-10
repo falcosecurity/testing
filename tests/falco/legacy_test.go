@@ -2,7 +2,7 @@
 // implemented in python that we historically have in falcosecurity/falco
 // (see: https://github.com/falcosecurity/falco/tree/059a28184d1d4f498f5b0bd53ffe10d6fedf35c2/test).
 // The porting has been 90% automated with a migration script
-// (see: https://github.com/jasondellaluce/falco-testing/blob/32ce0c31eb8fa098a689f1888a4f11b984ae26d8/migration/main.go).
+// (see: https://github.com/falcosecurity/testing/blob/32ce0c31eb8fa098a689f1888a4f11b984ae26d8/migration/main.go).
 //
 // Data files used for running the tests is generated on-the-fly by using
 // `go generate` and are pulled from the same sources used in the python tests.
@@ -27,11 +27,11 @@ import (
 	"github.com/falcosecurity/client-go/pkg/api/outputs"
 	"github.com/falcosecurity/client-go/pkg/client"
 
-	"github.com/jasondellaluce/falco-testing/pkg/falco"
-	"github.com/jasondellaluce/falco-testing/tests"
-	"github.com/jasondellaluce/falco-testing/tests/data/captures"
-	"github.com/jasondellaluce/falco-testing/tests/data/configs"
-	"github.com/jasondellaluce/falco-testing/tests/data/rules"
+	"github.com/falcosecurity/testing/pkg/falco"
+	"github.com/falcosecurity/testing/tests"
+	"github.com/falcosecurity/testing/tests/data/captures"
+	"github.com/falcosecurity/testing/tests/data/configs"
+	"github.com/falcosecurity/testing/tests/data/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
