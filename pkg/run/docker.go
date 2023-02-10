@@ -5,10 +5,8 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	"fmt"
 	"io"
-	"strconv"
-	"strings"
+	"path"
 	"sync"
 	"time"
 
@@ -29,27 +27,26 @@ type DockerRunnerOptions struct {
 type dockerRunner struct {
 	m          sync.Mutex
 	image      string
-	entryPoint string
+	entrypoint string
 	options    DockerRunnerOptions
 }
 
 // NewDockerRunner returns a runner that runs a container image with Docker
-func NewDockerRunner(image, entryPoint string, options *DockerRunnerOptions) (Runner, error) {
-	res := &dockerRunner{
-		image:      image,
-		entryPoint: entryPoint,
-	}
+func NewDockerRunner(image, entrypoint string, options *DockerRunnerOptions) (Runner, error) {
+	res := &dockerRunner{image: image, entrypoint: entrypoint}
 	if options != nil {
 		res.options = *options
 	}
 
-	// need to pull the image
+	// attempt pulling the image
 	err := res.withClient(context.Background(), func(cli *client.Client) error {
 		logrus.WithField("image", res.image).Debugf("pulling docker image")
 		reader, err := cli.ImagePull(context.Background(), res.image, types.ImagePullOptions{})
 		if err != nil {
 			return err
 		}
+
+		// consume output and wait up until pulling is finished
 		scanner := bufio.NewScanner(reader)
 		scanner.Split(bufio.ScanLines)
 		for scanner.Scan() {
@@ -73,31 +70,68 @@ func (d *dockerRunner) WorkDir() string {
 	return "/"
 }
 
+func (d *dockerRunner) Run(ctx context.Context, options ...RunnerOption) (retErr error) {
+	d.m.Lock()
+	defer d.m.Unlock()
+	opts := buildRunOptions(options...)
+	return d.withClient(ctx, func(cli *client.Client) (err error) {
+		// create a container
+		var containerID string
+		containerID, err = d.createContainer(ctx, cli, opts.args)
+		if err != nil {
+			return err
+		}
+		defer func() { err = multierr.Append(err, d.removeContainer(cli, containerID)) }()
+
+		// copy all loaded files into the container
+		err = d.copyFilesArchive(ctx, cli, containerID, opts.files)
+		if err != nil {
+			return err
+		}
+
+		// attach to container
+		logrus.WithField("containerID", containerID).Debugf("attaching to docker container")
+		hr, err := cli.ContainerAttach(ctx, containerID, types.ContainerAttachOptions{
+			Stdout: true,
+			Stderr: true,
+			Stream: true,
+		})
+		if err != nil {
+			return err
+		}
+		defer hr.Close()
+
+		// start the container
+		err = d.startContainer(ctx, cli, containerID)
+		if err != nil {
+			return err
+		}
+		defer func() { err = multierr.Append(err, d.stopContainer(cli, containerID)) }()
+
+		// pipe and collect all container outputs
+		_, err = stdcopy.StdCopy(opts.stdout, opts.stderr, hr.Reader)
+		return err
+	})
+}
+
 func (d *dockerRunner) withClient(ctx context.Context, do func(*client.Client) error) error {
-	// create a new Docker client
 	logrus.Debugf("creating new docker client")
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		return err
 	}
 	defer cli.Close()
-
-	// perform action
 	return do(cli)
 }
 
-func (d *dockerRunner) withNewContainer(ctx context.Context, cli *client.Client, do func(containerID string) error) (err error) {
-	// create a new container
+func (d *dockerRunner) createContainer(ctx context.Context, cli *client.Client, args []string) (id string, err error) {
 	var resp container.ContainerCreateCreatedBody
 	logrus.WithField("image", d.image).WithField("privileged", d.options.Privileged).Debugf("creating new docker container")
 	resp, err = cli.ContainerCreate(
 		ctx,
 		&container.Config{
-			Image: d.image,
-			// todo(jasondellaluce): the whole docker runner may be simplified by:
-			//   1) copying archive before starting (and controlling the workdir)
-			//   2) use a custom entrypoint and args here
-			Entrypoint: strslice.StrSlice{"/bin/bash", "-c", "--", "while true; do sleep 30; done;"},
+			Image:      d.image,
+			Entrypoint: strslice.StrSlice(append([]string{d.entrypoint}, args...)),
 		},
 		&container.HostConfig{
 			Privileged: d.options.Privileged,
@@ -105,169 +139,47 @@ func (d *dockerRunner) withNewContainer(ctx context.Context, cli *client.Client,
 		},
 		nil, nil, "")
 	if err != nil {
-		return err
+		return "", err
 	}
-
-	// force removing the container once finished
-	defer func() {
-		logrus.WithField("containerID", resp.ID).Debugf("removing docker container")
-		err = multierr.Append(
-			err,
-			cli.ContainerRemove(
-				context.Background(),
-				resp.ID,
-				types.ContainerRemoveOptions{Force: true},
-			),
-		)
-	}()
-
-	// start the container
-	logrus.WithField("containerID", resp.ID).Debugf("starting docker container")
-	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
-		return err
-	}
-
-	// perform action
-	return do(resp.ID)
+	return resp.ID, err
 }
 
-// todo(jasondellaluce): check that everything is ok here
-// contract:
-// if a file is a relpath, or is within the work dir, it's moved in the
-// workdir
-// if file is an absolute path, it is accessed as-is (note: this can have issues
-// for docker (let's see, maybe mounting will be enough))
-func (d *dockerRunner) createFilesArchive(opts *runOpts) ([]byte, error) {
+func (d *dockerRunner) removeContainer(cli *client.Client, containerID string) error {
+	// note: the context's deadline may be done, but we still want to wait
+	ctx := context.Background()
+	logrus.WithField("containerID", containerID).Debugf("removing docker container")
+	return cli.ContainerRemove(ctx, containerID, types.ContainerRemoveOptions{Force: true})
+}
+
+func (d *dockerRunner) startContainer(ctx context.Context, cli *client.Client, containerID string) error {
+	logrus.WithField("containerID", containerID).Debugf("starting docker container")
+	return cli.ContainerStart(ctx, containerID, types.ContainerStartOptions{})
+}
+
+func (d *dockerRunner) stopContainer(cli *client.Client, containerID string) error {
+	// note: the context's deadline may be done, but we still want to wait
+	ctx := context.Background()
+	logrus.WithField("containerID", containerID).Debugf("stopping docker container")
+	return cli.ContainerStop(ctx, containerID, nil)
+}
+
+func (d *dockerRunner) copyFilesArchive(ctx context.Context, cli *client.Client, containerID string, files []FileAccessor) error {
+	logrus.WithField("containerID", containerID).Debugf("creating files archive")
 	var buf bytes.Buffer
-	if err := tarFiles(&buf, opts.files...); err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-func (d *dockerRunner) Run(ctx context.Context, options ...RunnerOption) (retErr error) {
-	d.m.Lock()
-	defer d.m.Unlock()
-
-	var filesArchive []byte
-	opts := buildRunOptions(options...)
-	filesArchive, retErr = d.createFilesArchive(opts)
-	if retErr != nil {
-		return retErr
+	if err := d.tarFiles(d.WorkDir(), &buf, files...); err != nil {
+		return err
 	}
 
-	return d.withClient(ctx, func(cli *client.Client) error {
-		return d.withNewContainer(ctx, cli, func(containerID string) (err error) {
-			log := logrus.WithField("containerID", containerID)
-			// copy files archive into container
-			log.Debugf("copying file archive")
-			err = cli.CopyToContainer(ctx,
-				containerID,
-				d.WorkDir(),
-				bytes.NewReader(filesArchive),
-				types.CopyToContainerOptions{AllowOverwriteDirWithFile: true},
-			)
-			if err != nil {
-				return err
-			}
-
-			// start a wait group and wait for all routines to finish before
-			// returning. Once all are done, all errors collected asynchronously
-			// are appended.
-			var wg sync.WaitGroup
-			var eventErr error
-			var ioCopyErr error
-			defer func() {
-				err = multierr.Append(err, eventErr)
-				err = multierr.Append(err, ioCopyErr)
-			}()
-			defer wg.Wait()
-			defer log.Debugf("waiting for all docker async routines")
-
-			// start listening to docker events to understand when the
-			// command execution will terminate.
-			diedC := make(chan bool) // closed when command execution dies
-			quitC := make(chan bool) // closed when needing to quit
-			defer close(quitC)
-			wg.Add(1)
-			log.Debugf("start listening for docker events")
-			go func() {
-				eventC, eventErrC := cli.Events(ctx, types.EventsOptions{})
-				defer wg.Done()
-				defer close(diedC)
-				for {
-					select {
-					case <-quitC:
-						return
-					case e := <-eventErrC:
-						eventErr = multierr.Append(eventErr, e)
-						return
-					case ev := <-eventC:
-						if ev.ID == containerID && ev.Type == "container" && ev.Action == "exec_die" {
-							exitCode := 0
-							if ecStr, ok := ev.Actor.Attributes["exitCode"]; ok {
-								exitCode, eventErr = strconv.Atoi(ecStr)
-								if eventErr == nil && exitCode != 0 {
-									eventErr = &ExitCodeError{Code: exitCode}
-								}
-							}
-							return
-						}
-					}
-				}
-			}()
-
-			// execute entrypoint in the container
-			cmd := []string{d.entryPoint}
-			cmd = append(cmd, opts.args...)
-			log.WithField("cmd", strings.Join(cmd, " ")).Debugf("execute entrypoint in container")
-			execResp, err := cli.ContainerExecCreate(ctx, containerID, types.ExecConfig{
-				Privileged:   d.options.Privileged,
-				AttachStdin:  false,
-				AttachStderr: true,
-				AttachStdout: true,
-				Cmd:          cmd,
-			})
-			if err != nil {
-				return err
-			}
-
-			// attach to the running command execution and copy stdout
-			// and stderr in async
-			log.Debugf("attaching to command execution")
-			hr, err := cli.ContainerExecAttach(context.Background(), execResp.ID, types.ExecStartCheck{})
-			if err != nil {
-				return err
-			}
-			defer hr.Close()
-			wg.Add(1)
-			log.Debugf("start piping container's stderr and stdout")
-			go func() {
-				defer wg.Done()
-				_, ioCopyErr = stdcopy.StdCopy(opts.stdout, opts.stderr, hr.Reader)
-			}()
-
-			// wait for container termination
-			log.Debugf("waiting for container's termiantion")
-			statusC, errC := cli.ContainerWait(ctx, containerID, container.WaitConditionNotRunning)
-			select {
-			case <-diedC:
-				return nil
-			case <-ctx.Done():
-				return ctx.Err()
-			case err := <-errC:
-				return err
-			case c := <-statusC:
-				if c.Error != nil {
-					return fmt.Errorf(c.Error.Message)
-				}
-				return nil
-			}
-		})
-	})
+	logrus.WithField("containerID", containerID).Debugf("copying files archive")
+	return cli.CopyToContainer(ctx,
+		containerID,
+		d.WorkDir(),
+		bytes.NewReader(buf.Bytes()),
+		types.CopyToContainerOptions{AllowOverwriteDirWithFile: true},
+	)
 }
 
-func tarFiles(w io.Writer, files ...FileAccessor) (err error) {
+func (d *dockerRunner) tarFiles(baseDir string, w io.Writer, files ...FileAccessor) (err error) {
 	tw := tar.NewWriter(w)
 	defer func() {
 		err = multierr.Append(err, tw.Close())
@@ -279,9 +191,16 @@ func tarFiles(w io.Writer, files ...FileAccessor) (err error) {
 			return err
 		}
 
+		// if file's name is a relative path, copy it in the workdir.
+		// if file's name is an absolute path, it is copied as-is
+		fileName := file.Name()
+		if !path.IsAbs(fileName) {
+			fileName = baseDir + "/" + fileName
+		}
+
 		// create a new file header
 		header := &tar.Header{
-			Name:     file.Name(),
+			Name:     fileName,
 			ModTime:  time.Now(),
 			Mode:     int64(0777),
 			Typeflag: tar.TypeReg,
