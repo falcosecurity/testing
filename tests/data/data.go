@@ -9,6 +9,7 @@ package data
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -24,10 +25,13 @@ import (
 )
 
 const (
-	FalcoSourceCodeURL = "https://github.com/falcosecurity/falco/archive/refs/tags/0.33.1.zip"
+	FalcoCodeVersion = "0.33.1"
 )
 
-var DownloadDir = ""
+var (
+	DownloadDir  = ""
+	FalcoCodeURL = fmt.Sprintf("https://github.com/falcosecurity/falco/archive/refs/tags/%s.zip", FalcoCodeVersion)
+)
 
 func init() {
 	var err error
@@ -184,7 +188,7 @@ func ListDirFiles(dirPath string, recursive bool) ([]string, error) {
 
 func DownloadAndListFalcoCodeFiles() ([]string, error) {
 	extractDir := DownloadDir
-	err := Download(FalcoSourceCodeURL, DownloadDir+"/falco-code.zip")
+	err := Download(FalcoCodeURL, DownloadDir+"/falco-code.zip")
 	if err != nil {
 		return nil, err
 	}

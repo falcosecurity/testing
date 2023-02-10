@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path"
@@ -24,7 +25,7 @@ func main() {
 	files, err := data.DownloadAndListFalcoCodeFiles()
 	die(err)
 
-	baseDir := "/falco-0.33.1/test/rules"
+	baseDir := fmt.Sprintf("/falco-%s/test/rules", data.FalcoCodeVersion)
 	for _, s := range files {
 		if path.Ext(s) == ".yaml" && strings.Contains(s, baseDir) {
 			content, err := os.ReadFile(s)
