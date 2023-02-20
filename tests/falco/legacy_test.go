@@ -87,7 +87,7 @@ func TestFalco_Legacy_DisabledAndEnabledRules1(t *testing.T) {
 		falco.WithEnabledTags("a"),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
-	assert.Regexp(t, `Runtime error: You can not specify both disabled .-D/-T. and enabled .-t. rules. Exiting.`, res.Stderr())
+	assert.Regexp(t, `Error: You can not specify both disabled .-D/-T. and enabled .-t. rules`, res.Stderr())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1498,7 +1498,7 @@ func TestFalco_Legacy_DisabledAndEnabledRules2(t *testing.T) {
 		falco.WithEnabledTags("a"),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
-	assert.Regexp(t, `Runtime error: You can not specify both disabled .-D/-T. and enabled .-t. rules. Exiting.`, res.Stderr())
+	assert.Regexp(t, `Error: You can not specify both disabled .-D/-T. and enabled .-t. rules`, res.Stderr())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }

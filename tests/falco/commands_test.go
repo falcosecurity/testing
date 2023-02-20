@@ -32,7 +32,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 		assert.Equal(t, res.ExitCode(), 0)
 		assert.Regexp(t, regexp.MustCompile(
 			`Falco version:[\s]+[0-9]+\.[0-9]+\.[0-9](\-[0-9]+\+[a-f0-9]+)?[\s]+`+
-				`Libs version:[\s]+[0-9]+\.[0-9]+\.[0-9][\s]+`+
+				`Libs version:[\s]+[0-9]+\.[0-9]+\.[0-9](\-[a-z0-9]+)?[\s]+`+
 				`Plugin API:[\s]+[0-9]+\.[0-9]+\.[0-9][\s]+`+
 				`Engine:[\s]+[0-9]+[\s]+`+ // note: since falco 0.34.0
 				`Driver:[\s]+`+
