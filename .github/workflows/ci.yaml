@@ -14,7 +14,7 @@
 # limitations under the License.
 # 
 
-name: Test on Latest Dev Falco
+name: Test Dev Falco
 on:
   workflow_dispatch:
     inputs:
@@ -30,41 +30,9 @@ on:
 jobs:
   build:
     name: Run Tests on falcosecurity/falco image
-    runs-on: ubuntu-latest
-    container:
-      image: falcosecurity/falco:${{ github.event.inputs.version || 'master' }}
-    steps:
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '>=1.17.0'
-
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      # note: this converts the output of go test into a junit-compatible,
-      # which can later be processed by test-summary/action to upload
-      # a Markdown report on the GitHub Actions workflow.
-      - name: Install go-junit-report
-        run: |
-          go install github.com/jstemmer/go-junit-report/v2@latest
-  
-      - name: Generate test files
-        run: |
-          go generate ./...
-
-      - name: Run tests
-        run: |
-          ./build/falco.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
-          ./build/falcoctl.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
-          ./build/k8saudit.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
-          cat ./report.txt | go-junit-report -set-exit-code > report.xml
-
-      - name: Test Summary
-        uses: test-summary/action@v2
-        with:
-          paths: "report.xml"
-          show: "all"
-        if: always() # note: upload the report even if tests fail
+    uses: ./.github/workflows/run_tests.yaml
+    with:
+      package: falco
+      summary_show: fail
+      container_image: falcosecurity/falco:${{ github.event.inputs.version || 'master' }}
+      # code_ref: main
