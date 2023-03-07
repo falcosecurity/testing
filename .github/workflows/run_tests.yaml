@@ -7,18 +7,22 @@ on:
       package:
         required: false
         type: string
+        default: ''
       # a valid git ref from falcosecurity/testing to run tests with
       code_ref:
         required: false
         type: string
+        default: ''
       # one of the following, or a comma-separated list: 'all', 'none', 'pass', 'skip', or 'fail'
       summary_show:
         required: false
         type: string
+        default: 'all'
       # a base container image to un the worflow into
       container_image:
         required: false
         type: string
+        default: ''
 
 jobs:
   build:

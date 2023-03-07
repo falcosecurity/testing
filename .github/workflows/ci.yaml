@@ -14,7 +14,7 @@
 # limitations under the License.
 # 
 
-name: Test Dev Falco
+name: Run Tests
 on:
   workflow_dispatch:
     inputs:
@@ -28,11 +28,8 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  run-falco-tests:
     name: Run Tests on falcosecurity/falco image
     uses: ./.github/workflows/run_tests.yaml
     with:
-      package: falco
-      summary_show: fail
       container_image: falcosecurity/falco:${{ github.event.inputs.version || 'master' }}
-      # code_ref: main
