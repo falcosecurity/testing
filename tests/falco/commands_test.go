@@ -42,8 +42,11 @@ import (
 //   -s, --stats-interval, -U, --unbuffered
 
 func TestFalco_Cmd_Version(t *testing.T) {
+	t.Parallel()
+	checkDefaultConfig(t)
 	runner := tests.NewFalcoExecutableRunner(t)
 	t.Run("text-output", func(t *testing.T) {
+		t.Parallel()
 		res := falco.Test(runner, falco.WithArgs("--version"))
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
 		assert.Equal(t, res.ExitCode(), 0)
@@ -59,6 +62,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 			res.Stdout())
 	})
 	t.Run("json-output", func(t *testing.T) {
+		t.Parallel()
 		res := falco.Test(runner,
 			falco.WithArgs("--version"),
 			falco.WithOutputJSON(),
@@ -77,6 +81,8 @@ func TestFalco_Cmd_Version(t *testing.T) {
 }
 
 func TestFalco_Cmd_ListPlugins(t *testing.T) {
+	t.Parallel()
+	checkDefaultConfig(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--list-plugins"),
@@ -105,6 +111,8 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 }
 
 func TestFalco_Cmd_PluginInfo(t *testing.T) {
+	t.Parallel()
+	checkDefaultConfig(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--plugin-info=cloudtrail"),

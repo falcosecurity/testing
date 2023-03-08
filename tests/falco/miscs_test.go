@@ -18,6 +18,7 @@ limitations under the License.
 package testfalco
 
 import (
+	"os"
 	"testing"
 
 	"github.com/falcosecurity/testing/pkg/falco"
@@ -45,6 +46,12 @@ import (
 //   - collection of live events with kmod, bpf, modern-bpf, gvisor, userspace
 //   - collection of live events with multiple event sources active at the same
 //   - stress test with event generator, checking memory usage and event drops
+
+func checkDefaultConfig(t *testing.T) {
+	if _, err := os.Stat(falco.DefaultConfigFile); err != nil {
+		t.Skipf("could not find default Falco config: %s", err.Error())
+	}
+}
 
 func TestFalco_Miscs_StartupFail(t *testing.T) {
 	runner := tests.NewFalcoExecutableRunner(t)
