@@ -42,7 +42,11 @@ import (
 )
 
 const (
-	FalcoCodeVersion = "0.33.1"
+	// FalcoCodeVersion is a git tag used to pull the code of
+	// falcosecurity/falco and extract the test data files used in the
+	// legacy Python regression tests
+	FalcoCodeVersion = "0.34.1"
+	FalcoCodeDir     = "falco-" + FalcoCodeVersion
 )
 
 var (
@@ -205,15 +209,15 @@ func ListDirFiles(dirPath string, recursive bool) ([]string, error) {
 
 func DownloadAndListFalcoCodeFiles() ([]string, error) {
 	extractDir := DownloadDir
-	err := Download(FalcoCodeURL, DownloadDir+"/falco-code.zip")
+	err := Download(FalcoCodeURL, DownloadDir+"/"+FalcoCodeDir+".zip")
 	if err != nil {
 		return nil, err
 	}
-	err = Unzip(DownloadDir+"/falco-code.zip", extractDir)
+	err = Unzip(DownloadDir+"/"+FalcoCodeDir+".zip", extractDir)
 	if err != nil {
 		return nil, err
 	}
-	return ListDirFiles(extractDir+"/falco-0.33.1/", true)
+	return ListDirFiles(extractDir+"/"+FalcoCodeDir+"/", true)
 }
 
 func VarNameFromFilePath(path, prefix string) string {
