@@ -40,8 +40,11 @@ const (
 	// DefaultMaxDuration is the default max duration of a Falco run
 	DefaultMaxDuration = time.Second * 30
 	//
-	// DefaultFalcoExecutable is the default path of the Falco executable
+	// DefaultExecutable is the default path of the Falco executable
 	DefaultExecutable = "/usr/bin/falco"
+	//
+	// DefaultConfig is the default path of the Falco config file
+	DefaultConfigFile = "/etc/falco/falco.yaml"
 )
 
 type testOptions struct {
