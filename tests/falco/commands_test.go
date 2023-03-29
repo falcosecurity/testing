@@ -18,6 +18,8 @@ limitations under the License.
 package testfalco
 
 import (
+	"encoding/json"
+	"os"
 	"regexp"
 	"testing"
 
@@ -131,4 +133,39 @@ func TestFalco_Cmd_PluginInfo(t *testing.T) {
 			`Init config schema type: JSON[\s]+.*[\s]+`+
 			`No suggested open params available.*`),
 		res.Stdout())
+}
+
+func TestFalco_Print_IgnoredEvents(t *testing.T) {
+	t.Parallel()
+	checkDefaultConfig(t)
+	type Data struct {
+		Events []string `json:"events"`
+	}
+	evntfile, err := os.Open("events.json")
+	if err != nil {
+		panic(err)
+	}
+	defer evntfile.Close()
+
+	var events Data
+	err = json.NewDecoder(evntfile).Decode(&events)
+	if err != nil {
+		panic(err)
+	}
+
+	runner := tests.NewFalcoExecutableRunner(t)
+	t.Run("all-events-ignored-by-default", func(t *testing.T) {
+		res := falco.Test(
+			runner,
+			falco.WithArgs("-i"),
+		)
+		assert.Regexp(t, regexp.MustCompile(
+			`Ignored\sEvent\(s\):\n`,
+		), res.Stdout())
+		for _, event := range events.Events {
+			assert.Regexp(t, regexp.MustCompile(`\b`+event+`\b`), res.Stdout())
+		}
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
+		assert.Equal(t, res.ExitCode(), 0)
+	})
 }
