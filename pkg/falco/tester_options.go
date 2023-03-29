@@ -18,6 +18,7 @@ limitations under the License.
 package falco
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -138,4 +139,16 @@ func WithExtraFiles(files ...run.FileAccessor) TestOption {
 	return func(o *testOptions) {
 		o.files = append(o.files, files...)
 	}
+}
+
+// WithEnvVars runs Falco with a given set of environment varibles.
+func WithEnvVars(vars map[string]string) TestOption {
+	return func(o *testOptions) {
+		o.runOpts = append(o.runOpts, run.WithEnvVars(vars))
+	}
+}
+
+// WithContext runs Falco with a given context.
+func WithContext(ctx context.Context) TestOption {
+	return func(o *testOptions) { o.ctx = ctx }
 }
