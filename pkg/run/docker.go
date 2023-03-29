@@ -22,6 +22,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"path"
 	"sync"
@@ -94,7 +95,7 @@ func (d *dockerRunner) Run(ctx context.Context, options ...RunnerOption) (retErr
 	return d.withClient(ctx, func(cli *client.Client) (err error) {
 		// create a container
 		var containerID string
-		containerID, err = d.createContainer(ctx, cli, opts.args)
+		containerID, err = d.createContainer(ctx, cli, opts)
 		if err != nil {
 			return err
 		}
@@ -141,14 +142,20 @@ func (d *dockerRunner) withClient(ctx context.Context, do func(*client.Client) e
 	return do(cli)
 }
 
-func (d *dockerRunner) createContainer(ctx context.Context, cli *client.Client, args []string) (id string, err error) {
+func (d *dockerRunner) createContainer(ctx context.Context, cli *client.Client, opts *runOpts) (id string, err error) {
 	var resp container.ContainerCreateCreatedBody
+	var env []string
+	for k, v := range opts.envVars {
+		env = append(env, fmt.Sprintf(`%s=%s`, k, v))
+	}
+
 	logrus.WithField("image", d.image).WithField("privileged", d.options.Privileged).Debugf("creating new docker container")
 	resp, err = cli.ContainerCreate(
 		ctx,
 		&container.Config{
 			Image:      d.image,
-			Entrypoint: strslice.StrSlice(append([]string{d.entrypoint}, args...)),
+			Entrypoint: strslice.StrSlice(append([]string{d.entrypoint}, opts.args...)),
+			Env:        env,
 		},
 		&container.HostConfig{
 			Privileged: d.options.Privileged,

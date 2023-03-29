@@ -107,6 +107,10 @@ func (e *execRunner) Run(ctx context.Context, options ...RunnerOption) error {
 	cmd.Stdout = opts.stdout
 	cmd.Stderr = opts.stderr
 	cmd.Dir = e.WorkDir()
+	for k, v := range opts.envVars {
+		cmd.Env = append(cmd.Env, fmt.Sprintf(`%s=%s`, k, v))
+	}
+
 	err := cmd.Run()
 	if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() != 0 {
 		err = &ExitCodeError{Code: exitErr.ExitCode()}
