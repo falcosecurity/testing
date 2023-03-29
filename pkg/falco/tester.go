@@ -38,7 +38,7 @@ var (
 
 const (
 	// DefaultMaxDuration is the default max duration of a Falco run
-	DefaultMaxDuration = time.Second * 30
+	DefaultMaxDuration = time.Second * 180
 	//
 	// DefaultExecutable is the default path of the Falco executable
 	DefaultExecutable = "/usr/bin/falco"
@@ -51,7 +51,9 @@ type testOptions struct {
 	err      error
 	args     []string
 	files    []run.FileAccessor
+	runOpts  []run.RunnerOption
 	duration time.Duration
+	ctx      context.Context
 }
 
 // TestOutput is the output of a Falco test run
@@ -71,6 +73,7 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	res := &TestOutput{
 		opts: &testOptions{
 			duration: DefaultMaxDuration,
+			ctx:      context.Background(),
 		},
 	}
 	for _, o := range options {
@@ -86,13 +89,15 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	res.opts.args = append(res.opts.args, "-o", "log_syslog=false")
 	res.opts.args = append(res.opts.args, "-o", "stdout_output.enabled=true")
 	logrus.WithField("deadline", res.opts.duration).Info("running falco with runner")
-	ctx, cancel := context.WithTimeout(context.Background(), skewedDuration(res.opts.duration))
+	ctx, cancel := context.WithTimeout(res.opts.ctx, skewedDuration(res.opts.duration))
 	defer cancel()
 	res.err = runner.Run(ctx,
-		run.WithArgs(res.opts.args...),
-		run.WithFiles(res.opts.files...),
-		run.WithStdout(&res.stdout),
-		run.WithStderr(&res.stderr),
+		append([]run.RunnerOption{
+			run.WithArgs(res.opts.args...),
+			run.WithFiles(res.opts.files...),
+			run.WithStdout(&res.stdout),
+			run.WithStderr(&res.stderr),
+		}, res.opts.runOpts...)...,
 	)
 	if res.err != nil {
 		logrus.WithError(res.err).Warn("error running falco with runner")

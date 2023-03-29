@@ -100,10 +100,12 @@ func (r RuleValidation) AllWarnings() RuleValidationInfos {
 }
 
 // AllErrors returns the merged list of errors from all the validated Falco rules files.
-func (r RuleValidation) AllErrors() RuleValidationInfos {
+func (r *RuleValidation) AllErrors() RuleValidationInfos {
 	var res RuleValidationInfos
-	for _, result := range r.Results {
-		res = append(res, result.Errors...)
+	if r != nil {
+		for _, result := range r.Results {
+			res = append(res, result.Errors...)
+		}
 	}
 	return res
 }
