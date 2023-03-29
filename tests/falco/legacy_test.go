@@ -35,19 +35,24 @@ package testfalco
 //
 
 import (
+	"bufio"
+	"bytes"
 	"context"
+	"errors"
 	"os"
 	"sync"
 	"testing"
 	"time"
 
-	"github.com/falcosecurity/client-go/pkg/api/outputs"
+	grpcOutputs "github.com/falcosecurity/client-go/pkg/api/outputs"
 	"github.com/falcosecurity/client-go/pkg/client"
 
 	"github.com/falcosecurity/testing/pkg/falco"
+	"github.com/falcosecurity/testing/pkg/run"
 	"github.com/falcosecurity/testing/tests"
 	"github.com/falcosecurity/testing/tests/data/captures"
 	"github.com/falcosecurity/testing/tests/data/configs"
+	"github.com/falcosecurity/testing/tests/data/outputs"
 	"github.com/falcosecurity/testing/tests/data/rules"
 
 	"github.com/stretchr/testify/assert"
@@ -62,10 +67,10 @@ func TestFalco_Legacy_EngineVersionMismatch(t *testing.T) {
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.EngineVersionMismatch),
 	)
+	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		OfCode("LOAD_ERR_VALIDATE").
 		OfItemType("required_engine_version"))
-	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
 
@@ -118,17 +123,20 @@ func TestFalco_Legacy_StdoutOutputStrict(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.StdoutOutput),
-		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.CatWrite),
 		falco.WithArgs("-o", "time_format_iso_8601=true"),
-		falco.WithArgs("-o", "json_include_output_property=false"),
-		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
-	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
-	assert.NoError(t, res.Err(), "%s", res.Stderr())
+
 	assert.Equal(t, 0, res.ExitCode())
+	expectedContent, err := outputs.SingleRuleWithCatWriteText.Content()
+	assert.Nil(t, err)
+	scanner := bufio.NewScanner(bytes.NewReader(expectedContent))
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		assert.Contains(t, res.Stdout(), scanner.Text())
+	}
+	assert.Nil(t, scanner.Err())
 }
 
 func TestFalco_Legacy_StdoutOutputJsonStrict(t *testing.T) {
@@ -140,13 +148,20 @@ func TestFalco_Legacy_StdoutOutputJsonStrict(t *testing.T) {
 		falco.WithRules(rules.SingleRuleWithTags),
 		falco.WithCaptureFile(captures.CatWrite),
 		falco.WithArgs("-o", "time_format_iso_8601=true"),
-		falco.WithArgs("-o", "json_include_output_property=false"),
-		falco.WithArgs("-o", "json_include_tags_property=false"),
+		falco.WithArgs("-o", "json_include_output_property=true"),
+		falco.WithArgs("-o", "json_include_tags_property=true"),
+		falco.WithEnvVars(map[string]string{"FALCO_HOSTNAME": "test-falco-hostname"}),
 	)
-	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
-	assert.NoError(t, res.Err(), "%s", res.Stderr())
+
 	assert.Equal(t, 0, res.ExitCode())
+	expectedContent, err := outputs.SingleRuleWithCatWriteJSON.Content()
+	assert.Nil(t, err)
+	scanner := bufio.NewScanner(bytes.NewReader(expectedContent))
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		assert.Contains(t, res.Stdout(), scanner.Text())
+	}
+	assert.Nil(t, scanner.Err())
 }
 
 func TestFalco_Legacy_ListAppendFalse(t *testing.T) {
@@ -810,20 +825,25 @@ func TestFalco_Legacy_InvalidRuleOutput(t *testing.T) {
 
 func TestFalco_Legacy_FileOutputStrict(t *testing.T) {
 	t.Parallel()
-	res := falco.Test(
-		tests.NewFalcoExecutableRunner(t),
-		falco.WithConfig(configs.FileOutput),
-		falco.WithOutputJSON(),
-		falco.WithRules(rules.SingleRule),
-		falco.WithCaptureFile(captures.CatWrite),
-		falco.WithArgs("-o", "time_format_iso_8601=true"),
-		falco.WithArgs("-o", "json_include_output_property=false"),
-		falco.WithArgs("-o", "json_include_tags_property=false"),
-	)
-	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
-	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	run.WorkDir(func(workDir string) {
+		outFilePath := workDir + "/file_output.txt"
+		res := falco.Test(
+			tests.NewFalcoExecutableRunner(t),
+			falco.WithConfig(configs.FileOutput),
+			falco.WithRules(rules.SingleRule),
+			falco.WithCaptureFile(captures.CatWrite),
+			falco.WithArgs("-o", "time_format_iso_8601=true"),
+			falco.WithArgs("-o", "file_output.filename="+outFilePath),
+		)
+
+		outFile := run.NewLocalFileAccessor(outFilePath, outFilePath)
+		actualContent, err1 := outFile.Content()
+		expectedContent, err2 := outputs.SingleRuleWithCatWriteText.Content()
+		assert.Nil(t, err1)
+		assert.Nil(t, err2)
+		assert.Equal(t, string(expectedContent), string(actualContent))
+		assert.Equal(t, 0, res.ExitCode())
+	})
 }
 
 func TestFalco_Legacy_RunTagsBc(t *testing.T) {
@@ -1530,17 +1550,22 @@ func TestFalco_Legacy_ProgramOutputStrict(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithConfig(configs.ProgramOutput),
-		falco.WithOutputJSON(),
 		falco.WithRules(rules.SingleRule),
 		falco.WithCaptureFile(captures.CatWrite),
 		falco.WithArgs("-o", "time_format_iso_8601=true"),
-		falco.WithArgs("-o", "json_include_output_property=false"),
-		falco.WithArgs("-o", "json_include_tags_property=false"),
+		falco.WithArgs("-o", "program_output.program=cat"),
+		falco.WithArgs("-o", "stdout_output.enabled=false"),
 	)
-	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
-	assert.NoError(t, res.Err(), "%s", res.Stderr())
+
 	assert.Equal(t, 0, res.ExitCode())
+	expectedContent, err := outputs.SingleRuleWithCatWriteText.Content()
+	assert.Nil(t, err)
+	scanner := bufio.NewScanner(bytes.NewReader(expectedContent))
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		assert.Contains(t, res.Stdout(), scanner.Text())
+	}
+	assert.Nil(t, scanner.Err())
 }
 
 func TestFalco_Legacy_InvalidAppendRule(t *testing.T) {
@@ -2927,7 +2952,7 @@ func TestFalco_Legacy_TestWarnings(t *testing.T) {
 	assert.NotNil(t, warnings.OfItemName("not_with_evttypes_addl"))
 }
 
-func grpcOutputResponseToFalcoAlert(res *outputs.Response) *falco.Alert {
+func grpcOutputResponseToFalcoAlert(res *grpcOutputs.Response) *falco.Alert {
 	outputFields := make(map[string]interface{})
 	for k, v := range res.OutputFields {
 		outputFields[k] = v
@@ -2950,6 +2975,8 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 	t.Parallel()
 
 	// launch falco asynchronously
+	ctx, ctxCancel := context.WithCancel(context.Background())
+	defer ctxCancel()
 	runner := tests.NewFalcoExecutableRunner(t)
 	socketName := runner.WorkDir() + "/falco.sock"
 	wg.Add(1)
@@ -2957,21 +2984,22 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 		defer wg.Done()
 		res := falco.Test(
 			runner,
+			falco.WithContext(ctx),
 			falco.WithRules(rules.SingleRuleWithTags),
 			falco.WithConfig(configs.GrpcUnixSocket),
 			falco.WithCaptureFile(captures.CatWrite),
-			falco.WithMaxDuration(5*time.Second),
+			falco.WithMaxDuration(30*time.Second),
 			falco.WithArgs("-o", "time_format_iso_8601=true"),
 			falco.WithArgs("-o", "grpc.bind_address=unix://"+socketName),
 		)
 		require.NotContains(t, res.Stderr(), "Error starting gRPC server")
-		// todo: skipping this as it can be flacky (Falco sometimes shutsdown
+		// todo(jasondellaluce): skipping this as it can be flacky (Falco sometimes shutsdown
 		// with exit code -1), we need to investigate on that
 		// require.Nil(t, res.Err())
 	}()
 
 	// wait up until Falco creates the unix socket
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 10; i++ {
 		if _, err := os.Stat(socketName); err != nil {
 			time.Sleep(100 * time.Millisecond)
 			continue
@@ -2980,22 +3008,28 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 	}
 
 	// connect using the Falco grpc client and collect detection
-	grpcClient, err := client.NewForConfig(
-		context.Background(),
-		&client.Config{UnixSocketPath: "unix://" + socketName},
-	)
+	grpcClient, err := client.NewForConfig(ctx, &client.Config{UnixSocketPath: "unix://" + socketName})
 	require.Nil(t, err)
-	var detections falco.Detections
-	err = grpcClient.OutputsWatch(context.Background(), func(res *outputs.Response) error {
+
+	expectedCount := 8
+	expectedErr := errors.New("expected error")
+	detections := make(falco.Detections, 0)
+	err = grpcClient.OutputsWatch(context.Background(), func(res *grpcOutputs.Response) error {
 		detections = append(detections, grpcOutputResponseToFalcoAlert(res))
+		if len(detections) == expectedCount {
+			// note: we stop Falco when we reache the number of expected
+			// detections
+			ctxCancel()
+			return expectedErr
+		}
 		return nil
 	}, 100*time.Millisecond)
 
 	// perform checks on the detections
 	// todo(jasondellaluce): add deeper checks on the received struct
-	require.Nil(t, err)
-	assert.NotZero(t, detections.Count())
-	assert.NotZero(t, detections.
+	require.Equal(t, expectedErr, err)
+	assert.Equal(t, expectedCount, detections.Count())
+	assert.Equal(t, expectedCount, detections.
 		OfPriority("WARNING").
 		OfRule("open_from_cat").Count())
 }
