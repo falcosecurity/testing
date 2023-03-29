@@ -24,10 +24,11 @@ import (
 )
 
 type runOpts struct {
-	stderr io.Writer
-	stdout io.Writer
-	args   []string
-	files  []FileAccessor
+	stderr  io.Writer
+	stdout  io.Writer
+	args    []string
+	files   []FileAccessor
+	envVars map[string]string
 }
 
 // RunnerOption is an option for running Falco
@@ -68,6 +69,17 @@ func WithStderr(writer io.Writer) RunnerOption {
 	return func(ro *runOpts) { ro.stderr = writer }
 }
 
+// WithEnvVars is an option for running Falco with a given set of
+// environment varibles
+func WithEnvVars(vars map[string]string) RunnerOption {
+	return func(ro *runOpts) {
+
+		for k, v := range vars {
+			ro.envVars[k] = v
+		}
+	}
+}
+
 // ExitCodeError is an error representing the exit code of Falco
 type ExitCodeError struct {
 	Code int
@@ -79,10 +91,11 @@ func (c *ExitCodeError) Error() string {
 
 func buildRunOptions(opts ...RunnerOption) *runOpts {
 	res := &runOpts{
-		args:   []string{},
-		files:  []FileAccessor{},
-		stderr: io.Discard,
-		stdout: io.Discard,
+		args:    []string{},
+		files:   []FileAccessor{},
+		stderr:  io.Discard,
+		stdout:  io.Discard,
+		envVars: make(map[string]string),
 	}
 	for _, o := range opts {
 		o(res)
