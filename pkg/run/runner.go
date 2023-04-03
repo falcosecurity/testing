@@ -59,12 +59,12 @@ func WithArgs(args ...string) RunnerOption {
 	return func(ro *runOpts) { ro.args = append(ro.args, args...) }
 }
 
-// WithArgs is an option for running Falco by writing stdout on a given writer
+// WithStdout is an option for running Falco by writing stdout on a given writer
 func WithStdout(writer io.Writer) RunnerOption {
 	return func(ro *runOpts) { ro.stdout = writer }
 }
 
-// WithArgs is an option for running Falco by writing stderr on a given writer
+// WithStderr is an option for running Falco by writing stderr on a given writer
 func WithStderr(writer io.Writer) RunnerOption {
 	return func(ro *runOpts) { ro.stderr = writer }
 }
