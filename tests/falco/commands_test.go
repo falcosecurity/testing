@@ -18,13 +18,13 @@ limitations under the License.
 package testfalco
 
 import (
-	"encoding/json"
-	"os"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/falcosecurity/testing/pkg/falco"
 	"github.com/falcosecurity/testing/tests"
+	"github.com/falcosecurity/testing/tests/data/outputs"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -138,34 +138,22 @@ func TestFalco_Cmd_PluginInfo(t *testing.T) {
 func TestFalco_Print_IgnoredEvents(t *testing.T) {
 	t.Parallel()
 	checkDefaultConfig(t)
-	type Data struct {
-		Events []string `json:"events"`
-	}
-	evntfile, err := os.Open("events.json")
+	bytearr, err := outputs.EventData.Content()
 	if err != nil {
 		panic(err)
 	}
-	defer evntfile.Close()
-
-	var events Data
-	err = json.NewDecoder(evntfile).Decode(&events)
-	if err != nil {
-		panic(err)
-	}
-
+	events := strings.Split(string(bytearr), ",")
 	runner := tests.NewFalcoExecutableRunner(t)
-	t.Run("all-events-ignored-by-default", func(t *testing.T) {
-		res := falco.Test(
-			runner,
-			falco.WithArgs("-i"),
-		)
-		assert.Regexp(t, regexp.MustCompile(
-			`Ignored\sEvent\(s\):\n`,
-		), res.Stdout())
-		for _, event := range events.Events {
-			assert.Regexp(t, regexp.MustCompile(`\b`+event+`\b`), res.Stdout())
-		}
-		assert.NoError(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 0)
-	})
+	res := falco.Test(
+		runner,
+		falco.WithArgs("-i"),
+	)
+	assert.Regexp(t, regexp.MustCompile(
+		`Ignored\sEvent\(s\):\n`,
+	), res.Stdout())
+	for _, event := range events {
+		assert.Contains(t, res.Stdout(), event)
+	}
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
+	assert.Equal(t, res.ExitCode(), 0)
 }
