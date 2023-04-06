@@ -25,6 +25,7 @@ import (
 	"github.com/falcosecurity/testing/pkg/falco"
 	"github.com/falcosecurity/testing/tests"
 	"github.com/falcosecurity/testing/tests/data/outputs"
+	"github.com/falcosecurity/testing/tests/data/rules"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -154,4 +155,34 @@ func TestFalco_Print_IgnoredEvents(t *testing.T) {
 	}
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
+}
+
+func TestFalco_Print_Rules(t *testing.T) {
+	t.Parallel()
+	checkDefaultConfig(t)
+	runner := tests.NewFalcoExecutableRunner(t)
+	t.Run("valid-rules", func(t *testing.T) {
+		t.Parallel()
+		res := falco.Test(
+			runner,
+			falco.WithArgs("-L"),
+			falco.WithRules(rules.DetectConnectUsingIn, rules.ListAppend, rules.CatchallOrder),
+		)
+		rules := []string{"Open From Cat", "Localhost connect", "open_dev_null", "dev_null"}
+		for _, rule := range rules {
+			assert.Contains(t, res.Stdout(), rule)
+		}
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
+		assert.Equal(t, res.ExitCode(), 0)
+	})
+	t.Run("invalid-rules", func(t *testing.T) {
+		t.Parallel()
+		res := falco.Test(
+			runner,
+			falco.WithArgs("-L"),
+			falco.WithRules(rules.InvalidRuleOutput),
+		)
+		assert.Error(t, res.Err(), "%s", res.Stderr())
+		assert.Equal(t, res.ExitCode(), 1)
+	})
 }
