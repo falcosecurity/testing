@@ -155,3 +155,24 @@ func TestFalco_Print_IgnoredEvents(t *testing.T) {
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
 }
+
+func TestFalco_Print_AllRules(t *testing.T) {
+	t.Parallel()
+	checkDefaultConfig(t)
+	bytearr, err := outputs.Rules.Content()
+	if err != nil {
+		panic(err)
+	}
+	rules := strings.Split((string(bytearr)), ",")
+	runner := tests.NewFalcoExecutableRunner(t)
+	res := falco.Test(
+		runner,
+		falco.WithArgs("-L"),
+	)
+	assert.Contains(t, res.Stdout(), "Rule")
+	for _, rule := range rules {
+		assert.Contains(t, res.Stdout(), rule)
+	}
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
+	assert.Equal(t, res.ExitCode(), 0)
+}
