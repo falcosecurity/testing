@@ -32,7 +32,7 @@ import (
 
 // todo(jasondellaluce): implement tests for the non-covered Falco cmds/args:
 // Commands printing information:
-//   -h, --help, --support, -i, -L, -l, --list, --list-syscall-events,
+//   -h, --help, --support, -l, --list, --list-syscall-events,
 //   --markdown, -N, --gvisor-generate-config, --page-size
 // Metadata collection and container runtimes:
 //   --cri, --disable-cri-async, -k, --k8s-api, -K, --k8s-api-cert, --k8s-node, -m, --mesos-api
@@ -86,6 +86,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 func TestFalco_Cmd_ListPlugins(t *testing.T) {
 	t.Parallel()
 	checkDefaultConfig(t)
+	checkNotStaticExecutable(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--list-plugins"),
@@ -116,6 +117,7 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 func TestFalco_Cmd_PluginInfo(t *testing.T) {
 	t.Parallel()
 	checkDefaultConfig(t)
+	checkNotStaticExecutable(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--plugin-info=cloudtrail"),

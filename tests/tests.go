@@ -30,24 +30,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var falcoStatic = false
 var falcoBinary = falco.DefaultExecutable
 var falcoctlBinary = falcoctl.DefaultLocalExecutable
 
 func init() {
+	flag.BoolVar(&falcoStatic, "falco-static", falcoStatic, "True if the Falco executable is from a static build")
 	flag.StringVar(&falcoBinary, "falco-binary", falcoBinary, "Falco executable binary path")
 	flag.StringVar(&falcoctlBinary, "falcoctl-binary", falcoctlBinary, "falcoctl executable binary path")
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 }
 
-// NewFalcoctlExecutableRunner returns an executable runner for Falco
+// NewFalcoExecutableRunner returns an executable runner for Falco.
 func NewFalcoExecutableRunner(t *testing.T) run.Runner {
 	runner, err := run.NewExecutableRunner(falcoBinary)
 	require.Nil(t, err)
 	return runner
 }
 
-// NewFalcoctlExecutableRunner returns an executable runner for falcoctl
+// NewFalcoctlExecutableRunner returns an executable runner for falcoctl.
 func NewFalcoctlExecutableRunner(t *testing.T) run.Runner {
 	if _, err := os.Stat(falcoctlBinary); err == nil {
 		runner, err := run.NewExecutableRunner(falcoctlBinary)
@@ -73,4 +75,9 @@ func IsInContainer() bool {
 		return true
 	}
 	return false
+}
+
+// IsStaticFalcoExecutable returns true if Falco executables use a static build.
+func IsStaticFalcoExecutable() bool {
+	return falcoStatic
 }
