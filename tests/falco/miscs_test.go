@@ -47,9 +47,18 @@ import (
 //   - collection of live events with multiple event sources active at the same
 //   - stress test with event generator, checking memory usage and event drops
 
+// checkDefaultConfig skips a test if the default configuration filepath
+// is not available in the local filesystem.
 func checkDefaultConfig(t *testing.T) {
 	if _, err := os.Stat(falco.DefaultConfigFile); err != nil {
 		t.Skipf("could not find default Falco config: %s", err.Error())
+	}
+}
+
+// checkNotStaticExecutable is Falco executables use a static binary build.
+func checkNotStaticExecutable(t *testing.T) {
+	if tests.IsStaticFalcoExecutable() {
+		t.Skipf("test not available for static Falco builds")
 	}
 }
 
