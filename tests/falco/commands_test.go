@@ -188,3 +188,28 @@ func TestFalco_Print_Rules(t *testing.T) {
 		assert.Equal(t, res.ExitCode(), 1)
 	})
 }
+
+func TestFlaco_Rule_Info(t *testing.T) {
+	t.Parallel()
+	runner := tests.NewFalcoExecutableRunner(t)
+	t.Run("valid-rule-name", func(t *testing.T) {
+		res := falco.Test(
+			runner,
+			falco.WithRules(rules.DisabledRuleUsingEnabledFlagOnly),
+			falco.WithArgs("-l"),
+			falco.WithArgs("open_from_cat"),
+		)
+		assert.Contains(t, res.Stdout(), "open_from_cat")
+		assert.Contains(t, res.Stdout(), "A process named cat does an open")
+	})
+	t.Run("invalid-rule-name", func(t *testing.T) {
+		res := falco.Test(
+			runner,
+			falco.WithRules(rules.DisabledRuleUsingEnabledFlagOnly),
+			falco.WithArgs("-l"),
+			falco.WithArgs("invalid"),
+		)
+		assert.Error(t, res.Err(), "%s", res.Stderr())
+		assert.Equal(t, res.ExitCode(), -1)
+	})
+}
