@@ -1,1 +1,1 @@
-sendfile,recvfrom,readv,sendto,send,read,recvmmsg,write,recvmsg,pwrite,sendmmsg,sendmsg,pread,writev,recv,pwritev,preadv
+pread,preadv,pwrite,pwritev,read,readv,recv,recvmmsg,send,sendfile,sendmmsg,write,writev

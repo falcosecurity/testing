@@ -151,7 +151,7 @@ func TestFalco_Print_IgnoredEvents(t *testing.T) {
 		runner,
 		falco.WithArgs("-i"),
 	)
-	assert.Contains(t, res.Stdout(), "Ignored I/O syscall(s)")
+	assert.Contains(t, res.Stdout(), "Ignored syscall(s)")
 	for _, event := range events {
 		assert.Contains(t, res.Stdout(), event)
 	}
