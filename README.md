@@ -1,5 +1,7 @@
 # Falco Regression Tests
 
+[![Falco Infra Repository](https://github.com/falcosecurity/evolution/blob/main/repos/badges/falco-infra-blue.svg)](https://github.com/falcosecurity/evolution/blob/main/REPOSITORIES.md#infra-scope) [![Incubating](https://img.shields.io/badge/status-incubating-orange?style=for-the-badge)](https://github.com/falcosecurity/evolution/blob/main/REPOSITORIES.md#incubating) [![License](https://img.shields.io/github/license/falcosecurity/testing?style=for-the-badge)](./LICENSE)
+
 A regression test suite for Falco and other tools in its ecosystem.
 This is meant to be and end-to-end suite for black-box testing, for both individual tools and their integration, trying to emulate the same usage and patterns of the average user.
 
