@@ -199,8 +199,12 @@ func TestFlaco_Rule_Info(t *testing.T) {
 			falco.WithArgs("-l"),
 			falco.WithArgs("open_from_cat"),
 		)
-		assert.Contains(t, res.Stdout(), "open_from_cat")
-		assert.Contains(t, res.Stdout(), "A process named cat does an open")
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
+		assert.Regexp(t,
+			`.*Rule[\s]+Description[\s]+`+
+				`[\-]+[\s]+[\-]+[\s]+`+
+				`open_from_cat[\s]+A process named cat does an open`,
+			res.Stdout())
 	})
 	t.Run("invalid-rule-name", func(t *testing.T) {
 		res := falco.Test(
@@ -209,7 +213,10 @@ func TestFlaco_Rule_Info(t *testing.T) {
 			falco.WithArgs("-l"),
 			falco.WithArgs("invalid"),
 		)
-		assert.Error(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), -1)
+		assert.NoError(t, res.Err(), "%s", res.Stderr())
+		assert.Regexp(t,
+			`.*Rule[\s]+Description[\s]+`+
+				`[\-]+[\s]+[\-]+[\s]+`,
+			res.Stdout())
 	})
 }
