@@ -40,7 +40,7 @@ func TestFalcoctl_Version(t *testing.T) {
 		)
 		assert.Error(t, res.Err(), "%s", res.Stderr())
 		assert.NotZero(t, res.ExitCode())
-		assert.Contains(t, res.Stderr(), `Error: unknown command "some_other_cmd"`)
+		assert.Contains(t, res.Stdout(), `unknown command "some_other_cmd"`)
 	})
 
 	t.Run("version-plaintext", func(t *testing.T) {
