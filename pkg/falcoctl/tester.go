@@ -75,8 +75,7 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	}
 
 	res.opts.args = removeFromArgs(res.opts.args, "--verbose", 1)
-	res.opts.args = removeFromArgs(res.opts.args, "--disable-styling", 1)
-	res.opts.args = append(res.opts.args, "--verbose=true", "--disable-styling=true")
+	res.opts.args = append(res.opts.args, "--verbose=true")
 	logrus.WithField("deadline", res.opts.duration).Info("running falcoctl with runner")
 	ctx, cancel := context.WithTimeout(context.Background(), skewedDuration(res.opts.duration))
 	defer cancel()
