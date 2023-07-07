@@ -3,7 +3,7 @@ module github.com/falcosecurity/testing
 go 1.17
 
 require (
-	github.com/docker/docker v20.10.23+incompatible
+	github.com/docker/docker v24.0.3+incompatible
 	github.com/falcosecurity/client-go v0.5.1
 	github.com/iancoleman/strcase v0.2.0
 	github.com/sirupsen/logrus v1.9.0

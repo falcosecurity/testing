@@ -143,7 +143,7 @@ func (d *dockerRunner) withClient(ctx context.Context, do func(*client.Client) e
 }
 
 func (d *dockerRunner) createContainer(ctx context.Context, cli *client.Client, opts *runOpts) (id string, err error) {
-	var resp container.ContainerCreateCreatedBody
+	var resp container.CreateResponse
 	var env []string
 	for k, v := range opts.envVars {
 		env = append(env, fmt.Sprintf(`%s=%s`, k, v))
@@ -184,7 +184,7 @@ func (d *dockerRunner) stopContainer(cli *client.Client, containerID string) err
 	// note: the context's deadline may be done, but we still want to wait
 	ctx := context.Background()
 	logrus.WithField("containerID", containerID).Debugf("stopping docker container")
-	return cli.ContainerStop(ctx, containerID, nil)
+	return cli.ContainerStop(ctx, containerID, container.StopOptions{})
 }
 
 func (d *dockerRunner) copyFilesArchive(ctx context.Context, cli *client.Client, containerID string, files []FileAccessor) error {
