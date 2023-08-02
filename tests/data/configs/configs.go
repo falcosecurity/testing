@@ -420,3 +420,24 @@ program_output:
   enabled: false
 `,
 )
+
+var RuleMatchingFirst = run.NewStringFileAccessor(
+	"rule_matching_first.yaml",
+	`
+rule_matching: first
+  `,
+)
+
+var RuleMatchingAll = run.NewStringFileAccessor(
+	"rule_matching_all.yaml",
+	`
+rule_matching: all
+  `,
+)
+
+var RuleMatchingWrongValue = run.NewStringFileAccessor(
+	"rule_matching_wrong_value.yaml",
+	`
+rule_matching: test
+  `,
+)
