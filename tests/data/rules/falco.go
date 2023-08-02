@@ -1323,3 +1323,23 @@ var TaggedRules = run.NewStringFileAccessor(
   priority: WARNING
 `,
 )
+
+var ShadowingRules = run.NewStringFileAccessor(
+	"shadowing_rules.yaml",
+	`
+- macro: open_read
+  condition: evt.type in (open,openat,openat2) and evt.is_open_read=true and fd.typechar='f'
+
+- rule: open_1
+  desc: open one
+  condition: open_read and fd.name=/etc/shadow and proc.name=cat
+  output: Open one (file=%fd.name)
+  priority: WARNING
+
+- rule: open_2
+  desc: open two
+  condition: open_read and fd.name=/etc/shadow and proc.name=cat
+  output: Open two (file=%fd.name)
+  priority: WARNING
+  `,
+)
