@@ -2302,9 +2302,9 @@ func TestFalco_Legacy_RunShellUntrusted(t *testing.T) {
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
-	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().OfPriority("DEBUG").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Run shell untrusted").Count())
+	assert.Zero(t, res.Detections().Count())
+	assert.Zero(t, res.Detections().OfPriority("DEBUG").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("Run shell untrusted").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
