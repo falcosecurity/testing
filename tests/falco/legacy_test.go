@@ -2670,7 +2670,7 @@ func TestFalco_Legacy_KubeDemo(t *testing.T) {
 	checkDefaultConfig(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
-		falco.WithMaxDuration(90*time.Second),
+		falco.WithStopAfter(90*time.Second),
 		falco.WithOutputJSON(),
 		falco.WithCaptureFile(captures.TracesNegativeKubeDemo),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2988,7 +2988,7 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 			falco.WithRules(rules.SingleRuleWithTags),
 			falco.WithConfig(configs.GrpcUnixSocket),
 			falco.WithCaptureFile(captures.CatWrite),
-			falco.WithMaxDuration(30*time.Second),
+			falco.WithStopAfter(30*time.Second),
 			falco.WithArgs("-o", "time_format_iso_8601=true"),
 			falco.WithArgs("-o", "grpc.bind_address=unix://"+socketName),
 		)

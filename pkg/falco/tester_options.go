@@ -113,12 +113,10 @@ func WithCaptureFile(f run.FileAccessor) TestOption {
 	}
 }
 
-// WithMaxDuration runs Falco with a maximum duration through the `-M` option.
-func WithMaxDuration(duration time.Duration) TestOption {
+// WithContextDeadline runs Falco with a maximum context deadline.
+func WithContextDeadline(duration time.Duration) TestOption {
 	return func(o *testOptions) {
 		o.duration = duration
-		o.args = removeFromArgs(o.args, "-M", 1)
-		o.args = append(o.args, "-M", fmt.Sprintf("%d", int64(duration.Seconds())))
 	}
 }
 
@@ -151,4 +149,12 @@ func WithEnvVars(vars map[string]string) TestOption {
 // WithContext runs Falco with a given context.
 func WithContext(ctx context.Context) TestOption {
 	return func(o *testOptions) { o.ctx = ctx }
+}
+
+// WithStopAfter tells Falco to stop after 'duration' with the `-M` option.
+func WithStopAfter(duration time.Duration) TestOption {
+	return func(o *testOptions) {
+		o.args = removeFromArgs(o.args, "-M", 1)
+		o.args = append(o.args, "-M", fmt.Sprintf("%d", int64(duration.Seconds())))
+	}
 }
