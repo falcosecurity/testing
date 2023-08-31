@@ -1377,3 +1377,19 @@ var ShadowingRules = run.NewStringFileAccessor(
   priority: WARNING
   `,
 )
+
+var AppendUnknownSource = run.NewStringFileAccessor(
+	"append_unknown_source.yaml",
+	`
+- rule: Rule1
+  desc: NoDesc
+  condition: evt.type=open
+  priority: INFO
+  output: Never
+  source: mysource
+
+- rule: Rule1
+  append: true
+  condition: or evt.type=openat
+  `,
+)
