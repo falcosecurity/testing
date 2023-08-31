@@ -1163,10 +1163,24 @@ var SingleRuleWithTags = run.NewStringFileAccessor(
 var SkipUnknownError = run.NewStringFileAccessor(
 	"skip_unknown_error.yaml",
 	`
-- rule: Contains Unknown Event And Not Skipping
+- rule: Contains Unknown Event And Not Skipping (field)
   desc: Contains an unknown event
-  condition: proc.nobody=cat
+  condition: evt.type=open and proc.nobody=cat
   output: Never
+  skip-if-unknown-filter: false
+  priority: INFO
+
+- rule: Contains Unknown Event And Not Skipping (evt type)
+  desc: Contains an unknown event
+  condition: evt.type=some_invalid_event
+  output: Never
+  skip-if-unknown-filter: false
+  priority: INFO
+
+- rule: Contains Unknown Event And Not Skipping (output)
+  desc: Contains an unknown event
+  condition: evt.type=open
+  output: proc.nobody=%proc.nobody
   skip-if-unknown-filter: false
   priority: INFO
 `,
@@ -1175,11 +1189,31 @@ var SkipUnknownError = run.NewStringFileAccessor(
 var SkipUnknownEvt = run.NewStringFileAccessor(
 	"skip_unknown_evt.yaml",
 	`
-- rule: Contains Unknown Event And Skipping
+- rule: Contains Unknown Event And Skipping (field)
   desc: Contains an unknown event
   condition: evt.type=open and proc.nobody=cat
   output: Never
   skip-if-unknown-filter: true
+  priority: INFO
+
+- rule: Contains Unknown Event And Skipping (evt type)
+  desc: Contains an unknown event
+  condition: evt.type=some_invalid_event
+  output: Never
+  skip-if-unknown-filter: true
+  priority: INFO
+
+- rule: Contains Unknown Event And Skipping (output)
+  desc: Contains an unknown event
+  condition: evt.type=open
+  output: proc.nobody=%proc.nobody
+  skip-if-unknown-filter: true
+  priority: INFO
+
+- rule: Legit Rule (output)
+  desc: A legit rule
+  condition: evt.type=open
+  output: Never
   priority: INFO
 `,
 )

@@ -272,9 +272,12 @@ func TestFalco_Legacy_DetectSkipUnknownNoevt(t *testing.T) {
 	checkDefaultConfig(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
+		falco.WithOutputJSON(),
 		falco.WithRules(rules.SkipUnknownEvt),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
+	assert.Equal(t, 8, res.Detections().Count())
+	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -317,10 +320,11 @@ func TestFalco_Legacy_SkipUnknownError(t *testing.T) {
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.SkipUnknownError),
 	)
+	assert.Equal(t, 1, res.RuleValidation().AllErrors().Count())
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		OfCode("LOAD_ERR_COMPILE_CONDITION").
 		OfItemType("rule").
-		OfItemName("Contains Unknown Event And Not Skipping").
+		OfItemName("Contains Unknown Event And Not Skipping (field)").
 		OfMessage("filter_check called with nonexistent field proc.nobody"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
@@ -1657,11 +1661,19 @@ func TestFalco_Legacy_ValidateSkipUnknownNoevt(t *testing.T) {
 		falco.WithOutputJSON(),
 		falco.WithRulesValidation(rules.SkipUnknownEvt),
 	)
-	assert.NotNil(t, res.RuleValidation().AllWarnings().
-		OfCode("LOAD_UNKNOWN_FIELD").
-		OfItemType("rule").
-		OfItemName("Contains Unknown Event And Skipping").
-		OfMessage("filter_check called with nonexistent field proc.nobody"))
+	assert.Equal(t, 3, res.RuleValidation().AllWarnings().Count())
+	ruleWarnings := res.RuleValidation().AllWarnings().
+		OfCode("LOAD_UNKNOWN_FILTER").
+		OfItemType("rule")
+	assert.NotNil(t, ruleWarnings.
+		OfItemName("Contains Unknown Event And Skipping (field)").
+		OfMessage("filter_check called with nonexistent field proc.nobody"), res.Stderr())
+	assert.NotNil(t, ruleWarnings.
+		OfItemName("Contains Unknown Event And Skipping (evt type)").
+		OfMessage("unknown event type some_invalid_event"), res.Stderr())
+	assert.NotNil(t, ruleWarnings.
+		OfItemName("Contains Unknown Event And Skipping (output)").
+		OfMessage("invalid formatting token proc.nobody"), res.Stderr())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
