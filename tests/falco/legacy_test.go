@@ -3051,6 +3051,23 @@ func TestFalco_Legacy_NoPluginsUnknownSource(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
+func TestFalco_Legacy_AppendUnknownSource(t *testing.T) {
+	t.Parallel()
+	checkDefaultConfig(t)
+	res := falco.Test(
+		tests.NewFalcoExecutableRunner(t),
+		falco.WithOutputJSON(),
+		falco.WithRulesValidation(rules.AppendUnknownSource),
+	)
+	assert.NotNil(t, res.RuleValidation().AllWarnings().
+		OfCode("LOAD_UNKNOWN_SOURCE").
+		OfItemType("rule").
+		OfItemName("Rule1").
+		OfMessage("Unknown source mysource, skipping"))
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
+	assert.Equal(t, 0, res.ExitCode())
+}
+
 func TestFalco_Legacy_NoPluginsUnknownSourceRuleException(t *testing.T) {
 	t.Parallel()
 	checkDefaultConfig(t)
