@@ -643,6 +643,7 @@ func TestFalco_Legacy_BuiltinRulesNoWarnings(t *testing.T) {
 	checkDefaultConfig(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.Empty),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
@@ -2242,6 +2243,7 @@ func TestFalco_Legacy_ReadSensitiveFileUntrusted(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveReadSensitiveFileUntrusted),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2259,6 +2261,7 @@ func TestFalco_Legacy_KernelUpgrade(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeKernelUpgrade),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2275,6 +2278,7 @@ func TestFalco_Legacy_CreateFilesBelowDev(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveCreateFilesBelowDev),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2292,6 +2296,7 @@ func TestFalco_Legacy_ReadSensitiveFileAfterStartup(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveReadSensitiveFileAfterStartup),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2310,6 +2315,7 @@ func TestFalco_Legacy_RunShellUntrusted(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveRunShellUntrusted),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2327,6 +2333,7 @@ func TestFalco_Legacy_ChangeThreadNamespace(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveChangeThreadNamespace),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2344,6 +2351,7 @@ func TestFalco_Legacy_MkdirBinaryDirs(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveMkdirBinaryDirs),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2361,6 +2369,7 @@ func TestFalco_Legacy_SystemBinariesNetworkActivity(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveSystemBinariesNetworkActivity),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2378,6 +2387,7 @@ func TestFalco_Legacy_WriteRpmDatabase(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveWriteRpmDatabase),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2395,6 +2405,7 @@ func TestFalco_Legacy_DockerCompose(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeDockerCompose),
 		falco.WithAllEvents(),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2413,6 +2424,7 @@ func TestFalco_Legacy_CurlUninstall(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeCurlUninstall),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2429,6 +2441,7 @@ func TestFalco_Legacy_DhcpclientRenew(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeDhcpclientRenew),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2445,6 +2458,7 @@ func TestFalco_Legacy_StagingWorker(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeStagingWorker),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2461,6 +2475,7 @@ func TestFalco_Legacy_DbProgramSpawnedProcess(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveDbProgramSpawnedProcess),
 		falco.WithAllEvents(),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2479,6 +2494,7 @@ func TestFalco_Legacy_UserMgmtBinaries(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveUserMgmtBinaries),
 		falco.WithAllEvents(),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2497,6 +2513,7 @@ func TestFalco_Legacy_Exim4(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeExim4),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2513,6 +2530,7 @@ func TestFalco_Legacy_WriteEtc(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveWriteEtc),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2530,6 +2548,7 @@ func TestFalco_Legacy_StagingCollector(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeStagingCollector),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2546,6 +2565,7 @@ func TestFalco_Legacy_ContainerPrivileged(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveContainerPrivileged),
 		falco.WithAllEvents(),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2564,6 +2584,7 @@ func TestFalco_Legacy_ContainerSensitiveMount(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveContainerSensitiveMount),
 		falco.WithAllEvents(),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2582,6 +2603,7 @@ func TestFalco_Legacy_WriteBinaryDir(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveWriteBinaryDir),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2599,6 +2621,7 @@ func TestFalco_Legacy_CurlInstall(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeCurlInstall),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2615,6 +2638,7 @@ func TestFalco_Legacy_StagingDb(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeStagingDb),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2631,6 +2655,7 @@ func TestFalco_Legacy_ModifyBinaryDirs(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveModifyBinaryDirs),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2648,6 +2673,7 @@ func TestFalco_Legacy_NonSudoSetuid(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveNonSudoSetuid),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2665,6 +2691,7 @@ func TestFalco_Legacy_GitPush(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeGitPush),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2684,6 +2711,7 @@ func TestFalco_Legacy_KubeDemo(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithStopAfter(90*time.Second),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesNegativeKubeDemo),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2700,6 +2728,7 @@ func TestFalco_Legacy_FalcoEventGenerator(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveFalcoEventGenerator),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2732,6 +2761,7 @@ func TestFalco_Legacy_SystemUserInteractive(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveSystemUserInteractive),
 		falco.WithAllEvents(),
 		falco.WithArgs("-o", "json_include_output_property=false"),
@@ -2750,6 +2780,7 @@ func TestFalco_Legacy_DetectCounts(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithCaptureFile(captures.TracesPositiveFalcoEventGenerator),
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
@@ -2779,6 +2810,7 @@ func TestFalco_Legacy_RuleNamesWithRegexChars(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithOutputJSON(),
+		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
 		falco.WithRules(rules.RuleNamesWithRegexChars),
 		falco.WithCaptureFile(captures.CatWrite),
 		falco.WithArgs("-o", "json_include_output_property=false"),

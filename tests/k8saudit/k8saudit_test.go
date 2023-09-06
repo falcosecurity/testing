@@ -65,7 +65,7 @@ func TestK8SAudit_Legacy_CreateSensitiveMountPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodSensitiveMount,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -82,7 +82,7 @@ func TestK8SAudit_Legacy_CreateService(t *testing.T) {
 		captures.K8SAuditCreateService,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -99,7 +99,7 @@ func TestK8SAudit_Legacy_DeleteConfigmap(t *testing.T) {
 		captures.K8SAuditDeleteConfigmap,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -116,7 +116,7 @@ func TestK8SAudit_Legacy_CreateNamespace(t *testing.T) {
 		captures.K8SAuditSomeUserCreatesNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditAllowNamespaceFoo,
 			rules.K8SAuditAllowUserSomeUser),
@@ -135,7 +135,7 @@ func TestK8SAudit_Legacy_DeleteDeployment(t *testing.T) {
 		captures.K8SAuditDeleteDeployment,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -152,7 +152,7 @@ func TestK8SAudit_Legacy_DeleteClusterrolebinding(t *testing.T) {
 		captures.K8SAuditDeleteClusterrolebinding,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -169,7 +169,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateDisallowedPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditEngineV4K8SAuditRules,
 			rules.K8SAuditEngineV4AllowOnlyApacheContainer),
 	)
@@ -187,7 +187,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateHostnetworkPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodHostnetwork,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditEngineV4K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -204,7 +204,7 @@ func TestK8SAudit_Legacy_CreatePodExecClusterRole(t *testing.T) {
 		captures.K8SAuditCreateClusterRolePodExec,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -221,7 +221,7 @@ func TestK8SAudit_Legacy_CreateConfigmap(t *testing.T) {
 		captures.K8SAuditCreateConfigmap,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -238,7 +238,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreatePrivilegedPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodPrivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditEngineV4K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -254,7 +254,7 @@ func TestK8SAudit_Legacy_NamespaceInAllowedSet(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditMinikubeCreatesNamespaceFoo,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditAllowNamespaceFoo,
 			rules.K8SAuditDisallowKactivity),
@@ -270,7 +270,7 @@ func TestK8SAudit_Legacy_CreateServiceaccountInKubePublicNamespace(t *testing.T)
 		captures.K8SAuditCreateServiceaccountKubePublicNamespace,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -287,7 +287,7 @@ func TestK8SAudit_Legacy_CreateDeployment(t *testing.T) {
 		captures.K8SAuditCreateDeployment,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -304,7 +304,7 @@ func TestK8SAudit_Legacy_DeleteNamespace(t *testing.T) {
 		captures.K8SAuditDeleteNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -336,7 +336,7 @@ func TestK8SAudit_Legacy_CreateDisallowedPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditAllowOnlyApacheContainer),
 	)
@@ -353,7 +353,7 @@ func TestK8SAudit_Legacy_CreateNohostnetworkPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodNohostnetwork,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
@@ -366,7 +366,7 @@ func TestK8SAudit_Legacy_CreateNonodeportService(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxServiceNonodeport,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditDisallowKactivity),
 	)
@@ -381,7 +381,7 @@ func TestK8SAudit_Legacy_CreatePodInKubePublicNamespace(t *testing.T) {
 		captures.K8SAuditCreatePodKubePublicNamespace,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -398,7 +398,7 @@ func TestK8SAudit_Legacy_CreateClusterRoleWildcardResources(t *testing.T) {
 		captures.K8SAuditCreateClusterRoleWildcardResources,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -415,7 +415,7 @@ func TestK8SAudit_Legacy_SystemClusterroleDeleted(t *testing.T) {
 		captures.K8SAuditDeleteClusterRoleKubeAggregator,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -431,7 +431,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateAllowedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditEngineV4K8SAuditRules,
 			rules.K8SAuditEngineV4AllowNginxContainer),
 	)
@@ -445,7 +445,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreatePrivilegedTrustedPod(t *testing.T) 
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodPrivileged,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditEngineV4K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
@@ -460,7 +460,7 @@ func TestK8SAudit_Legacy_CreateUnsensitiveMountPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnsensitiveMount,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
@@ -474,7 +474,7 @@ func TestK8SAudit_Legacy_CreateNodeportService(t *testing.T) {
 		captures.K8SAuditCreateNginxServiceNodeport,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditDisallowKactivity),
 	)
@@ -492,7 +492,7 @@ func TestK8SAudit_Legacy_NamespaceOutsideAllowedSet(t *testing.T) {
 		captures.K8SAuditSomeUserCreatesNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditAllowUserSomeUser),
 	)
@@ -510,7 +510,7 @@ func TestK8SAudit_Legacy_DeleteSecret(t *testing.T) {
 		captures.K8SAuditDeleteSecret,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -526,7 +526,7 @@ func TestK8SAudit_Legacy_CreateSensitiveMountTrustedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodSensitiveMount,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
@@ -541,7 +541,7 @@ func TestK8SAudit_Legacy_PodExec(t *testing.T) {
 		captures.K8SAuditExecPod,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -558,7 +558,7 @@ func TestK8SAudit_Legacy_PodAttach(t *testing.T) {
 		captures.K8SAuditAttachPod,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -575,7 +575,7 @@ func TestK8SAudit_Legacy_CreateServiceaccountInKubeSystemNamespace(t *testing.T)
 		captures.K8SAuditCreateServiceaccountKubeSystemNamespace,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -592,7 +592,7 @@ func TestK8SAudit_Legacy_AttachClusterAdminRole(t *testing.T) {
 		captures.K8SAuditAttachClusterAdminRole,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -608,7 +608,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateUnprivilegedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditEngineV4K8SAuditRules),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
@@ -622,7 +622,7 @@ func TestK8SAudit_Legacy_CreatePrivilegedNoSecctx1StContainer2NdContainerPod(t *
 		captures.K8SAuditCreateNginxPodNoSecctx1StContainerPrivileged2NdContainer,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -638,7 +638,7 @@ func TestK8SAudit_Legacy_CreateUnsensitiveMountTrustedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnsensitiveMount,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
@@ -653,7 +653,7 @@ func TestK8SAudit_Legacy_CreatePrivileged2NdContainerPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodPrivileged2NdContainer,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -669,7 +669,7 @@ func TestK8SAudit_Legacy_CreateHostnetworkTrustedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodHostnetwork,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
@@ -684,7 +684,7 @@ func TestK8SAudit_Legacy_CreateServiceaccount(t *testing.T) {
 		captures.K8SAuditCreateServiceaccount,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -701,7 +701,7 @@ func TestK8SAudit_Legacy_CreateKubeSystemSecret(t *testing.T) {
 		captures.K8SAuditCreateKubeSystemSecret,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.Zero(t, res.Detections().Count())
@@ -716,7 +716,7 @@ func TestK8SAudit_Legacy_UserInAllowedSet(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditSomeUserCreatesNamespaceFoo,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditAllowNamespaceFoo,
 			rules.K8SAuditAllowUserSomeUser,
@@ -733,7 +733,7 @@ func TestK8SAudit_Legacy_CreateClusterRoleWildcardVerbs(t *testing.T) {
 		captures.K8SAuditCreateClusterRoleWildcardVerbs,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -750,7 +750,7 @@ func TestK8SAudit_Legacy_CreateWritableClusterRole(t *testing.T) {
 		captures.K8SAuditCreateClusterRoleWritePrivileges,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -767,7 +767,7 @@ func TestK8SAudit_Legacy_DeleteClusterrole(t *testing.T) {
 		captures.K8SAuditDeleteClusterrole,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -784,7 +784,7 @@ func TestK8SAudit_Legacy_CreateSecret(t *testing.T) {
 		captures.K8SAuditCreateSecret,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -800,7 +800,7 @@ func TestK8SAudit_Legacy_CompatEngineV4CreateHostnetworkTrustedPod(t *testing.T)
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodHostnetwork,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditEngineV4K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
@@ -816,7 +816,7 @@ func TestK8SAudit_Legacy_CreateSensitiveMount2NdContainerPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodSensitiveMount2NdContainer,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -833,7 +833,7 @@ func TestK8SAudit_Legacy_DeleteServiceaccount(t *testing.T) {
 		captures.K8SAuditDeleteServiceaccount,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -850,7 +850,7 @@ func TestK8SAudit_Legacy_CreateClusterrole(t *testing.T) {
 		captures.K8SAuditCreateClusterrole,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -867,7 +867,7 @@ func TestK8SAudit_Legacy_CreateClusterrolebinding(t *testing.T) {
 		captures.K8SAuditCreateClusterrolebinding,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -883,7 +883,7 @@ func TestK8SAudit_Legacy_CreateAllowedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditAllowNginxContainer),
 	)
@@ -897,7 +897,7 @@ func TestK8SAudit_Legacy_CreateUnprivilegedTrustedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
@@ -911,7 +911,7 @@ func TestK8SAudit_Legacy_CreateNohostnetworkTrustedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodNohostnetwork,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
@@ -926,7 +926,7 @@ func TestK8SAudit_Legacy_CreatePrivilegedPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodPrivileged,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -943,7 +943,7 @@ func TestK8SAudit_Legacy_CreateConfigmapPrivateCreds(t *testing.T) {
 		captures.K8SAuditCreateConfigmapSensitiveValues,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditDisallowKactivity),
 	)
@@ -960,7 +960,7 @@ func TestK8SAudit_Legacy_CreateConfigmapNoPrivateCreds(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateConfigmapNoSensitiveValues,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditDisallowKactivity),
 	)
@@ -974,7 +974,7 @@ func TestK8SAudit_Legacy_CreatePrivilegedTrustedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodPrivileged,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditTrustNginxContainer),
 	)
@@ -989,7 +989,7 @@ func TestK8SAudit_Legacy_CreateHostnetworkPod(t *testing.T) {
 		captures.K8SAuditCreateNginxPodHostnetwork,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -1006,7 +1006,7 @@ func TestK8SAudit_Legacy_AnonymousUser(t *testing.T) {
 		captures.K8SAuditAnonymousCreatesNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -1023,7 +1023,7 @@ func TestK8SAudit_Legacy_SystemClusterroleModified(t *testing.T) {
 		captures.K8SAuditModifyClusterRoleNodeProblemDetector,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -1039,7 +1039,7 @@ func TestK8SAudit_Legacy_Fal01003(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditFal01003,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.Regexp(t, `data not recognized as a k8s audit event`, res.Stderr())
@@ -1054,7 +1054,7 @@ func TestK8SAudit_Legacy_UserOutsideAllowedSet(t *testing.T) {
 		captures.K8SAuditSomeUserCreatesNamespaceFoo,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules,
 			rules.K8SAuditAllowNamespaceFoo),
 	)
@@ -1071,7 +1071,7 @@ func TestK8SAudit_Legacy_CreateUnprivilegedPod(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		captures.K8SAuditCreateNginxPodUnprivileged,
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
@@ -1085,7 +1085,7 @@ func TestK8SAudit_Legacy_CreatePodInKubeSystemNamespace(t *testing.T) {
 		captures.K8SAuditCreatePodKubeSystemNamespace,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -1102,7 +1102,7 @@ func TestK8SAudit_Legacy_DeleteService(t *testing.T) {
 		captures.K8SAuditDeleteService,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.NotZero(t, res.Detections().Count())
@@ -1119,7 +1119,7 @@ func TestK8SAudit_Legacy_CreateServiceAccountTokenSecret(t *testing.T) {
 		captures.K8SAuditCreateServiceAccountTokenSecret,
 		falco.WithOutputJSON(),
 		falco.WithRules(
-			rules.FalcoRules,
+			rules.LegacyFalcoRules_v1_0_1,
 			rules.K8SAuditRules),
 	)
 	assert.Zero(t, res.Detections().Count())
