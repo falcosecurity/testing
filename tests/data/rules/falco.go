@@ -1393,3 +1393,18 @@ var AppendUnknownSource = run.NewStringFileAccessor(
   condition: or evt.type=openat
   `,
 )
+
+var RulesListWithPluginJSON = run.NewStringFileAccessor(
+	"rule-list-with-plugin-json.yaml",
+	`
+- required_engine_version: 11
+
+- required_plugin_versions:
+  - name: json
+    version: 0.1.0
+
+- rule: open_from_cat
+  condition: and json.value[/test] = "test"
+  append: true
+`,
+)

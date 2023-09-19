@@ -181,7 +181,19 @@ func TestFalco_Print_Rules(t *testing.T) {
 	t.Parallel()
 	checkDefaultConfig(t)
 	runner := tests.NewFalcoExecutableRunner(t)
-	t.Run("valid-rules", func(t *testing.T) {
+
+	t.Run("invalid-rules", func(t *testing.T) {
+		t.Parallel()
+		res := falco.Test(
+			runner,
+			falco.WithArgs("-L"),
+			falco.WithRules(rules.InvalidRuleOutput),
+		)
+		assert.Error(t, res.Err(), "%s", res.Stderr())
+		assert.Equal(t, res.ExitCode(), 1)
+	})
+
+	t.Run("text-valid-rules", func(t *testing.T) {
 		t.Parallel()
 		res := falco.Test(
 			runner,
@@ -195,15 +207,98 @@ func TestFalco_Print_Rules(t *testing.T) {
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
 		assert.Equal(t, res.ExitCode(), 0)
 	})
-	t.Run("invalid-rules", func(t *testing.T) {
+
+	t.Run("json-valid-rules", func(t *testing.T) {
 		t.Parallel()
 		res := falco.Test(
 			runner,
 			falco.WithArgs("-L"),
-			falco.WithRules(rules.InvalidRuleOutput),
+			falco.WithOutputJSON(),
+			falco.WithArgs("-o", "load_plugins[0]=json"),
+			falco.WithRules(rules.RulesDir000SingleRule, rules.RulesListWithPluginJSON),
 		)
-		assert.Error(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 1)
+		infos := res.RulesetDescription()
+		assert.NotNil(t, infos)
+
+		// check required engine version
+		assert.Equal(t, "11", infos.RequiredEngineVersion)
+
+		// check required plugin versions
+		assert.Len(t, infos.RequiredPluginVersions, 1)
+		assert.Equal(t, "json", infos.RequiredPluginVersions[0].Name)
+		assert.Equal(t, "0.1.0", infos.RequiredPluginVersions[0].Version)
+
+		// check list elements
+		assert.Len(t, infos.Lists, 2)
+
+		assert.Equal(t, "cat_binaries", infos.Lists[0].Info.Name)
+		assert.Len(t, infos.Lists[0].Info.Items, 1)
+		assert.Equal(t, "cat", infos.Lists[0].Info.Items[0])
+		assert.True(t, infos.Lists[0].Details.Used)
+		assert.Len(t, infos.Lists[0].Details.Lists, 0)
+		assert.Len(t, infos.Lists[0].Details.Plugins, 0)
+		assert.Len(t, infos.Lists[0].Details.ItemsCompiled, 1)
+		assert.Equal(t, "cat", infos.Lists[0].Info.Items[0])
+
+		assert.Equal(t, "cat_capable_binaries", infos.Lists[1].Info.Name)
+		assert.Len(t, infos.Lists[1].Info.Items, 0)
+		assert.True(t, infos.Lists[1].Details.Used)
+		assert.Len(t, infos.Lists[1].Details.Lists, 1)
+		assert.Equal(t, "cat_binaries", infos.Lists[1].Details.Lists[0])
+		assert.Len(t, infos.Lists[1].Details.Plugins, 0)
+		assert.Len(t, infos.Lists[1].Details.ItemsCompiled, 1)
+		assert.Equal(t, "cat", infos.Lists[1].Details.ItemsCompiled[0])
+
+		// check macro elements
+		assert.Len(t, infos.Macros, 1)
+
+		assert.Equal(t, "is_cat", infos.Macros[0].Info.Name)
+		assert.Equal(t, "proc.name in (cat_capable_binaries)", infos.Macros[0].Info.Condition)
+		assert.True(t, infos.Macros[0].Details.Used)
+		assert.Len(t, infos.Macros[0].Details.Macros, 0)
+		assert.Len(t, infos.Macros[0].Details.Lists, 1)
+		assert.Equal(t, "cat_capable_binaries", infos.Macros[0].Details.Lists[0])
+		assert.Len(t, infos.Macros[0].Details.Plugins, 0)
+		assert.NotEmpty(t, infos.Macros[0].Details.Events)
+		assert.Len(t, infos.Macros[0].Details.ConditionOperators, 1)
+		assert.Equal(t, "in", infos.Macros[0].Details.ConditionOperators[0])
+		assert.Len(t, infos.Macros[0].Details.ConditionFields, 1)
+		assert.Equal(t, "proc.name", infos.Macros[0].Details.ConditionFields[0])
+		assert.Equal(t, "proc.name in (cat)", infos.Macros[0].Details.ConditionCompiled)
+
+		// check rule elements
+		assert.Len(t, infos.Rules, 1)
+
+		assert.Equal(t, "open_from_cat", infos.Rules[0].Info.Name)
+		assert.Equal(t, `evt.type=open and is_cat and json.value[/test] = "test"`, infos.Rules[0].Info.Condition)
+		assert.Equal(t, "A process named cat does an open", infos.Rules[0].Info.Description)
+		assert.Equal(t, "An open was seen (command=%proc.cmdline)", infos.Rules[0].Info.Output)
+		assert.Equal(t, true, infos.Rules[0].Info.Enabled)
+		assert.Equal(t, "Warning", infos.Rules[0].Info.Priority)
+		assert.Equal(t, "syscall", infos.Rules[0].Info.Source)
+		assert.Empty(t, infos.Rules[0].Info.Tags)
+		assert.Len(t, infos.Rules[0].Details.Plugins, 1)
+		assert.Equal(t, "json", infos.Rules[0].Details.Plugins[0])
+		assert.Len(t, infos.Rules[0].Details.OutputFields, 1)
+		assert.Equal(t, "proc.cmdline", infos.Rules[0].Details.OutputFields[0])
+		assert.Equal(t, infos.Rules[0].Info.Output, infos.Rules[0].Details.OutputCompiled)
+		assert.Len(t, infos.Rules[0].Details.Macros, 1)
+		assert.Equal(t, "is_cat", infos.Rules[0].Details.Macros[0])
+		assert.Len(t, infos.Rules[0].Details.Lists, 0)
+		assert.Len(t, infos.Rules[0].Details.ExceptionFields, 0)
+		assert.Len(t, infos.Rules[0].Details.ExceptionOperators, 0)
+		assert.Len(t, infos.Rules[0].Details.ExceptionNames, 0)
+		assert.Len(t, infos.Rules[0].Details.Events, 2)
+		assert.Contains(t, infos.Rules[0].Details.Events, "open")
+		assert.Contains(t, infos.Rules[0].Details.Events, "asyncevent")
+		assert.Len(t, infos.Rules[0].Details.ConditionOperators, 2)
+		assert.Contains(t, infos.Rules[0].Details.ConditionOperators, "=")
+		assert.Contains(t, infos.Rules[0].Details.ConditionOperators, "in")
+		assert.Len(t, infos.Rules[0].Details.ConditionFields, 3)
+		assert.Contains(t, infos.Rules[0].Details.ConditionFields, "evt.type")
+		assert.Contains(t, infos.Rules[0].Details.ConditionFields, "proc.name")
+		assert.Contains(t, infos.Rules[0].Details.ConditionFields, "json.value[/test]")
+		assert.Equal(t, `(evt.type = open and proc.name in (cat) and json.value[/test] = test)`, infos.Rules[0].Details.ConditionCompiled)
 	})
 }
 
