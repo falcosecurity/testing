@@ -53,15 +53,27 @@ func TestFalco_Cmd_Version(t *testing.T) {
 		res := falco.Test(runner, falco.WithArgs("--version"))
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
 		assert.Equal(t, res.ExitCode(), 0)
+		// Falco version supports:
+		// - (dev) -> 0.36.0-198+30aa28f
+		// - (release) -> 0.36.0
+		// - (release-rc) -> 0.36.0-rc1
+		// Libs version supports:
+		// - (commit hash) -> e999e61fa8f57ca8e9590e4c108fd4a12459ec48
+		// - (release) -> 0.13.0
+		// - (release-rc) -> 0.13.0-rc1
+		// Default driver supports:
+		// - (commit hash) -> e999e61fa8f57ca8e9590e4c108fd4a12459ec48
+		// - (release) -> 6.0.1+driver
+		// - (release-rc) -> 6.0.1-rc1+driver
 		assert.Regexp(t, regexp.MustCompile(
 			`Falco version:[\s]+(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?[\s]+`+
-				`Libs version:[\s]+(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?[\s]+`+
+				`Libs version:[\s]+(((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|([a-f0-9]+))[\s]+`+
 				`Plugin API:[\s]+[0-9]+\.[0-9]+\.[0-9][\s]+`+
 				`Engine:[\s]+[0-9]+[\s]+`+ // note: since falco 0.34.0
 				`Driver:[\s]+`+
 				`API version:[\s]+[0-9]+\.[0-9]+\.[0-9][\s]+`+
 				`Schema version:[\s]+[0-9]+\.[0-9]+\.[0-9][\s]+`+
-				`Default driver:[\s]+(([0-9]+\.[0-9]+\.[0-9]\+driver)|([a-f0-9]+))`),
+				`Default driver:[\s]+(((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|([a-f0-9]+))[\s]*`),
 			res.Stdout())
 	})
 	t.Run("json-output", func(t *testing.T) {
