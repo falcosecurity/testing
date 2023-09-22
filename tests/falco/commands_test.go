@@ -44,6 +44,12 @@ import (
 // Misc Falco features:
 //   -s, --stats-interval, -U, --unbuffered
 
+const (
+	semVerRegex     string = `((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)`
+	commitHashRegex string = `([a-f0-9]+)`
+	tagRegex        string = `[0-9]+\.[0-9]+\.[0-9]`
+)
+
 func TestFalco_Cmd_Version(t *testing.T) {
 	t.Parallel()
 	checkDefaultConfig(t)
@@ -66,14 +72,14 @@ func TestFalco_Cmd_Version(t *testing.T) {
 		// - (release) -> 6.0.1+driver
 		// - (release-rc) -> 6.0.1-rc1+driver
 		assert.Regexp(t, regexp.MustCompile(
-			`Falco version:[\s]+(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?[\s]+`+
-				`Libs version:[\s]+(((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|([a-f0-9]+))[\s]+`+
-				`Plugin API:[\s]+[0-9]+\.[0-9]+\.[0-9][\s]+`+
+			`Falco version:[\s]+`+semVerRegex+`[\s]+`+
+				`Libs version:[\s]+(`+semVerRegex+`|`+commitHashRegex+`)[\s]+`+
+				`Plugin API:[\s]+`+tagRegex+`[\s]+`+
 				`Engine:[\s]+[0-9]+[\s]+`+ // note: since falco 0.34.0
 				`Driver:[\s]+`+
-				`API version:[\s]+[0-9]+\.[0-9]+\.[0-9][\s]+`+
-				`Schema version:[\s]+[0-9]+\.[0-9]+\.[0-9][\s]+`+
-				`Default driver:[\s]+(((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|([a-f0-9]+))[\s]*`),
+				`API version:[\s]+`+tagRegex+`[\s]+`+
+				`Schema version:[\s]+`+tagRegex+`[\s]+`+
+				`Default driver:[\s]+(`+semVerRegex+`|`+commitHashRegex+`)[\s]*`),
 			res.Stdout())
 	})
 	t.Run("json-output", func(t *testing.T) {
