@@ -64,7 +64,6 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 	})
 
 	t.Run("install-plugin", func(t *testing.T) {
-		t.Parallel()
 		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
 			res := falcoctl.Test(
 				tests.NewFalcoctlExecutableRunner(t),
@@ -82,7 +81,6 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 	})
 
 	t.Run("install-rules-with-deps", func(t *testing.T) {
-		t.Parallel()
 		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
 			res := falcoctl.Test(
 				tests.NewFalcoctlExecutableRunner(t),
@@ -103,7 +101,6 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 	})
 
 	t.Run("install-for-falco", func(t *testing.T) {
-		t.Parallel()
 		require.Nil(t, run.WorkDir(func(sharedWorkDir string) {
 			res := falcoctl.Test(
 				tests.NewFalcoctlExecutableRunner(t),
