@@ -75,7 +75,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 			`Falco version:[\s]+`+semVerRegex+`[\s]+`+
 				`Libs version:[\s]+(`+semVerRegex+`|`+commitHashRegex+`)[\s]+`+
 				`Plugin API:[\s]+`+tagRegex+`[\s]+`+
-				`Engine:[\s]+[0-9]+[\s]+`+ // note: since falco 0.34.0
+				`Engine:[\s]+`+tagRegex+`[\s]+`+
 				`Driver:[\s]+`+
 				`API version:[\s]+`+tagRegex+`[\s]+`+
 				`Schema version:[\s]+`+tagRegex+`[\s]+`+

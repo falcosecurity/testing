@@ -232,7 +232,7 @@ func TestFalco_Legacy_InvalidEngineVersionNotNumber(t *testing.T) {
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		OfCode("LOAD_ERR_YAML_VALIDATE").
 		OfItemType("required_engine_version").
-		OfMessage("Can't decode YAML scalar value"))
+		OfMessage("Unable to parse engine version 'not-a-number' as a semver string. Expected \"x.y.z\" semver format."), res.Stdout())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
