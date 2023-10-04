@@ -442,3 +442,13 @@ var RuleMatchingWrongValue = run.NewStringFileAccessor(
 rule_matching: test
   `,
 )
+
+var MetricsEnabled = run.NewStringFileAccessor(
+	"rule_metrics_enabled.yaml",
+	`
+metrics:
+  enabled: true
+  interval: 5s
+  output_rule: true
+  `,
+)
