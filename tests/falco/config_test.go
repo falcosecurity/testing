@@ -74,3 +74,16 @@ func TestFalco_Config_RuleMatchingWrongValue(t *testing.T) {
 	assert.Contains(t, res.Stderr(), "Unknown rule matching strategy")
 	assert.Equal(t, 1, res.ExitCode())
 }
+
+func TestFalco_Config_Metrics_Enabled(t *testing.T) {
+	t.Parallel()
+	res := falco.Test(
+		tests.NewFalcoExecutableRunner(t),
+		falco.WithRules(rules.ShadowingRules),
+		falco.WithConfig(configs.MetricsEnabled),
+		falco.WithCaptureFile(captures.TracesPositiveReadSensitiveFileUntrusted),
+		falco.WithOutputJSON(),
+	)
+	assert.NoError(t, res.Err(), "%s", res.Stderr())
+	assert.Equal(t, 0, res.ExitCode())
+}
