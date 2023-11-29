@@ -26,22 +26,21 @@ import (
 
 	"github.com/falcosecurity/testing/pkg/falco"
 	"github.com/falcosecurity/testing/pkg/falcoctl"
-	"github.com/falcosecurity/testing/pkg/falcodriverloader"
 	"github.com/falcosecurity/testing/pkg/run"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 )
 
-var falcoStatic = false
-var falcoBinary = falco.DefaultExecutable
-var falcoctlBinary = falcoctl.DefaultLocalExecutable
-var falcoDriverLoaderBinary = falcodriverloader.DefaultExecutable
+var (
+	falcoStatic    = false
+	falcoBinary    = falco.DefaultExecutable
+	falcoctlBinary = falcoctl.DefaultLocalExecutable
+)
 
 func init() {
 	flag.BoolVar(&falcoStatic, "falco-static", falcoStatic, "True if the Falco executable is from a static build")
 	flag.StringVar(&falcoBinary, "falco-binary", falcoBinary, "Falco executable binary path")
 	flag.StringVar(&falcoctlBinary, "falcoctl-binary", falcoctlBinary, "falcoctl executable binary path")
-	flag.StringVar(&falcoDriverLoaderBinary, "falco-driver-loader-binary", falcoDriverLoaderBinary, "falco-driver-loader executable binary path")
 
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetFormatter(&logrus.JSONFormatter{})
@@ -50,13 +49,6 @@ func init() {
 // NewFalcoExecutableRunner returns an executable runner for Falco.
 func NewFalcoExecutableRunner(t *testing.T) run.Runner {
 	runner, err := run.NewExecutableRunner(falcoBinary)
-	require.Nil(t, err)
-	return runner
-}
-
-// NewFalcoExecutableRunner returns an executable runner for falco-driver-loader.
-func NewFalcoDriverLoaderExecutableRunner(t *testing.T) run.Runner {
-	runner, err := run.NewExecutableRunner(falcoDriverLoaderBinary)
 	require.Nil(t, err)
 	return runner
 }
