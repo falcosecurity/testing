@@ -19,11 +19,11 @@ limitations under the License.
 package testfalcodriverloader
 
 import (
+	"github.com/falcosecurity/testing/pkg/falcoctl"
 	"testing"
 	"time"
 
 	"github.com/falcosecurity/testing/pkg/falco"
-	"github.com/falcosecurity/testing/pkg/falcodriverloader"
 	"github.com/falcosecurity/testing/tests"
 	"github.com/stretchr/testify/assert"
 )
@@ -40,20 +40,29 @@ import (
 //
 // We need to use the `--compile` flag because we test against dev versions
 func TestFalcoLegacyBPF(t *testing.T) {
-	loaderRes := falcodriverloader.Test(
-		tests.NewFalcoDriverLoaderExecutableRunner(t),
-		falcodriverloader.WithArgs("bpf", "--compile"),
+	// First, configure falcoctl driver
+	configRes := falcoctl.Test(
+		tests.NewFalcoctlExecutableRunner(t),
+		falcoctl.WithArgs("driver", "config", "--type", "ebpf"),
+	)
+	assert.NoError(t, configRes.Err(), "%s", configRes.Stderr())
+	assert.Equal(t, 0, configRes.ExitCode())
+
+	loaderRes := falcoctl.Test(
+		tests.NewFalcoctlExecutableRunner(t),
+		falcoctl.WithArgs("driver", "install", "--download=false"),
 	)
 	assert.NoError(t, loaderRes.Err(), "%s", loaderRes.Stderr())
 	assert.Equal(t, 0, loaderRes.ExitCode())
-	// We expect the probe to be symlinked in '/root/.falco/falco-bpf.o'
-	assert.Regexp(t, `Success: eBPF probe symlinked`, loaderRes.Stdout())
+	// We expect the probe to be succesfully built and copied to /root/.falco/falco-bpf.o
+	assert.Regexp(t, `Probe successfully built.`, loaderRes.Stdout())
 
 	// Now running Falco with `FALCO_BPF_PROBE=/root/.falco/falco-bpf.o` we should be able to run the bpf driver
 	falcoRes := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithStopAfter(3*time.Second),
-		falco.WithEnvVars(map[string]string{"FALCO_BPF_PROBE": "/root/.falco/falco-bpf.o"}),
+		falco.WithArgs("-o", "engine.kind=ebpf"),
+		falco.WithArgs("-o", "engine.ebpf.probe=/root/.falco/falco-bpf.o"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
 	assert.Equal(t, 0, falcoRes.ExitCode())
@@ -75,19 +84,28 @@ func TestFalcoLegacyBPF(t *testing.T) {
 //
 // We need to use the `--compile` flag because we test against dev versions
 func TestFalcoKmod(t *testing.T) {
-	loaderRes := falcodriverloader.Test(
-		tests.NewFalcoDriverLoaderExecutableRunner(t),
-		falcodriverloader.WithArgs("module", "--compile"),
+	// First, configure falcoctl driver
+	configRes := falcoctl.Test(
+		tests.NewFalcoctlExecutableRunner(t),
+		falcoctl.WithArgs("driver", "config", "--type", "kmod"),
+	)
+	assert.NoError(t, configRes.Err(), "%s", configRes.Stderr())
+	assert.Equal(t, 0, configRes.ExitCode())
+
+	loaderRes := falcoctl.Test(
+		tests.NewFalcoctlExecutableRunner(t),
+		falcoctl.WithArgs("driver", "install", "--download=false"),
 	)
 	assert.NoError(t, loaderRes.Err(), "%s", loaderRes.Stderr())
 	assert.Equal(t, 0, loaderRes.ExitCode())
 	// We expect the module to be loaded in dkms
-	assert.Regexp(t, `Success: falco module found and loaded in dkms`, loaderRes.Stdout())
+	assert.Regexp(t, `Module installed in dkms.`, loaderRes.Stdout())
 
 	// Now running Falco we should be able to run the kernel module
 	falcoRes := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithStopAfter(3*time.Second),
+		falco.WithArgs("-o", "engine.kind=kmod"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
 	assert.Equal(t, 0, falcoRes.ExitCode())
