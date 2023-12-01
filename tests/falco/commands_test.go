@@ -212,6 +212,7 @@ func TestFalco_Print_Rules(t *testing.T) {
 
 	t.Run("json-valid-rules", func(t *testing.T) {
 		t.Parallel()
+		checkNotStaticExecutable(t)
 		res := falco.Test(
 			runner,
 			falco.WithArgs("-L"),
@@ -220,6 +221,7 @@ func TestFalco_Print_Rules(t *testing.T) {
 			falco.WithRules(rules.RulesDir000SingleRule, rules.RulesListWithPluginJSON),
 		)
 
+		assert.NoError(t, res.Err())
 		infos := res.RulesetDescription()
 		assert.NotNil(t, infos)
 
