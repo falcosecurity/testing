@@ -331,10 +331,6 @@ func TestFlaco_Rule_Info(t *testing.T) {
 			falco.WithArgs("-l"),
 			falco.WithArgs("invalid"),
 		)
-		assert.NoError(t, res.Err(), "%s", res.Stderr())
-		assert.Regexp(t,
-			`.*Rule[\s]+Description[\s]+`+
-				`[\-]+[\s]+[\-]+[\s]+`,
-			res.Stdout())
+		assert.Error(t, res.Err(), "%s", res.Stderr())
 	})
 }
