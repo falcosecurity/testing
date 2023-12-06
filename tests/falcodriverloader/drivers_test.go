@@ -55,7 +55,7 @@ func TestFalcoLegacyBPF(t *testing.T) {
 	assert.NoError(t, loaderRes.Err(), "%s", loaderRes.Stderr())
 	assert.Equal(t, 0, loaderRes.ExitCode())
 	// We expect the probe to be succesfully built and copied to /root/.falco/falco-bpf.o
-	assert.Regexp(t, `Probe successfully built.`, loaderRes.Stdout())
+	assert.Regexp(t, `Driver built.`, loaderRes.Stdout())
 
 	// Now running Falco with `FALCO_BPF_PROBE=/root/.falco/falco-bpf.o` we should be able to run the bpf driver
 	falcoRes := falco.Test(
