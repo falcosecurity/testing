@@ -38,19 +38,11 @@ import (
 // The output probe will be crafted here: `${HOME}/.falco/${DRIVER_VERSION}/${ARCH}/${BPF_PROBE_FILENAME}`
 // (e.g '/root/.falco/942a2249b7b9f65def0a01acfb1fba84f629b3bf/x86_64/falco_ubuntu-generic_6.2.0-26-generic_26~22.04.1.o')
 //
-// We need to use the `--compile` flag because we test against dev versions
+// We need to use the `--download=false` flag because we test against dev versions
 func TestFalcoLegacyBPF(t *testing.T) {
-	// First, configure falcoctl driver
-	configRes := falcoctl.Test(
-		tests.NewFalcoctlExecutableRunner(t),
-		falcoctl.WithArgs("driver", "config", "--type", "ebpf"),
-	)
-	assert.NoError(t, configRes.Err(), "%s", configRes.Stderr())
-	assert.Equal(t, 0, configRes.ExitCode())
-
 	loaderRes := falcoctl.Test(
 		tests.NewFalcoctlExecutableRunner(t),
-		falcoctl.WithArgs("driver", "install", "--download=false"),
+		falcoctl.WithArgs("driver", "install", "--download=false", "--type", "ebpf"),
 	)
 	assert.NoError(t, loaderRes.Err(), "%s", loaderRes.Stderr())
 	assert.Equal(t, 0, loaderRes.ExitCode())
@@ -82,19 +74,11 @@ func TestFalcoLegacyBPF(t *testing.T) {
 // The module will be loaded in DKMS:
 // (e.g '/var/lib/dkms/falco/942a2249b7b9f65def0a01acfb1fba84f629b3bf/6.2.0-26-generic/x86_64/module/falco.ko')
 //
-// We need to use the `--compile` flag because we test against dev versions
+// We need to use the `--download=false` flag because we test against dev versions
 func TestFalcoKmod(t *testing.T) {
-	// First, configure falcoctl driver
-	configRes := falcoctl.Test(
-		tests.NewFalcoctlExecutableRunner(t),
-		falcoctl.WithArgs("driver", "config", "--type", "kmod"),
-	)
-	assert.NoError(t, configRes.Err(), "%s", configRes.Stderr())
-	assert.Equal(t, 0, configRes.ExitCode())
-
 	loaderRes := falcoctl.Test(
 		tests.NewFalcoctlExecutableRunner(t),
-		falcoctl.WithArgs("driver", "install", "--download=false"),
+		falcoctl.WithArgs("driver", "install", "--download=false", "--type", "kmod"),
 	)
 	assert.NoError(t, loaderRes.Err(), "%s", loaderRes.Stderr())
 	assert.Equal(t, 0, loaderRes.ExitCode())
