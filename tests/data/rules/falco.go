@@ -352,13 +352,6 @@ var InvalidAppendMacro = run.NewStringFileAccessor(
 `,
 )
 
-var InvalidAppendMacroDangling = run.NewStringFileAccessor(
-	"invalid_append_macro_dangling.yaml",
-	`- macro: dangling append
-  condition: and evt.type=execve
-  append: true`,
-)
-
 var InvalidAppendMacroMultipleDocs = run.NewStringFileAccessor(
 	"invalid_append_macro_multiple_docs.yaml",
 	`---
@@ -644,15 +637,6 @@ var ListAppend = run.NewStringFileAccessor(
   condition: evt.type=open and proc.name in (my_list)
   output: "An open was seen (command=%proc.cmdline)"
   priority: WARNING
-`,
-)
-
-var ListAppendFailure = run.NewStringFileAccessor(
-	"list_append_failure.yaml",
-	`
-- list: my_list
-  items: [not-cat]
-  append: true
 `,
 )
 
@@ -984,15 +968,6 @@ var RuleAppend = run.NewStringFileAccessor(
 - rule: my_rule
   append: true
   condition: or (evt.type=open and fd.name=/dev/null)
-`,
-)
-
-var RuleAppendFailure = run.NewStringFileAccessor(
-	"rule_append_failure.yaml",
-	`
-- rule: my_rule
-  condition: evt.type=open
-  append: true
 `,
 )
 
