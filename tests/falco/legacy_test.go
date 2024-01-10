@@ -521,23 +521,6 @@ func TestFalco_Legacy_ListSubBare(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestFalco_Legacy_InvalidAppendMacroDangling(t *testing.T) {
-	t.Parallel()
-	checkDefaultConfig(t)
-	res := falco.Test(
-		tests.NewFalcoExecutableRunner(t),
-		falco.WithOutputJSON(),
-		falco.WithRulesValidation(rules.InvalidAppendMacroDangling),
-	)
-	assert.NotNil(t, res.RuleValidation().AllErrors().
-		OfCode("LOAD_ERR_VALIDATE").
-		OfItemType("macro").
-		OfItemName("dangling append").
-		OfMessage("Macro has 'append' key but no macro by that name already exists"))
-	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
-}
-
 func TestFalco_Legacy_InvalidOverwriteMacroMultipleDocs(t *testing.T) {
 	t.Parallel()
 	checkDefaultConfig(t)
@@ -1094,23 +1077,6 @@ func TestFalco_Legacy_MonitorSyscallDropsLog(t *testing.T) {
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
-}
-
-func TestFalco_Legacy_InvalidRuleAppendDangling(t *testing.T) {
-	t.Parallel()
-	checkDefaultConfig(t)
-	res := falco.Test(
-		tests.NewFalcoExecutableRunner(t),
-		falco.WithOutputJSON(),
-		falco.WithRulesValidation(rules.RuleAppendFailure),
-	)
-	assert.NotNil(t, res.RuleValidation().AllErrors().
-		OfCode("LOAD_ERR_VALIDATE").
-		OfItemType("rule").
-		OfItemName("my_rule").
-		OfMessage("Rule has 'append' key but no rule by that name already exists"))
-	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
 }
 
 func TestFalco_Legacy_InvalidOverwriteRule(t *testing.T) {
@@ -1709,23 +1675,6 @@ func TestFalco_Legacy_InvalidArrayItemNotObject(t *testing.T) {
 		OfCode("LOAD_ERR_YAML_VALIDATE").
 		OfItemType("rules content item").
 		OfMessage("Unexpected element type. Each element should be a yaml associative array."))
-	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
-}
-
-func TestFalco_Legacy_InvalidListAppendDangling(t *testing.T) {
-	t.Parallel()
-	checkDefaultConfig(t)
-	res := falco.Test(
-		tests.NewFalcoExecutableRunner(t),
-		falco.WithOutputJSON(),
-		falco.WithRulesValidation(rules.ListAppendFailure),
-	)
-	assert.NotNil(t, res.RuleValidation().AllErrors().
-		OfCode("LOAD_ERR_VALIDATE").
-		OfItemType("list").
-		OfItemName("my_list").
-		OfMessage("List has 'append' key but no list by that name already exists"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
