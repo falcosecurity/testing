@@ -59,7 +59,7 @@ Therefore, running Falco tests in your Github workflow is as easy as adding this
     # Default: 'false'.
     test-k8saudit: 'true'
     
-    # Whether to test drivers.
+    # Whether to test drivers. Requires kernel headers to be installed.
     # Default: 'false'.
     test-drivers: 'true'
     
@@ -80,6 +80,7 @@ Therefore, running Falco tests in your Github workflow is as easy as adding this
 
 > __NOTE:__ Since we don't use annotated tags, one cannot use eg: falcosecurity/testing@v0, but only either exact tag name, branch name or commit hash.
 
+> __NOTE:__ The action implies it gets ran on ubuntu or debian like distro. It uses `apt` to install some deps.
 
 ## Keep tests updated with the latest Falco version
 
