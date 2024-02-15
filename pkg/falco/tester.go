@@ -78,15 +78,16 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 			ctx:      context.Background(),
 		},
 	}
+	
+	// enforce Falco config path as default
+	res.opts.args = append(res.opts.args, "-c", FalcoConfig)
+
 	for _, o := range options {
 		o(res.opts)
 	}
 	if res.opts.err != nil {
 		return res
 	}
-
-	// enforce Falco config path
-	res.opts.args = append(res.opts.args, "-c", FalcoConfig)
 
 	// enforce logging everything on stdout
 	res.opts.args = append(res.opts.args, "-o", "log_level=debug")
