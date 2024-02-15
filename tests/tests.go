@@ -41,6 +41,7 @@ func init() {
 	flag.BoolVar(&falcoStatic, "falco-static", falcoStatic, "True if the Falco executable is from a static build")
 	flag.StringVar(&falcoBinary, "falco-binary", falcoBinary, "Falco executable binary path")
 	flag.StringVar(&falcoctlBinary, "falcoctl-binary", falcoctlBinary, "falcoctl executable binary path")
+	flag.StringVar(&falco.FalcoConfig, "falco-config", falco.FalcoConfig, "Falco config file path")
 
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetFormatter(&logrus.JSONFormatter{})

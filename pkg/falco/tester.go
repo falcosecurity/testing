@@ -35,6 +35,7 @@ var (
 		"/proc:/host/proc:ro",
 		"/var/run/docker.sock:/host/var/run/docker.sock",
 	}
+	FalcoConfig = DefaultConfigFile
 )
 
 const (
@@ -44,7 +45,7 @@ const (
 	// DefaultExecutable is the default path of the Falco executable
 	DefaultExecutable = "/usr/bin/falco"
 	//
-	// DefaultConfig is the default path of the Falco config file
+	// DefaultConfigFile is the default path of the Falco config file
 	DefaultConfigFile = "/etc/falco/falco.yaml"
 )
 
@@ -83,6 +84,9 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	if res.opts.err != nil {
 		return res
 	}
+
+	// enforce Falco config path
+	res.opts.args = append(res.opts.args, "-c", FalcoConfig)
 
 	// enforce logging everything on stdout
 	res.opts.args = append(res.opts.args, "-o", "log_level=debug")

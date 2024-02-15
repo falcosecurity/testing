@@ -54,7 +54,7 @@ const (
 
 func TestFalco_Cmd_Version(t *testing.T) {
 	t.Parallel()
-	checkDefaultConfig(t)
+	checkConfig(t)
 	runner := tests.NewFalcoExecutableRunner(t)
 	t.Run("text-output", func(t *testing.T) {
 		t.Parallel()
@@ -105,7 +105,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 
 func TestFalco_Cmd_ListPlugins(t *testing.T) {
 	t.Parallel()
-	checkDefaultConfig(t)
+	checkConfig(t)
 	checkNotStaticExecutable(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
@@ -136,7 +136,7 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 
 func TestFalco_Cmd_PluginInfo(t *testing.T) {
 	t.Parallel()
-	checkDefaultConfig(t)
+	checkConfig(t)
 	checkNotStaticExecutable(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
@@ -160,7 +160,7 @@ func TestFalco_Cmd_PluginInfo(t *testing.T) {
 
 func TestFalco_Print_IgnoredEvents(t *testing.T) {
 	t.Parallel()
-	checkDefaultConfig(t)
+	checkConfig(t)
 	bytearr, err := outputs.EventData.Content()
 	if err != nil {
 		panic(err)
@@ -181,7 +181,7 @@ func TestFalco_Print_IgnoredEvents(t *testing.T) {
 
 func TestFalco_Print_Rules(t *testing.T) {
 	t.Parallel()
-	checkDefaultConfig(t)
+	checkConfig(t)
 	runner := tests.NewFalcoExecutableRunner(t)
 
 	t.Run("invalid-rules", func(t *testing.T) {

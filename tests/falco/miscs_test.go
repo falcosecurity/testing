@@ -48,11 +48,11 @@ import (
 //   - collection of live events with multiple event sources active at the same
 //   - stress test with event generator, checking memory usage and event drops
 
-// checkDefaultConfig skips a test if the default configuration filepath
+// checkConfig skips a test if the default configuration filepath
 // is not available in the local filesystem.
-func checkDefaultConfig(t *testing.T) {
-	if _, err := os.Stat(falco.DefaultConfigFile); err != nil {
-		t.Skipf("could not find default Falco config: %s", err.Error())
+func checkConfig(t *testing.T) {
+	if _, err := os.Stat(falco.FalcoConfig); err != nil {
+		t.Skipf("could not find Falco config at %s: %s", falco.FalcoConfig, err.Error())
 	}
 }
 
