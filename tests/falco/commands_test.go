@@ -38,8 +38,6 @@ import (
 //   --markdown, -N, --gvisor-generate-config, --page-size
 // Metadata collection and container runtimes:
 //   --cri, --disable-cri-async, -k, --k8s-api, -K, --k8s-api-cert, --k8s-node, -m, --mesos-api
-// Falco event collection modes:
-//   -g, --gvisor-config, --gvisor-root, -u, --userspace, --modern-bpf
 // Changers of Falco's behavior:
 //   --disable-source, --enable-source, -A, -d, --daemon, -P, --pidfile,
 //   -p, --print, -b, --print-base64, -S, --snaplen,

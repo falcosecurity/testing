@@ -31,9 +31,8 @@ import (
 
 // todo(jasondellaluce): implement tests for the non-covered Falco config fields:
 //   watch_config_files, libs_logger, buffered_outputs, syscall_event_timeouts,
-//   syscall_buf_size_preset, modern_bpf, output_timeout, outputs
 //   syslog_output, file_output, stdout_output, webserver, program_output,
-//   http_output, metadata_download
+//   http_output, metadata_download, output_timeout, outputs
 //
 // todo(jasondellaluce): test Falco behavior on environment variables and their
 // priorities in combination with their args/configs/cmds counterparts:
