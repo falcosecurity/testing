@@ -84,17 +84,17 @@ runs:
         HOST_ROOT: ""
       shell: bash  
       run: |
-        if ${{ inputs.test-falco && 'true' || 'false' }}; then
-          ./build/falco.test -falco-static=${{ inputs.static && 'true' || 'false' }} -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
+        if ${{ inputs.test-falco == 'true' }}; then
+          ./build/falco.test -falco-static=${{ inputs.static }} -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
         fi
-        if ${{ inputs.static && 'false' || 'true' }}; then
-          if ${{ inputs.test-falcoctl && 'true' || 'false' }}; then
+        if ${{ inputs.static == 'false' }}; then
+          if ${{ inputs.test-falcoctl == 'true' }}; then
             ./build/falcoctl.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
           fi
-          if ${{ inputs.test-k8saudit && 'true' || 'false' }}; then
+          if ${{ inputs.test-k8saudit == 'true' }}; then
             ./build/k8saudit.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
           fi
-          if ${{ inputs.test-drivers && 'true' || 'false' }}; then
+          if ${{ inputs.test-drivers == 'true' }}; then
             ${{ inputs.sudo }} ./build/falco-driver-loader.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
           fi
         fi
