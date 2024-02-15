@@ -14,8 +14,8 @@ inputs:
     description: 'Whether to run k8saudit tests. Default disabled.'
     required: false
     default: 'false'
-  test-driver:  
-    description: 'Whether to run driver tests. Default disabled.'
+  test-drivers:  
+    description: 'Whether to run drivers tests. Default disabled.'
     required: false
     default: 'false'  
   static:
@@ -90,7 +90,7 @@ runs:
           if ${{ inputs.test-k8saudit && 'true' || 'false' }}; then
             ./build/k8saudit.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
           fi
-          if ${{ inputs.test-driver && 'true' || 'false' }}; then
+          if ${{ inputs.test-drivers && 'true' || 'false' }}; then
             sudo ./build/falco-driver-loader.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
           fi
         fi
