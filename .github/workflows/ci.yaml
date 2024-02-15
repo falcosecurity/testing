@@ -44,6 +44,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install needed artifacts using falcoctl
+        run: |
+          mkdir -p /usr/share/falco/plugins
+          falcoctl artifact install k8saudit-rules
+          falcoctl artifact install cloudtrail-rules
+
       # note: this converts the output of go test into a junit-compatible,
       # which can later be processed by test-summary/action to upload
       # a Markdown report on the GitHub Actions workflow.
