@@ -67,14 +67,14 @@ runs:
         ${{ inputs.sudo }} falcoctl artifact install cloudtrail-rules
    
     - name: Install dependencies for falco-driver-loader tests
-      if: ${{ inputs.arch == 'x86_64' }}
+      if: ${{ inputs.arch == 'x86_64' && inputs.test-drivers == 'true' }}
       shell: bash
       run: |
         ${{ inputs.sudo }} apt update -y
         ${{ inputs.sudo }} apt install -y --no-install-recommends build-essential clang make llvm gcc dkms linux-headers-$(uname -r)
     
     - name: Install dependencies for falco-driver-loader tests
-      if: ${{ inputs.arch == 'aarch64' }}
+      if: ${{ inputs.arch == 'aarch64' && inputs.test-drivers == 'true' }}
       uses: self-actuated/get-kernel-sources@master
     
     - name: Run tests
