@@ -19,9 +19,10 @@ limitations under the License.
 package testfalcodriverloader
 
 import (
-	"github.com/falcosecurity/testing/pkg/falcoctl"
 	"testing"
 	"time"
+
+	"github.com/falcosecurity/testing/pkg/falcoctl"
 
 	"github.com/falcosecurity/testing/pkg/falco"
 	"github.com/falcosecurity/testing/tests"
@@ -106,7 +107,7 @@ func TestFalcoModernBpf(t *testing.T) {
 	falcoRes := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithStopAfter(3*time.Second),
-		falco.WithArgs("--modern-bpf"),
+		falco.WithArgs("-o", "engine.kind=modern_ebpf"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
 	assert.Equal(t, 0, falcoRes.ExitCode())

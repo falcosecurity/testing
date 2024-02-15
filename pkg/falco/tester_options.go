@@ -105,11 +105,10 @@ func WithAllEvents() TestOption {
 	}
 }
 
-// WithCaptureFile runs Falco reading events from a capture file through the `-e` option.
+// WithCaptureFile runs Falco reading events from a capture file through the `-o engine.kind=replay` option.
 func WithCaptureFile(f run.FileAccessor) TestOption {
 	return func(o *testOptions) {
-		o.args = removeFromArgs(o.args, "-e", 1)
-		o.args = append(o.args, "-e", f.Name())
+		o.args = append(o.args, "-o", "engine.kind=replay", "-o", fmt.Sprintf("engine.replay.capture_file=%s", f.Name()))
 		o.files = append(o.files, f)
 	}
 }
