@@ -39,6 +39,36 @@ build/falco.test -test.run 'TestFalco_Legacy_WriteBinaryDir'
 
 To check all other options use the `--help` flag.
 
+## Usage in CI
+
+To better suit the CI usage, a [Github composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action) has been developed. Therefore, running Falco tests in your Github workflow is as easy as adding this step:
+```
+- name: Run tests
+  uses: falcosecurity/testing@main
+  with:
+    # Whether to test Falco.
+    # Default: 'true'.
+    test-falco: 'true'
+    # Whether to test Falcoctl.
+    # Default: 'false'.
+    test-falcoctl: 'true'
+    # Whether to test k8saudit.
+    # Default: 'false'.
+    test-k8saudit: 'true'
+    # Whether to test drivers.
+    # Default: 'false'.
+    test-drivers: 'true'
+    # Whether to run Falco in static mode in tests
+    # If enabled, only Falco tests will be enabled,
+    # all the others will be forcefully skipped.
+    # Default: 'false'.
+    static: 'false'
+    # Whether to upload all tests in action-summary.
+    # Default: 'false'.
+    show-all: 'true'
+```
+
+
 ## Keep tests updated with the latest Falco version
 
 Some of these tests might become incompatible with a new Falco version, for example after a fix an old scap-file could trigger more rules than the ones expected or maybe the rule is no more triggered for a valid reason.
