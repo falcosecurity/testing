@@ -39,9 +39,10 @@ build/falco.test -test.run 'TestFalco_Legacy_WriteBinaryDir'
 
 To check all other options use the `--help` flag.
 
-## Usage in CI
+## CI Usage
 
-To better suit the CI usage, a [Github composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action) has been developed. Therefore, running Falco tests in your Github workflow is as easy as adding this step:
+To better suit the CI usage, a [Github composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action) has been developed.  
+Therefore, running Falco tests in your Github workflow is as easy as adding this step:
 ```
 - name: Run tests
   uses: falcosecurity/testing@main
@@ -49,27 +50,35 @@ To better suit the CI usage, a [Github composite action](https://docs.github.com
     # Whether to test Falco.
     # Default: 'true'.
     test-falco: 'true'
+    
     # Whether to test Falcoctl.
     # Default: 'false'.
     test-falcoctl: 'true'
+    
     # Whether to test k8saudit.
     # Default: 'false'.
     test-k8saudit: 'true'
+    
     # Whether to test drivers.
     # Default: 'false'.
     test-drivers: 'true'
+    
     # Whether to run Falco in static mode in tests
     # If enabled, only Falco tests will be enabled,
     # all the others will be forcefully skipped.
     # Default: 'false'.
     static: 'false'
+    
     # Whether to upload all tests in action-summary.
     # Default: 'false'.
     show-all: 'true'
+    
     # Specify a sudo command. Put it empty when sudo is not available.
     # Default: 'sudo'
     sudo: 'sudo'
 ```
+
+> __NOTE:__ Since we don't use annotated tags, one cannot use eg: falcosecurity/testing@v0, but only either exact tag name, branch name or commit hash.
 
 
 ## Keep tests updated with the latest Falco version
