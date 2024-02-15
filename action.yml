@@ -26,6 +26,10 @@ inputs:
     description: 'Whether to upload all tests summary, not just failed.'
     required: false
     default: 'false'
+  sudo:
+    description: 'Specify a sudo command. Put it empty when sudo is not available.'
+    required: false
+    default: 'sudo'
 
 outputs:
   report:
@@ -58,16 +62,16 @@ runs:
       if: ${{ inputs.static == 'false' }}
       shell: bash
       run: |
-        sudo mkdir -p /usr/share/falco/plugins
-        sudo falcoctl artifact install k8saudit-rules
-        sudo falcoctl artifact install cloudtrail-rules
+        ${{ inputs.sudo }} mkdir -p /usr/share/falco/plugins
+        ${{ inputs.sudo }} falcoctl artifact install k8saudit-rules
+        ${{ inputs.sudo }} falcoctl artifact install cloudtrail-rules
    
     - name: Install dependencies for falco-driver-loader tests
       if: ${{ inputs.arch == 'x86_64' }}
       shell: bash
       run: |
-        sudo apt update -y
-        sudo apt install -y --no-install-recommends build-essential clang make llvm gcc dkms linux-headers-$(uname -r)
+        ${{ inputs.sudo }} apt update -y
+        ${{ inputs.sudo }} apt install -y --no-install-recommends build-essential clang make llvm gcc dkms linux-headers-$(uname -r)
     
     - name: Install dependencies for falco-driver-loader tests
       if: ${{ inputs.arch == 'aarch64' }}
@@ -91,7 +95,7 @@ runs:
             ./build/k8saudit.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
           fi
           if ${{ inputs.test-drivers && 'true' || 'false' }}; then
-            sudo ./build/falco-driver-loader.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
+            ${{ inputs.sudo }} ./build/falco-driver-loader.test -test.timeout=90s -test.v >> ./report.txt 2>&1 || true
           fi
         fi
         cat ./report.txt | go-junit-report -set-exit-code > report.xml

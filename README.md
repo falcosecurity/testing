@@ -66,6 +66,9 @@ To better suit the CI usage, a [Github composite action](https://docs.github.com
     # Whether to upload all tests in action-summary.
     # Default: 'false'.
     show-all: 'true'
+    # Specify a sudo command. Put it empty when sudo is not available.
+    # Default: 'sudo'
+    sudo: 'sudo'
 ```
 
 
