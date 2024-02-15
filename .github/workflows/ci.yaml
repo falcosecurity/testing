@@ -46,3 +46,4 @@ jobs:
           test-falcoctl: 'true'
           test-k8saudit: 'true'
           show-all: 'true'
+          sudo: ''
