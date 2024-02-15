@@ -1,6 +1,6 @@
 module github.com/falcosecurity/testing
 
-go 1.17
+go 1.21
 
 require (
 	github.com/docker/docker v24.0.3+incompatible
