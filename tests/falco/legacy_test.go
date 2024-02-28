@@ -355,12 +355,12 @@ func TestFalco_Legacy_InvalidAppendMacro(t *testing.T) {
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		OfCode("LOAD_ERR_COMPILE_CONDITION").
 		OfItemType("macro").
-		OfItemName("some macro").
+		OfItemName("some_macro").
 		OfMessage("unexpected token after 'execve', expecting 'or', 'and'"))
 	assert.NotNil(t, res.RuleValidation().AllWarnings().
 		OfCode("LOAD_UNUSED_MACRO").
 		OfItemType("macro").
-		OfItemName("some macro").
+		OfItemName("some_macro").
 		OfMessage("Macro not referred to by any other rule/macro"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
@@ -532,7 +532,7 @@ func TestFalco_Legacy_InvalidOverwriteMacroMultipleDocs(t *testing.T) {
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		OfCode("LOAD_ERR_VALIDATE").
 		OfItemType("macro").
-		OfItemName("some macro").
+		OfItemName("some_macro").
 		OfMessage("Undefined macro 'foo' used in filter."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
@@ -1182,7 +1182,7 @@ func TestFalco_Legacy_InvalidAppendMacroMultipleDocs(t *testing.T) {
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		OfCode("LOAD_ERR_COMPILE_CONDITION").
 		OfItemType("macro").
-		OfItemName("some macro").
+		OfItemName("some_macro").
 		OfMessage("unexpected token after 'execve', expecting 'or', 'and'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
@@ -1456,12 +1456,12 @@ func TestFalco_Legacy_InvalidOverwriteMacro(t *testing.T) {
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		OfCode("LOAD_ERR_VALIDATE").
 		OfItemType("macro").
-		OfItemName("some macro").
+		OfItemName("some_macro").
 		OfMessage("Undefined macro 'foo' used in filter."))
 	assert.NotNil(t, res.RuleValidation().AllWarnings().
 		OfCode("LOAD_UNUSED_MACRO").
 		OfItemType("macro").
-		OfItemName("some macro").
+		OfItemName("some_macro").
 		OfMessage("Macro not referred to by any other rule/macro"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())

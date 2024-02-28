@@ -346,7 +346,7 @@ var FalcoRulesWarnings = run.NewStringFileAccessor(
 
 var InvalidAppendMacro = run.NewStringFileAccessor(
 	"invalid_append_macro.yaml",
-	`- macro: some macro
+	`- macro: some_macro
   condition: foo
   append: true
 `,
@@ -355,10 +355,10 @@ var InvalidAppendMacro = run.NewStringFileAccessor(
 var InvalidAppendMacroMultipleDocs = run.NewStringFileAccessor(
 	"invalid_append_macro_multiple_docs.yaml",
 	`---
-- macro: some macro
+- macro: some_macro
   condition: evt.type=execve
 ---
-- macro: some macro
+- macro: some_macro
   condition: foo
   append: true
 `,
@@ -412,7 +412,7 @@ var InvalidArrayItemNotObject = run.NewStringFileAccessor(
 
 var InvalidBaseMacro = run.NewStringFileAccessor(
 	"invalid_base_macro.yaml",
-	`- macro: some macro
+	`- macro: some_macro
   condition: evt.type=execve
 `,
 )
@@ -552,7 +552,7 @@ var InvalidNotYaml = run.NewStringFileAccessor(
 
 var InvalidOverwriteMacro = run.NewStringFileAccessor(
 	"invalid_overwrite_macro.yaml",
-	`- macro: some macro
+	`- macro: some_macro
   condition: foo
   append: false
 `,
@@ -561,10 +561,10 @@ var InvalidOverwriteMacro = run.NewStringFileAccessor(
 var InvalidOverwriteMacroMultipleDocs = run.NewStringFileAccessor(
 	"invalid_overwrite_macro_multiple_docs.yaml",
 	`---
-- macro: some macro
+- macro: some_macro
   condition: evt.type=execve
 ---
-- macro: some macro
+- macro: some_macro
   condition: foo
   append: false
 `,
