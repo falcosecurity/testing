@@ -98,10 +98,11 @@ runs:
      
     - name: Set outputs
       id: store-outputs # note: store outputs even if tests fail
+      working-directory: ${{ github.action_path }}
       shell: bash
       if: always()
       run: |
-        echo "report=${{ github.action_path }}/report.xml" >> $GITHUB_OUTPUT
+        echo "report=$(realpath report.xml)" >> $GITHUB_OUTPUT
         
     - name: Test Summary
       if: always() # note: upload the report even if tests fail
