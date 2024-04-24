@@ -508,15 +508,15 @@ var K8SAuditSingleRuleWithJsonPointer = run.NewStringFileAccessor(
 
 var K8SAuditTrustNginxContainer = run.NewStringFileAccessor(
 	"trust_nginx_container.yaml",
-	`- list: falco_sensitive_mount_images
+	`- list: k8s_audit_sensitive_mount_images
   items: [nginx]
   append: true
 
-- list: falco_privileged_images
+- list: k8s_audit_privileged_images
   items: [nginx]
   append: true
 
-- list: falco_hostnetwork_images
+- list: k8s_audit_hostnetwork_images
   items: [nginx]
   append: true
 `,
