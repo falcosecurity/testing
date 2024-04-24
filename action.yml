@@ -34,7 +34,7 @@ inputs:
 outputs:
   report:
     description: "Generated report xml"
-    value: ${{ steps.run-tests.outputs.report }} 
+    value: ${{ steps.store-outputs.outputs.report }} 
 
 runs:
   using: "composite"
@@ -74,7 +74,6 @@ runs:
         ${{ inputs.sudo }} apt install -y --no-install-recommends build-essential clang make llvm gcc dkms
     
     - name: Run tests
-      id: run-tests
       working-directory: ${{ github.action_path }}
       env:
         # fixme(leogr): this is a workaround for https://github.com/falcosecurity/falco/issues/2784
@@ -96,13 +95,19 @@ runs:
           fi
         fi
         cat ./report.txt | go-junit-report -set-exit-code > report.xml
-        echo "report=$(realpath report.xml)" >> $GITHUB_OUTPUT
+     
+    - name: Set outputs
+      id: store-outputs # note: store outputs even if tests fail
+      shell: bash
+      if: always()
+      run: |
+        echo "report=${{ github.action_path }}/report.xml" >> $GITHUB_OUTPUT
         
     - name: Test Summary
       if: always() # note: upload the report even if tests fail
       uses: test-summary/action@62bc5c68de2a6a0d02039763b8c754569df99e3f
       with:
-        paths: ${{ steps.run-tests.outputs.report }}
+        paths: ${{ steps.store-outputs.outputs.report }}
         show: ${{ inputs.show-all && 'all' || 'fail' }}
 
     - name: Upload Test Summary
@@ -110,4 +115,4 @@ runs:
       uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
       with:
         name: falcosecurity-testing-report-${{ runner.arch }}
-        path: ${{ steps.run-tests.outputs.report }}
+        path: ${{ steps.store-outputs.outputs.report }}
