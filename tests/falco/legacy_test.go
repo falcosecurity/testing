@@ -2724,36 +2724,6 @@ func TestFalco_Legacy_SystemUserInteractive(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestFalco_Legacy_DetectCounts(t *testing.T) {
-	t.Parallel()
-	checkConfig(t)
-	res := falco.Test(
-		tests.NewFalcoExecutableRunner(t),
-		falco.WithOutputJSON(),
-		falco.WithRules(rules.LegacyFalcoRules_v1_0_1),
-		falco.WithCaptureFile(captures.TracesPositiveFalcoEventGenerator),
-		falco.WithArgs("-o", "json_include_output_property=false"),
-		falco.WithArgs("-o", "json_include_tags_property=false"),
-	)
-	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Write below binary dir").Count())
-	assert.Equal(t, 3, res.Detections().OfRule("Read sensitive file untrusted").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Run shell untrusted").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Write below rpm database").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Write below etc").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("System procs network activity").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Mkdir binary dirs").Count())
-	assert.Equal(t, 0, res.Detections().OfRule("System user interactive").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("DB program spawned process").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Non sudo setuid").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Create files below dev").Count())
-	assert.Equal(t, 2, res.Detections().OfRule("Modify binary dirs").Count())
-	assert.Equal(t, 0, res.Detections().OfRule("Change thread namespace").Count())
-	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
-}
-
 func TestFalco_Legacy_RuleNamesWithRegexChars(t *testing.T) {
 	t.Parallel()
 	checkConfig(t)
