@@ -92,7 +92,7 @@ var LegacyFalcoRules_v1_0_1 = run.NewStringFileAccessor(
     # on the identity of the process performing an action such as opening
     # a file, etc., we require that the process name be known.
     - macro: proc_name_exists
-      condition: (proc.name!="<NA>")
+      condition: (not proc.name in ("<NA>","N/A"))
     
     - macro: rename
       condition: (evt.type in (rename, renameat, renameat2))
@@ -2019,18 +2019,18 @@ var LegacyFalcoRules_v1_0_1 = run.NewStringFileAccessor(
     # below /etc as well, but the globbing mechanism
     # doesn't allow exclusions of a full pattern, only single characters.
     - macro: sensitive_mount
-      condition: (container.mount.dest[/proc*] != "N/A" or
-                  container.mount.dest[/var/run/docker.sock] != "N/A" or
-                  container.mount.dest[/var/run/crio/crio.sock] != "N/A" or
-                  container.mount.dest[/run/containerd/containerd.sock] != "N/A" or
-                  container.mount.dest[/var/lib/kubelet] != "N/A" or
-                  container.mount.dest[/var/lib/kubelet/pki] != "N/A" or
-                  container.mount.dest[/] != "N/A" or
-                  container.mount.dest[/home/admin] != "N/A" or
-                  container.mount.dest[/etc] != "N/A" or
-                  container.mount.dest[/etc/kubernetes] != "N/A" or
-                  container.mount.dest[/etc/kubernetes/manifests] != "N/A" or
-                  container.mount.dest[/root*] != "N/A")
+      condition: (not container.mount.dest[/proc*] in ("<NA>","N/A") or
+        not container.mount.dest[/var/run/docker.sock] in ("<NA>","N/A") or
+        not container.mount.dest[/var/run/crio/crio.sock] in ("<NA>","N/A") or
+        not container.mount.dest[/run/containerd/containerd.sock] in ("<NA>","N/A") or
+        not container.mount.dest[/var/lib/kubelet] in ("<NA>","N/A") or
+        not container.mount.dest[/var/lib/kubelet/pki] in ("<NA>","N/A") or
+        not container.mount.dest[/] in ("<NA>","N/A") or
+        not container.mount.dest[/home/admin] in ("<NA>","N/A") or
+        not container.mount.dest[/etc] in ("<NA>","N/A") or
+        not container.mount.dest[/etc/kubernetes] in ("<NA>","N/A") or
+        not container.mount.dest[/etc/kubernetes/manifests] in ("<NA>","N/A") or
+        not container.mount.dest[/root*] in ("<NA>","N/A"))
     
     # The steps libcontainer performs to set up the root program for a container are:
     # - clone + exec self to a program runc:[0:PARENT]
@@ -2319,7 +2319,7 @@ var LegacyFalcoRules_v1_0_1 = run.NewStringFileAccessor(
     # https://github.com/draios/sysdig/issues/954). So in that case, allow
     # a setuid.
     - macro: known_user_in_container
-      condition: (container and user.name != "N/A")
+      condition: (container and not user.name in ("<NA>","N/A"))
     
     # Add conditions to this macro (probably in a separate file,
     # overwriting this macro) to allow for specific combinations of
