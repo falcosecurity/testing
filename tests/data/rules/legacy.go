@@ -2319,7 +2319,7 @@ var LegacyFalcoRules_v1_0_1 = run.NewStringFileAccessor(
     # https://github.com/draios/sysdig/issues/954). So in that case, allow
     # a setuid.
     - macro: known_user_in_container
-      condition: (container and not user.name in ("<NA>","N/A"))
+      condition: (container and not user.name in ("<NA>","N/A",""))
     
     # Add conditions to this macro (probably in a separate file,
     # overwriting this macro) to allow for specific combinations of
