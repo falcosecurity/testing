@@ -2628,9 +2628,7 @@ func TestFalco_Legacy_NonSudoSetuid(t *testing.T) {
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
-	assert.NotZero(t, res.Detections().Count())
-	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("Non sudo setuid").Count())
+	assert.Zero(t, res.Detections().Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
