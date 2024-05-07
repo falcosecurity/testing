@@ -158,7 +158,7 @@ func TestK8SAudit_Legacy_DeleteClusterrolebinding(t *testing.T) {
 	)
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("K8s Role/Clusterrolebinding Deleted").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("K8s ClusterRoleBinding Deleted").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -773,7 +773,7 @@ func TestK8SAudit_Legacy_DeleteClusterrole(t *testing.T) {
 	)
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("K8s Role/Clusterrole Deleted").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("K8s ClusterRole Deleted").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -856,7 +856,7 @@ func TestK8SAudit_Legacy_CreateClusterrole(t *testing.T) {
 	)
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("K8s Role/Clusterrole Created").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("K8s ClusterRole Created").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -873,7 +873,7 @@ func TestK8SAudit_Legacy_CreateClusterrolebinding(t *testing.T) {
 	)
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("K8s Role/Clusterrolebinding Created").Count())
+	assert.Equal(t, 1, res.Detections().OfRule("K8s ClusterRoleBinding Created").Count(), res.Stdout())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
