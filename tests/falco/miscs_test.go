@@ -99,7 +99,7 @@ func TestFalco_Miscs_HotReload(t *testing.T) {
 		falco.WithConfig(hotReloadCfg),
 		falco.WithRules(rules.SingleRule),
 		falco.WithStopAfter(5*time.Second),
-		falco.WithArgs("-o", "engine.kind=modern_ebpf"),
+		falco.WithArgs("-o", "engine.kind=nodriver"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
 	assert.Equal(t, 0, falcoRes.ExitCode())
