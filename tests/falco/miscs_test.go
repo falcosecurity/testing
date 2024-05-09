@@ -19,7 +19,6 @@ limitations under the License.
 package testfalco
 
 import (
-	"fmt"
 	"github.com/falcosecurity/testing/pkg/run"
 	"github.com/falcosecurity/testing/tests/data/rules"
 	"os"
@@ -104,9 +103,6 @@ func TestFalco_Miscs_HotReload(t *testing.T) {
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
 	assert.Equal(t, 0, falcoRes.ExitCode())
-
-	fmt.Println(falcoRes.Stderr())
-	fmt.Println(falcoRes.Stdout())
 	// We want to be sure that the hot reload was triggered
 	assert.Regexp(t, `SIGHUP received, restarting...`, falcoRes.Stderr())
 }
