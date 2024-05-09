@@ -37,7 +37,7 @@ type localFileAccessor struct {
 
 // NewLocalFileAccessor creates a FileAccessor of which content is the content
 // of a file in the local filesystem
-func NewLocalFileAccessor(name, path string) *localFileAccessor {
+func NewLocalFileAccessor(name, path string) FileAccessor {
 	return &localFileAccessor{name: name, path: path}
 }
 
@@ -55,12 +55,12 @@ type memFileAccessor struct {
 }
 
 // NewStringFileAccessor creates a FileAccessor that has a string as its content
-func NewStringFileAccessor(name, content string) *memFileAccessor {
+func NewStringFileAccessor(name, content string) FileAccessor {
 	return &memFileAccessor{name: name, content: ([]byte)(content)}
 }
 
 // NewBytesFileAccessor creates a FileAccessor that has a byte buf as its content
-func NewBytesFileAccessor(name string, content []byte) *memFileAccessor {
+func NewBytesFileAccessor(name string, content []byte) FileAccessor {
 	return &memFileAccessor{name: name, content: content}
 }
 
