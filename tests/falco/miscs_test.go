@@ -19,8 +19,13 @@ limitations under the License.
 package testfalco
 
 import (
+	"fmt"
+	"github.com/falcosecurity/testing/pkg/run"
+	"github.com/falcosecurity/testing/tests/data/rules"
 	"os"
+	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/falcosecurity/testing/pkg/falco"
 	"github.com/falcosecurity/testing/tests"
@@ -70,4 +75,38 @@ func TestFalco_Miscs_StartupFail(t *testing.T) {
 		assert.Equal(t, res.ExitCode(), 1)
 		assert.Contains(t, res.Stderr(), "You must specify at least one rules file")
 	})
+}
+
+func TestFalco_Miscs_HotReload(t *testing.T) {
+	cwd, err := os.Getwd()
+	assert.NoError(t, err)
+	path := filepath.Join(cwd, "hot_reload_enabled.yaml")
+	_ = os.WriteFile(path, []byte(`watch_config_files: true`), 0700)
+	hotReloadCfg := run.NewLocalFileAccessor(path, path)
+
+	t.Cleanup(func() {
+		_ = os.Remove(path)
+	})
+
+	go func() {
+		time.Sleep(2 * time.Second)
+		f, _ := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0700)
+		_, _ = f.WriteString("  \n\n")
+		_ = f.Close()
+	}()
+
+	falcoRes := falco.Test(
+		tests.NewFalcoExecutableRunner(t),
+		falco.WithConfig(hotReloadCfg),
+		falco.WithRules(rules.SingleRule),
+		falco.WithStopAfter(5*time.Second),
+		falco.WithArgs("-o", "engine.kind=modern_ebpf"),
+	)
+	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
+	assert.Equal(t, 0, falcoRes.ExitCode())
+
+	fmt.Println(falcoRes.Stderr())
+	fmt.Println(falcoRes.Stdout())
+	// We want to be sure that the hot reload was triggered
+	assert.Regexp(t, `SIGHUP received, restarting...`, falcoRes.Stderr())
 }
