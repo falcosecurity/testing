@@ -48,7 +48,7 @@ func TestFalcoLegacyBPF(t *testing.T) {
 	assert.NoError(t, loaderRes.Err(), "%s", loaderRes.Stderr())
 	assert.Equal(t, 0, loaderRes.ExitCode())
 	// We expect the probe to be succesfully built and copied to /root/.falco/falco-bpf.o
-	assert.Regexp(t, `Driver built.`, loaderRes.Stdout())
+	assert.Regexp(t, `eBPF probe available.`, loaderRes.Stdout())
 
 	// Now running Falco with `FALCO_BPF_PROBE=/root/.falco/falco-bpf.o` we should be able to run the bpf driver
 	falcoRes := falco.Test(
@@ -84,7 +84,7 @@ func TestFalcoKmod(t *testing.T) {
 	assert.NoError(t, loaderRes.Err(), "%s", loaderRes.Stderr())
 	assert.Equal(t, 0, loaderRes.ExitCode())
 	// We expect the module to be loaded in dkms
-	assert.Regexp(t, `Module installed in dkms.`, loaderRes.Stdout())
+	assert.Regexp(t, `kernel module available.`, loaderRes.Stdout())
 
 	// Now running Falco we should be able to run the kernel module
 	falcoRes := falco.Test(
