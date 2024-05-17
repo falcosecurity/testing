@@ -347,7 +347,7 @@ var K8SAuditEngineV4K8SAuditRules = run.NewStringFileAccessor(
 
 - rule: ClusterRole With Pod Exec Created
   desc: Detect any attempt to create a Role/ClusterRole that can exec to pods
-  condition: kevt and (role or clusterrole) and kcreate and ka.req.role.rules.resources contains "pods/exec"
+  condition: kevt and (role or clusterrole) and kcreate and ka.req.role.rules.resources intersects ("pods/exec")
   output: Created Role/ClusterRole with pod exec privileges (user=%ka.user.name role=%ka.target.name rules=%ka.req.role.rules)
   priority: WARNING
   source: k8s_audit
