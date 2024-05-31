@@ -84,6 +84,17 @@ func WithDisabledSources(sources ...string) TestOption {
 	return withMultipleArgValues("--disable-source", sources...)
 }
 
+// WithPrometheusMetrics runs Falco enabling prometheus metrics endpoint.
+func WithPrometheusMetrics() TestOption {
+	return func(o *testOptions) {
+		o.args = append(o.args, "-o", "metrics.enabled=true")
+		o.args = append(o.args, "-o", "metrics.output_rule=true")
+		o.args = append(o.args, "-o", "metrics.interval=2s")
+		o.args = append(o.args, "-o", "webserver.enabled=true")
+		o.args = append(o.args, "-o", "webserver.prometheus_metrics_enabled=true")
+	}
+}
+
 // WithMinRulePriority runs Falco by forcing a mimimum rules priority.
 func WithMinRulePriority(priority string) TestOption {
 	return func(o *testOptions) {

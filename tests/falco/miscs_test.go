@@ -21,8 +21,10 @@ package testfalco
 import (
 	"github.com/falcosecurity/testing/pkg/run"
 	"github.com/falcosecurity/testing/tests/data/rules"
+	"net/http"
 	"os"
 	"path/filepath"
+	"sync"
 	"testing"
 	"time"
 
@@ -105,4 +107,32 @@ func TestFalco_Miscs_HotReload(t *testing.T) {
 	assert.Equal(t, 0, falcoRes.ExitCode())
 	// We want to be sure that the hot reload was triggered
 	assert.Regexp(t, `SIGHUP received, restarting...`, falcoRes.Stderr())
+}
+
+func TestFalco_Miscs_PrometheusMetricsNoDriver(t *testing.T) {
+	var (
+		wg         sync.WaitGroup
+		metricsErr error
+	)
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		time.Sleep(2 * time.Second)
+		_, metricsErr = http.Get("http://127.0.0.1:8765/metrics")
+	}()
+
+	falcoRes := falco.Test(
+		tests.NewFalcoExecutableRunner(t),
+		falco.WithPrometheusMetrics(),
+		falco.WithRules(rules.SingleRule),
+		falco.WithStopAfter(5*time.Second),
+		falco.WithArgs("-o", "engine.kind=nodriver"),
+	)
+	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
+	assert.Equal(t, 0, falcoRes.ExitCode())
+
+	wg.Wait()
+
+	assert.NoError(t, metricsErr)
 }

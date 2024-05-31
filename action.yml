@@ -68,6 +68,7 @@ runs:
         ${{ inputs.sudo }} mkdir -p /usr/share/falco/plugins
         ${{ inputs.sudo }} falcoctl artifact install k8saudit-rules
         ${{ inputs.sudo }} falcoctl artifact install cloudtrail-rules
+        ${{ inputs.sudo }} falcoctl artifact install dummy
    
     - name: Install dependencies for falco-driver-loader tests
       if: ${{ inputs.test-drivers == 'true' }}
