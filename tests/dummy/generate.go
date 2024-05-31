@@ -16,22 +16,6 @@ limitations under the License.
 
 */
 
-package plugins
+package testdummy
 
-import "github.com/falcosecurity/testing/pkg/run"
-
-var K8SAuditPlugin = run.NewLocalFileAccessor(
-	"libk8saudit.so",
-	"/usr/share/falco/plugins/libk8saudit.so")
-
-var CloudtrailPlugin = run.NewLocalFileAccessor(
-	"libcloudtrail.so",
-	"/usr/share/falco/plugins/libcloudtrail.so")
-
-var JSONPlugin = run.NewLocalFileAccessor(
-	"libjson.so",
-	"/usr/share/falco/plugins/libjson.so")
-
-var DummyPlugin = run.NewLocalFileAccessor(
-	"libdummy.so",
-	"/usr/share/falco/plugins/libdummy.so")
+//go:generate go test ./... -c -o ../../build/dummy.test
