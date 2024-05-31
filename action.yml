@@ -14,6 +14,10 @@ inputs:
     description: 'Whether to run k8saudit tests. Default disabled.'
     required: false
     default: 'false'
+  test-dummy:
+    description: 'Whether to run dummy plugin tests. Default disabled.'
+    required: false
+    default: 'false'
   test-drivers:  
     description: 'Whether to run drivers tests. Requires kernel headers to be installed. Default disabled.'
     required: false
@@ -93,6 +97,9 @@ runs:
           fi
           if ${{ inputs.test-k8saudit == 'true' }}; then
             ./build/k8saudit.test -test.timeout=180s -test.v >> ./report.txt 2>&1 || true
+          fi
+          if ${{ inputs.test-dummy == 'true' }}; then
+            ./build/dummy.test -test.timeout=180s -test.v >> ./report.txt 2>&1 || true
           fi
           if ${{ inputs.test-drivers == 'true' }}; then
             ${{ inputs.sudo }} ./build/falco-driver-loader.test -test.timeout=180s -test.v >> ./report.txt 2>&1 || true

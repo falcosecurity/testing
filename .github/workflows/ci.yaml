@@ -45,5 +45,6 @@ jobs:
           test-falco: 'true'
           test-falcoctl: 'true'
           test-k8saudit: 'true'
+          test-dummy: 'true'
           show-all: 'true'
           sudo: ''
