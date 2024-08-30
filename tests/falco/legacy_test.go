@@ -41,6 +41,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -159,10 +160,16 @@ func TestFalco_Legacy_StdoutOutputJsonStrict(t *testing.T) {
 	assert.Nil(t, err)
 	scanner := bufio.NewScanner(bytes.NewReader(expectedContent))
 	scanner.Split(bufio.ScanLines)
+	var expectedJsonLines []string
 	for scanner.Scan() {
-		assert.Contains(t, res.Stdout(), scanner.Text())
+		expectedJsonLines = append(expectedJsonLines, scanner.Text())
 	}
 	assert.Nil(t, scanner.Err())
+
+	outputLines := strings.Split(res.Stdout(), "\n")
+	for i, expectedLine := range expectedJsonLines {
+		require.JSONEq(t, expectedLine, outputLines[i])
+	}
 }
 
 func TestFalco_Legacy_ListAppendFalse(t *testing.T) {
