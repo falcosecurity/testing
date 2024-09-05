@@ -61,17 +61,30 @@ func WithConfig(f run.FileAccessor) TestOption {
 
 // WithEnabledTags runs Falco with enabled rules tags through the `-t` option.
 func WithEnabledTags(tags ...string) TestOption {
-	return withMultipleArgValues("-t", tags...)
+	return func(o *testOptions) {
+		o.args = append(o.args, "-o", "rules[].disable.rule=*")
+		for _, t := range tags {
+			o.args = append(o.args, "-o", "rules[].enable.tag="+t)
+		}
+	}
 }
 
 // WithDisabledTags runs Falco with disabled rules tags through the `-T` option.
 func WithDisabledTags(tags ...string) TestOption {
-	return withMultipleArgValues("-T", tags...)
+	return func(o *testOptions) {
+		for _, t := range tags {
+			o.args = append(o.args, "-o", "rules[].disable.tag="+t)
+		}
+	}
 }
 
-// WithDisabledRules runs Falco with disabled rules through the `-D` option.
+// WithDisabledRules runs Falco with disabled rules through the `rules:` config option.
 func WithDisabledRules(rules ...string) TestOption {
-	return withMultipleArgValues("-D", rules...)
+	return func(o *testOptions) {
+		for _, r := range rules {
+			o.args = append(o.args, "-o", "rules[].disable.rule="+r)
+		}
+	}
 }
 
 // WithEnabledSources runs Falco with enabled event sources through the `--enable-source` option.
