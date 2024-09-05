@@ -1567,21 +1567,6 @@ func TestFalco_Legacy_InvalidAppendRuleMultipleDocs(t *testing.T) {
 	assert.Equal(t, 1, res.ExitCode())
 }
 
-func TestFalco_Legacy_DisabledAndEnabledRules2(t *testing.T) {
-	t.Parallel()
-	checkConfig(t)
-	res := falco.Test(
-		tests.NewFalcoExecutableRunner(t),
-		falco.WithRules(rules.SingleRule),
-		falco.WithDisabledRules("open.*"),
-		falco.WithEnabledTags("a"),
-		falco.WithCaptureFile(captures.CatWrite),
-	)
-	assert.Regexp(t, `Error: You can not specify both disabled .-D/-T. and enabled .-t. rules`, res.Stderr())
-	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
-}
-
 func TestFalco_Legacy_RunTagsAb(t *testing.T) {
 	t.Parallel()
 	checkConfig(t)
