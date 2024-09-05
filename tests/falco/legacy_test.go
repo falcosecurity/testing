@@ -105,21 +105,6 @@ func TestFalco_Legacy_Endswith(t *testing.T) {
 	assert.Equal(t, 0, res.ExitCode())
 }
 
-func TestFalco_Legacy_DisabledAndEnabledRules1(t *testing.T) {
-	t.Parallel()
-	checkConfig(t)
-	res := falco.Test(
-		tests.NewFalcoExecutableRunner(t),
-		falco.WithRules(rules.SingleRule),
-		falco.WithDisabledTags("a"),
-		falco.WithEnabledTags("a"),
-		falco.WithCaptureFile(captures.CatWrite),
-	)
-	assert.Regexp(t, `Error: You can not specify both disabled .-D/-T. and enabled .-t. rules`, res.Stderr())
-	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
-}
-
 func TestFalco_Legacy_StdoutOutputStrict(t *testing.T) {
 	t.Parallel()
 	res := falco.Test(
