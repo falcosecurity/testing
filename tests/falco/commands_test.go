@@ -332,3 +332,34 @@ func TestFlaco_Rule_Info(t *testing.T) {
 		assert.Error(t, res.Err(), "%s", res.Stderr())
 	})
 }
+
+func TestFalco_Cmd_Help(t *testing.T) {
+	t.Parallel()
+	runner := tests.NewFalcoExecutableRunner(t)
+	tests := []struct {
+		name string
+		args []string
+	}{
+		{name: "-h flag", args: []string{"-h"}},
+		{name: "--help flag", args: []string{"--help"}},
+	}
+
+	outputs := []string{"-h", "-c", "-A", "-b", "-D", "-e", "-g", "-i", "-L", "-l",
+		"-M", "-N", "-o", "-p", "-P", "-r", "-S", "-T", "-t", "-U", "-V", "-v"}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			res := falco.Test(runner, falco.WithArgs(tc.args...))
+			assert.NoError(t, res.Err(), "%s", res.Stderr())
+			assert.Equal(t, res.ExitCode(), 0)
+
+			out := res.Stdout()
+
+			assert.Contains(t, out, "Usage:")
+			assert.Contains(t, out, "falco [OPTION...]")
+			for _, output := range outputs {
+				assert.Contains(t, out, output)
+			}
+		})
+	}
+}
