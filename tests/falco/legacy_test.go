@@ -2932,19 +2932,23 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 			falco.WithArgs("-o", "grpc.bind_address=unix://"+socketName),
 		)
 		require.NotContains(t, res.Stderr(), "Error starting gRPC server")
-		// todo(jasondellaluce): skipping this as it can be flacky (Falco sometimes shutsdown
+		// todo(jasondellaluce): skipping this as it can be flaky (Falco sometimes shuts down
 		// with exit code -1), we need to investigate on that
 		// require.Nil(t, res.Err())
 	}()
 
 	// wait up until Falco creates the unix socket
-	for i := 0; i < 10; i++ {
+	socketCreated := false
+	for i := 0; i < 50; i++ {
 		if _, err := os.Stat(socketName); err != nil {
 			time.Sleep(100 * time.Millisecond)
 			continue
 		}
+		socketCreated = true
 		break
 	}
+
+	assert.Truef(t, socketCreated, "The socket %s was not created successfully in the allotted time", socketName)
 
 	// connect using the Falco grpc client and collect detection
 	grpcClient, err := client.NewForConfig(ctx, &client.Config{UnixSocketPath: "unix://" + socketName})
@@ -2966,7 +2970,7 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 
 	// perform checks on the detections
 	// todo(jasondellaluce): add deeper checks on the received struct
-	require.Equal(t, expectedErr, err)
+	require.Equal(t, expectedErr.Error(), err.Error())
 	assert.Equal(t, expectedCount, detections.Count())
 	assert.Equal(t, expectedCount, detections.
 		OfPriority("WARNING").
