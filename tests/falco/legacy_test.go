@@ -2932,6 +2932,11 @@ func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
 			falco.WithArgs("-o", "grpc.bind_address=unix://"+socketName),
 		)
 		require.NotContains(t, res.Stderr(), "Error starting gRPC server")
+		t.Log("-----------------------------")
+		t.Logf("stdout: %s", res.Stdout())
+		t.Log("-----------------------------")
+		t.Logf("stderr: %s", res.Stderr())
+		t.Log("-----------------------------")
 		// todo(jasondellaluce): skipping this as it can be flaky (Falco sometimes shuts down
 		// with exit code -1), we need to investigate on that
 		// require.Nil(t, res.Err())
