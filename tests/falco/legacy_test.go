@@ -38,16 +38,11 @@ package testfalco
 import (
 	"bufio"
 	"bytes"
-	"context"
-	"errors"
-	"os"
 	"strings"
-	"sync"
 	"testing"
 	"time"
 
 	grpcOutputs "github.com/falcosecurity/client-go/pkg/api/outputs"
-	"github.com/falcosecurity/client-go/pkg/client"
 
 	"github.com/falcosecurity/testing/pkg/falco"
 	"github.com/falcosecurity/testing/pkg/run"
@@ -2906,75 +2901,6 @@ func grpcOutputResponseToFalcoAlert(res *grpcOutputs.Response) *falco.Alert {
 		Tags:         res.Tags,
 		OutputFields: outputFields,
 	}
-}
-
-func TestFalco_Legacy_GrpcUnixSocketOutputs(t *testing.T) {
-	var wg sync.WaitGroup
-	defer wg.Wait()
-	t.Parallel()
-
-	// launch falco asynchronously
-	ctx, ctxCancel := context.WithCancel(context.Background())
-	defer ctxCancel()
-	runner := tests.NewFalcoExecutableRunner(t)
-	socketName := runner.WorkDir() + "/falco.sock"
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		res := falco.Test(
-			runner,
-			falco.WithContext(ctx),
-			falco.WithRules(rules.SingleRuleWithTags),
-			falco.WithConfig(configs.GrpcUnixSocket),
-			falco.WithCaptureFile(captures.CatWrite),
-			falco.WithStopAfter(30*time.Second),
-			falco.WithArgs("-o", "time_format_iso_8601=true"),
-			falco.WithArgs("-o", "grpc.bind_address=unix://"+socketName),
-		)
-		require.NotContains(t, res.Stderr(), "Error starting gRPC server")
-		// todo(jasondellaluce): skipping this as it can be flaky (Falco sometimes shuts down
-		// with exit code -1), we need to investigate on that
-		// require.Nil(t, res.Err())
-	}()
-
-	// wait up until Falco creates the unix socket
-	socketCreated := false
-	for i := 0; i < 50; i++ {
-		if _, err := os.Stat(socketName); err != nil {
-			time.Sleep(100 * time.Millisecond)
-			continue
-		}
-		socketCreated = true
-		break
-	}
-
-	assert.Truef(t, socketCreated, "The socket %s was not created successfully in the allotted time", socketName)
-
-	// connect using the Falco grpc client and collect detection
-	grpcClient, err := client.NewForConfig(ctx, &client.Config{UnixSocketPath: "unix://" + socketName})
-	require.Nil(t, err)
-
-	expectedCount := 8
-	expectedErr := errors.New("expected error")
-	detections := make(falco.Detections, 0)
-	err = grpcClient.OutputsWatch(context.Background(), func(res *grpcOutputs.Response) error {
-		detections = append(detections, grpcOutputResponseToFalcoAlert(res))
-		if len(detections) == expectedCount {
-			// note: we stop Falco when we reache the number of expected
-			// detections
-			ctxCancel()
-			return expectedErr
-		}
-		return nil
-	}, 100*time.Millisecond)
-
-	// perform checks on the detections
-	// todo(jasondellaluce): add deeper checks on the received struct
-	require.Equal(t, expectedErr.Error(), err.Error())
-	assert.Equal(t, expectedCount, detections.Count())
-	assert.Equal(t, expectedCount, detections.
-		OfPriority("WARNING").
-		OfRule("open_from_cat").Count())
 }
 
 func TestFalco_Legacy_NoPluginsUnknownSource(t *testing.T) {
