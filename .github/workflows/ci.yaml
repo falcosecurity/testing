@@ -32,7 +32,7 @@ jobs:
     name: Run Tests on falcosecurity/falco image
     runs-on: ubuntu-latest
     container:
-      image: falcosecurity/falco:${{ github.event.inputs.version || 'master' }}
+      image: falcosecurity/falco-driver-loader:${{ github.event.inputs.version || 'master' }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
