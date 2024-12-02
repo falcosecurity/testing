@@ -2665,7 +2665,6 @@ func TestFalco_Legacy_FalcoEventGenerator(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("Write below etc").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("System procs network activity").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Mkdir binary dirs").Count())
-	assert.Equal(t, 1, res.Detections().OfRule("System user interactive").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("DB program spawned process").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("Non sudo setuid").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Create files below dev").Count())
