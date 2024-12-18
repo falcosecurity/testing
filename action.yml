@@ -34,6 +34,10 @@ inputs:
     description: 'Specify a sudo command. Put it empty when sudo is not available.'
     required: false
     default: 'sudo'
+  report-name-suffix:
+    description: 'A suffix for the testing report name which will be uploaded to GitHub'
+    required: false
+    default: ''
 
 outputs:
   report:
@@ -127,7 +131,7 @@ runs:
       if: always() # note: upload the report even if tests fail
       uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
       with:
-        name: falcosecurity-testing-report-${{ runner.arch }}
+        name: falcosecurity-testing-report-${{ runner.arch }}${{ inputs.report-name-suffix }}
         path: |
           ${{ steps.store-outputs.outputs.report }}
           ${{ steps.store-outputs.outputs.report_txt }}
