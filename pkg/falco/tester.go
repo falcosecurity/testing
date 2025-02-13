@@ -35,7 +35,8 @@ var (
 		"/proc:/host/proc:ro",
 		"/var/run/docker.sock:/host/var/run/docker.sock",
 	}
-	FalcoConfig = DefaultConfigFile
+	FalcoConfig                 = DefaultConfigFile
+	FalcoContainerPluginLibrary = DefaultPluginPath + "/libcontainer.so"
 )
 
 const (
@@ -47,6 +48,9 @@ const (
 	//
 	// DefaultConfigFile is the default path of the Falco config file
 	DefaultConfigFile = "/etc/falco/falco.yaml"
+	//
+	// DefaultPluginPath is the default path to the Falco plugins
+	DefaultPluginPath = "/usr/share/falco/plugins"
 )
 
 type testOptions struct {
@@ -78,7 +82,7 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 			ctx:      context.Background(),
 		},
 	}
-	
+
 	// enforce Falco config path as default
 	res.opts.args = append(res.opts.args, "-c", FalcoConfig)
 
