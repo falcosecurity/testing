@@ -21,7 +21,6 @@ package tests
 import (
 	"flag"
 	"os"
-	"os/user"
 	"testing"
 
 	"github.com/falcosecurity/testing/pkg/falco"
@@ -42,6 +41,7 @@ func init() {
 	flag.StringVar(&falcoBinary, "falco-binary", falcoBinary, "Falco executable binary path")
 	flag.StringVar(&falcoctlBinary, "falcoctl-binary", falcoctlBinary, "falcoctl executable binary path")
 	flag.StringVar(&falco.FalcoConfig, "falco-config", falco.FalcoConfig, "Falco config file path")
+	flag.StringVar(&falco.FalcoContainerPluginLibrary, "falco-container-plugin", falco.FalcoContainerPluginLibrary, "Path to the Falco container plugin shared object.")
 
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetFormatter(&logrus.JSONFormatter{})
@@ -65,21 +65,6 @@ func NewFalcoctlExecutableRunner(t *testing.T) run.Runner {
 	runner, err := run.NewExecutableRunner(falcoctl.DefaultExecutable)
 	require.Nil(t, err)
 	return runner
-}
-
-// IsRootUser returns true if the program is run as root.
-func IsRootUser(t *testing.T) bool {
-	currentUser, err := user.Current()
-	require.Nil(t, err)
-	return currentUser.Uid == "0"
-}
-
-// IsInContainer returns true if the program is run inside a container.
-func IsInContainer() bool {
-	if _, err := os.Stat("/.dockerenv"); err == nil {
-		return true
-	}
-	return false
 }
 
 // IsStaticFalcoExecutable returns true if Falco executables use a static build.

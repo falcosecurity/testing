@@ -21,6 +21,7 @@ package falco
 import (
 	"bytes"
 	"encoding/json"
+	"os"
 	"text/template"
 
 	"github.com/falcosecurity/testing/pkg/run"
@@ -55,6 +56,16 @@ func (p *PluginConfigInfo) initConfigString() string {
 // (i.e. falco.yaml) loading one or more plugins.
 func NewPluginConfig(configName string, plugins ...*PluginConfigInfo) (run.FileAccessor, error) {
 	var buf bytes.Buffer
+
+	// If we are running a newer Falco version with
+	// the container plugin, enforce it to the
+	if _, err := os.Stat(FalcoContainerPluginLibrary); err == nil {
+		plugins = append(plugins, &PluginConfigInfo{
+			Name:    "container",
+			Library: FalcoContainerPluginLibrary,
+		})
+	}
+
 	err := template.Must(template.New("").Parse(`
 stdout_output:
   enabled: true
