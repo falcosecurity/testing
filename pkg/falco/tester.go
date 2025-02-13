@@ -86,6 +86,12 @@ func Test(runner run.Runner, options ...TestOption) *TestOutput {
 	// enforce Falco config path as default
 	res.opts.args = append(res.opts.args, "-c", FalcoConfig)
 
+	// avoids that the container plugin appends its suggested fields
+	// to the rules formatting; in some cases, that can make some tests fail
+	// because expected output format would not match with provided string.
+	// For example: TestFalco_Legacy_ValidateSkipUnknownNoevt and TestFalco_Legacy_InvalidRuleOutput.
+	res.opts.args = append(res.opts.args, "-o", "append_output.suggested_output=false")
+
 	for _, o := range options {
 		o(res.opts)
 	}
