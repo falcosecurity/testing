@@ -28,20 +28,13 @@ import (
 )
 
 var (
-	// PrivilegedDockerBinds is the set of Docker binds required by Falco
-	// when running as a Docker privileged container
-	PrivilegedDockerBinds = []string{
-		"/dev:/host/dev",
-		"/proc:/host/proc:ro",
-		"/var/run/docker.sock:/host/var/run/docker.sock",
-	}
 	FalcoConfig                 = DefaultConfigFile
 	FalcoContainerPluginLibrary = DefaultPluginPath + "/libcontainer.so"
 )
 
 const (
 	// DefaultMaxDuration is the default max duration of a Falco run
-	DefaultMaxDuration = time.Second * 180
+	DefaultMaxDuration = time.Minute * 5
 	//
 	// DefaultExecutable is the default path of the Falco executable
 	DefaultExecutable = "/usr/bin/falco"
