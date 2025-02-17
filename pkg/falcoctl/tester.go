@@ -29,7 +29,7 @@ import (
 
 const (
 	// DefaultMaxDuration is the default max duration of a falcoctl run
-	DefaultMaxDuration = time.Second * 30
+	DefaultMaxDuration = time.Minute * 5
 	//
 	// DefaultExecutable is the default path of the falcoctl executable
 	// when installed from a Falco package
