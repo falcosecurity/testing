@@ -125,7 +125,7 @@ func WithOutputJSON() TestOption {
 // WithAllEvents runs Falco with all events enabled through the `-A` option.
 func WithAllEvents() TestOption {
 	return func(o *testOptions) {
-		o.args = append(o.args, "-A")
+		o.args = append(o.args, "-o", "base_syscalls.all=true")
 	}
 }
 
