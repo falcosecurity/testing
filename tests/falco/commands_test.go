@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 /*
-Copyright (C) 2023 The Falco Authors.
+Copyright (C) 2025 The Falco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -344,8 +344,37 @@ func TestFalco_Cmd_Help(t *testing.T) {
 		{name: "--help flag", args: []string{"--help"}},
 	}
 
-	outputs := []string{"-h", "-c", "-A", "-b", "-D", "-e", "-g", "-i", "-L", "-l",
-		"-M", "-N", "-o", "-p", "-P", "-r", "-S", "-T", "-t", "-U", "-V", "-v"}
+	// Falco 0.41
+	outputs := []string{
+		"-h", "--help",
+		"-c",
+		"--config-schema",
+		"--rule-schema",
+		"--disable-source",
+		"--dry-run",
+		"--enable-source",
+		"--gvisor-generate-config",
+		"-i",
+		"-L",
+		"-l",
+		"--list",
+		"--list-events",
+		"--list-plugins",
+		"-M",
+		"--markdown",
+		"-N",
+		"-o", "--option",
+		"--plugin-info",
+		"-p", "--print",
+		"-P", "--pidfile",
+		"-r",
+		"--support",
+		"-U", "--unbuffered",
+		"-V", "--validate",
+		"-v",
+		"--version",
+		"--page-size",
+	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
