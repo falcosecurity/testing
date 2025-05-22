@@ -346,7 +346,7 @@ func TestFalco_Cmd_Help(t *testing.T) {
 	}
 
 	// Falco 0.41
-	outputs := []string{
+	helpList := []string{
 		"-h", "--help",
 		"-c",
 		"--config-schema",
@@ -378,7 +378,7 @@ func TestFalco_Cmd_Help(t *testing.T) {
 	// Gvisor is amd64 only:
 	// https://github.com/falcosecurity/libs/blob/d1f550a596b2f04db7b5853bb92c68baeeae8cb1/cmake/modules/engine_config.cmake#L26
 	if runtime.GOARCH == "amd64" {
-		outputs = append(outputs, "--gvisor-generate-config")
+		helpList = append(helpList, "--gvisor-generate-config")
 	}
 
 	for _, tc := range tests {
@@ -391,7 +391,7 @@ func TestFalco_Cmd_Help(t *testing.T) {
 
 			assert.Contains(t, out, "Usage:")
 			assert.Contains(t, out, "falco [OPTION...]")
-			for _, output := range outputs {
+			for _, output := range helpList {
 				assert.Contains(t, out, output)
 			}
 		})
