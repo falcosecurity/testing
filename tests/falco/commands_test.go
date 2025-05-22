@@ -20,6 +20,7 @@ package testfalco
 
 import (
 	"regexp"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -353,7 +354,6 @@ func TestFalco_Cmd_Help(t *testing.T) {
 		"--disable-source",
 		"--dry-run",
 		"--enable-source",
-		"--gvisor-generate-config",
 		"-i",
 		"-L",
 		"-l",
@@ -374,6 +374,11 @@ func TestFalco_Cmd_Help(t *testing.T) {
 		"-v",
 		"--version",
 		"--page-size",
+	}
+	// Gvisor is amd64 only:
+	// https://github.com/falcosecurity/libs/blob/d1f550a596b2f04db7b5853bb92c68baeeae8cb1/cmake/modules/engine_config.cmake#L26
+	if runtime.GOARCH == "amd64" {
+		outputs = append(outputs, "--gvisor-generate-config")
 	}
 
 	for _, tc := range tests {
