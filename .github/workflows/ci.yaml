@@ -30,7 +30,11 @@ on:
 jobs:
   build:
     name: Run Tests on falcosecurity/falco image
-    runs-on: ubuntu-latest
+    runs-on: ${{ (matrix.arch == 'arm64' && 'ubuntu-24.04-arm') || 'ubuntu-24.04' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [amd64, arm64]
     container:
       image: falcosecurity/falco-driver-loader:${{ github.event.inputs.version || 'master' }}
     steps:
