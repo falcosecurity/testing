@@ -109,26 +109,26 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--list-plugins"),
-		falco.WithArgs("-o", "load_plugins[0]=cloudtrail"),
+		falco.WithArgs("-o", "load_plugins[0]=container"),
 		falco.WithArgs("-o", "load_plugins[1]=json"),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
 	assert.Regexp(t, regexp.MustCompile(
 		`2 Plugins Loaded:[\s]+`+
-			`Name: cloudtrail[\s]+`+
+			`Name: container[\s]+`+
 			`Description: .*[\s]+`+
 			`Contact: .*[\s]+`+
 			`Version: .*[\s]+`+
 			`Capabilities:[\s]+`+
-			`- Event Sourcing \(ID=2, source='aws_cloudtrail'\)[\s]+`+
 			`- Field Extraction[\s]+`+
+			`- Event Parsing[\s]+`+
+			`- Async Events[\s]+`+
 			`Name: json[\s]+`+
 			`Description: .*[\s]+`+
 			`Contact: .*[\s]+`+
 			`Version: .*[\s]+`+
 			`Capabilities:[\s]+`+
-			`[\s]+`+
 			`- Field Extraction`),
 		res.Stdout())
 }
@@ -139,21 +139,21 @@ func TestFalco_Cmd_PluginInfo(t *testing.T) {
 	checkNotStaticExecutable(t)
 	res := falco.Test(
 		tests.NewFalcoExecutableRunner(t),
-		falco.WithArgs("--plugin-info=cloudtrail"),
-		falco.WithArgs("-o", "load_plugins[0]=cloudtrail"),
+		falco.WithArgs("--plugin-info=container"),
+		falco.WithArgs("-o", "load_plugins[0]=container"),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
 	assert.Regexp(t, regexp.MustCompile(
-		`Name: cloudtrail[\s]+`+
+		`Name: container[\s]+`+
 			`Description: .*[\s]+`+
 			`Contact: .*[\s]+`+
 			`Version: .*[\s]+`+
 			`Capabilities:[\s]+`+
-			`- Event Sourcing \(ID=2, source='aws_cloudtrail'\)[\s]+`+
 			`- Field Extraction[\s]+`+
-			`Init config schema type: JSON[\s]+.*[\s]+`+
-			`No suggested open params available.*`),
+			`- Event Parsing[\s]+`+
+			`- Async Events[\s]+`+
+			`Init config schema type: JSON[\s]+.*[\s]+`),
 		res.Stdout())
 }
 
