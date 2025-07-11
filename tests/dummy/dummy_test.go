@@ -20,6 +20,7 @@ func runFalcoWithDummy(t *testing.T, r run.Runner, opts ...falco.TestOption) *fa
 		&falco.PluginConfigInfo{
 			Name:       "dummy",
 			Library:    plugins.DummyPlugin.Name(),
+			InitConfig: `{"foo": "bar"}`, // add dummy init config to ensure plugins with init config work
 			OpenParams: `'{"start": 1, "maxEvents": 2000000000}'`,
 		},
 	)
