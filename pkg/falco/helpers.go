@@ -37,8 +37,7 @@ type PluginConfigInfo struct {
 	InitConfig interface{}
 }
 
-//lint:ignore U1000 this receiver is invoked in a tamplete and is not actually unused
-func (p *PluginConfigInfo) initConfigString() string {
+func (p *PluginConfigInfo) InitConfigString() string {
 	if p.InitConfig == nil {
 		return ""
 	}
@@ -72,7 +71,7 @@ stdout_output:
 plugins:
 {{ range $i, $p := . }}  - name: {{ $p.Name }}
     library_path: {{ $p.Library }}{{ if $p.InitConfig }}
-    init_config: {{ call $p.initConfigString }}{{ end }}{{ if $p.OpenParams }}
+    init_config: {{ $p.InitConfigString }}{{ end }}{{ if $p.OpenParams }}
     open_params: {{ $p.OpenParams }}{{ end }}
 {{ end }}load_plugins:{{ range $i, $p := . }}
   - {{ $p.Name }}
