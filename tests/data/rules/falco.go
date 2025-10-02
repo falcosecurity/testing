@@ -1373,7 +1373,7 @@ var AppendUnknownSource = run.NewStringFileAccessor(
 var RulesListWithPluginJSON = run.NewStringFileAccessor(
 	"rule-list-with-plugin-json.yaml",
 	`
-- required_engine_version: 11
+- required_engine_version: 0.11.0
 
 - required_plugin_versions:
   - name: json

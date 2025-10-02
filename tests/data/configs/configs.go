@@ -319,6 +319,16 @@ load_plugins: [k8saudit, json]
 `,
 )
 
+var PluginsJson = run.NewStringFileAccessor(
+	"json_plugin_config.yaml",
+	`
+plugins:
+  - name: json
+    library_path: /usr/share/falco/plugins/libjson.so
+    init_config: ""
+`,
+)
+
 var PluginsOverlapExtractSources = run.NewStringFileAccessor(
 	"overlap_extract_sources.yaml",
 	`
