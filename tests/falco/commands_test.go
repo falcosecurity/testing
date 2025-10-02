@@ -217,6 +217,9 @@ func TestFalco_Print_Rules(t *testing.T) {
 
 		assert.NoError(t, res.Err())
 		infos := res.RulesetDescription()
+		if infos == nil {
+			t.Fatalf("RulesetDescription returned nil, stdout: %s, stderr: %s", res.Stdout(), res.Stderr())
+		}
 		assert.NotNil(t, infos)
 
 		// check required engine version
