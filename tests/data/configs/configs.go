@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 /*
-Copyright (C) 2023 The Falco Authors.
+Copyright (C) 2025 The Falco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -324,7 +324,7 @@ var PluginsJson = run.NewStringFileAccessor(
 	`
 plugins:
   - name: json
-    library_path: BUILD_DIR/json-plugin-prefix/src/json-plugin/libjson.so
+    library_path: /usr/share/falco/plugins/libjson.so
     init_config: ""
 `,
 )
