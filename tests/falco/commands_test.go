@@ -115,7 +115,7 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
 	assert.Regexp(t, regexp.MustCompile(
-		`2 Plugins Loaded:[\s]+`+
+		`1 Plugins Loaded:[\s]+`+
 			`Name: container[\s]+`+
 			`Description: .*[\s]+`+
 			`Contact: .*[\s]+`+
