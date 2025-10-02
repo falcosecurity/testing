@@ -93,23 +93,22 @@ runs:
       shell: bash  
       run: |
         if ${{ inputs.test-falco == 'true' }}; then
-          ./build/falco.test -falco-static=${{ inputs.static }} -test.timeout=600s -test.v >> ./report.txt 2>&1
+          ./build/falco.test -falco-static=${{ inputs.static }} -test.timeout=600s -test.v >> ./report.txt 2>&1 || cat ./report.txt
         fi
         if ${{ inputs.static == 'false' }}; then
           if ${{ inputs.test-falcoctl == 'true' }}; then
-            ./build/falcoctl.test -test.timeout=600s -test.v >> ./report.txt 2>&1
+            ./build/falcoctl.test -test.timeout=600s -test.v >> ./report.txt 2>&1 || cat ./report.txt
           fi
           if ${{ inputs.test-k8saudit == 'true' }}; then
-            ./build/k8saudit.test -test.timeout=600s -test.v >> ./report.txt 2>&1
+            ./build/k8saudit.test -test.timeout=600s -test.v >> ./report.txt 2>&1 || cat ./report.txt
           fi
           if ${{ inputs.test-dummy == 'true' }}; then
-            ./build/dummy.test -test.timeout=600s -test.v >> ./report.txt 2>&1
+            ./build/dummy.test -test.timeout=600s -test.v >> ./report.txt 2>&1 || cat ./report.txt
           fi
           if ${{ inputs.test-drivers == 'true' }}; then
-            ${{ inputs.sudo }} ./build/falco-driver-loader.test -test.timeout=600s -test.v >> ./report.txt 2>&1
+            ${{ inputs.sudo }} ./build/falco-driver-loader.test -test.timeout=600s -test.v >> ./report.txt 2>&1 || cat ./report.txt
           fi
         fi
-        cat ./report.txt
         cat ./report.txt | go-junit-report -set-exit-code > report.xml
      
     - name: Set outputs
