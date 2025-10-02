@@ -26,6 +26,7 @@ import (
 
 	"github.com/falcosecurity/testing/pkg/falco"
 	"github.com/falcosecurity/testing/tests"
+	"github.com/falcosecurity/testing/tests/data/configs"
 	"github.com/falcosecurity/testing/tests/data/outputs"
 	"github.com/falcosecurity/testing/tests/data/rules"
 
@@ -110,7 +111,6 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 		tests.NewFalcoExecutableRunner(t),
 		falco.WithArgs("--list-plugins"),
 		falco.WithArgs("-o", "load_plugins[0]=container"),
-		falco.WithArgs("-o", "load_plugins[1]=json"),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, res.ExitCode(), 0)
@@ -123,13 +123,7 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 			`Capabilities:[\s]+`+
 			`- Field Extraction[\s]+`+
 			`- Event Parsing[\s]+`+
-			`- Async Events[\s]+`+
-			`Name: json[\s]+`+
-			`Description: .*[\s]+`+
-			`Contact: .*[\s]+`+
-			`Version: .*[\s]+`+
-			`Capabilities:[\s]+`+
-			`- Field Extraction`),
+			`- Async Events`),
 		res.Stdout())
 }
 
@@ -214,6 +208,7 @@ func TestFalco_Print_Rules(t *testing.T) {
 		checkNotStaticExecutable(t)
 		res := falco.Test(
 			runner,
+			falco.WithConfig(configs.PluginsJson),
 			falco.WithArgs("-L"),
 			falco.WithOutputJSON(),
 			falco.WithArgs("-o", "load_plugins[0]=json"),
