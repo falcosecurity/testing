@@ -302,7 +302,7 @@ func TestFalco_Print_Rules(t *testing.T) {
 	})
 }
 
-func TestFlaco_Rule_Info(t *testing.T) {
+func TestFalco_Rule_Info(t *testing.T) {
 	t.Parallel()
 	runner := tests.NewFalcoExecutableRunner(t)
 	t.Run("valid-rule-name", func(t *testing.T) {

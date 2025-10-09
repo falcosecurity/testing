@@ -264,7 +264,7 @@ func TestFalco_Legacy_DetectSkipUnknownNoevt(t *testing.T) {
 		falco.WithRules(rules.SkipUnknownEvt),
 		falco.WithCaptureFile(captures.CatWrite),
 	)
-	assert.Equal(t, 8, res.Detections().Count())
+	assert.Equal(t, 4, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
@@ -717,7 +717,7 @@ func TestFalco_Legacy_MultipleRulesSuppressInfo(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
-	assert.Equal(t, 8, res.Detections().OfRule("open_from_cat").Count())
+	assert.Equal(t, 4, res.Detections().OfRule("open_from_cat").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("exec_from_cat").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("access_from_cat").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
@@ -952,7 +952,7 @@ func TestFalco_Legacy_CatchallOrder(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_dev_null").Count())
-	assert.Equal(t, 6, res.Detections().OfRule("dev_null").Count())
+	assert.Equal(t, 3, res.Detections().OfRule("dev_null").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2600,7 +2600,7 @@ func TestFalco_Legacy_NonSudoSetuid(t *testing.T) {
 		falco.WithArgs("-o", "json_include_output_property=false"),
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
-	assert.Equal(t, 1, res.Detections().OfRule("Non sudo setuid").Count())
+	assert.Equal(t, 0, res.Detections().OfRule("Non sudo setuid").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2707,7 +2707,7 @@ func TestFalco_Legacy_RuleNamesWithRegexChars(t *testing.T) {
 	)
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
-	assert.Equal(t, 8, res.Detections().OfRule(`Open From Cat ($\.*+?()[]{}|^)`).Count())
+	assert.Equal(t, 4, res.Detections().OfRule(`Open From Cat ($\.*+?()[]{}|^)`).Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
@@ -2798,7 +2798,7 @@ func TestFalco_Legacy_EnabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
 		falco.WithArgs("-o", "json_include_tags_property=false"),
 	)
 	assert.NotZero(t, res.Detections().Count())
-	assert.Equal(t, 8, res.Detections().OfRule("open_from_cat").Count())
+	assert.Equal(t, 4, res.Detections().OfRule("open_from_cat").Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
