@@ -19,14 +19,15 @@ limitations under the License.
 package testfalco
 
 import (
-	"github.com/falcosecurity/testing/pkg/run"
-	"github.com/falcosecurity/testing/tests/data/rules"
 	"net/http"
 	"os"
 	"path/filepath"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/falcosecurity/testing/pkg/run"
+	"github.com/falcosecurity/testing/tests/data/rules"
 
 	"github.com/falcosecurity/testing/pkg/falco"
 	"github.com/falcosecurity/testing/tests"
@@ -43,13 +44,13 @@ import (
 // todo(jasondellaluce): test Falco behavior on environment variables and their
 // priorities in combination with their args/configs/cmds counterparts:
 //   FALCO_K8S_API, FALCO_K8S_API_CERT, FALCO_MESOS_API, FALCO_HOSTNAME,
-//   FALCO_GRPC_HOSTNAME, FALCO_BPF_PROBE, HOME (used for bpf probe)
+//   FALCO_GRPC_HOSTNAME
 //
 // todo(jasondellaluce): implement tests for Falco reaction to signals:
 //   SIGINT, SIGUSR1, SIGHUP
 //
 // todo(jasondellaluce): implement tests for other non-covered Falco things:
-//   - collection of live events with kmod, bpf, modern-bpf, gvisor, userspace
+//   - collection of live events with kmod, modern-bpf, gvisor, userspace
 //   - collection of live events with multiple event sources active at the same
 //   - stress test with event generator, checking memory usage and event drops
 
