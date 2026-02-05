@@ -50,7 +50,7 @@ import (
 //   SIGINT, SIGUSR1, SIGHUP
 //
 // todo(jasondellaluce): implement tests for other non-covered Falco things:
-//   - collection of live events with kmod, modern-bpf, gvisor, userspace
+//   - collection of live events with kmod, modern-bpf, userspace
 //   - collection of live events with multiple event sources active at the same
 //   - stress test with event generator, checking memory usage and event drops
 

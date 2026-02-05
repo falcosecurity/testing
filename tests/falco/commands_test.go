@@ -20,7 +20,6 @@ package testfalco
 
 import (
 	"regexp"
-	"runtime"
 	"strings"
 	"testing"
 
@@ -37,7 +36,7 @@ import (
 // todo(jasondellaluce): implement tests for the non-covered Falco cmds/args:
 // Commands printing information:
 //   -h, --help, --support, -l, --list, --list-syscall-events,
-//   --markdown, -N, --gvisor-generate-config, --page-size
+//   --markdown, -N, --page-size
 // Metadata collection and container runtimes:
 //   --cri, --disable-cri-async, -k, --k8s-api, -K, --k8s-api-cert, --k8s-node, -m, --mesos-api
 // Changers of Falco's behavior:
@@ -341,7 +340,7 @@ func TestFalco_Cmd_Help(t *testing.T) {
 		{name: "--help flag", args: []string{"--help"}},
 	}
 
-	// Falco 0.41
+	// Falco 0.43
 	helpList := []string{
 		"-h", "--help",
 		"-c",
@@ -370,11 +369,6 @@ func TestFalco_Cmd_Help(t *testing.T) {
 		"-v",
 		"--version",
 		"--page-size",
-	}
-	// Gvisor is amd64 only:
-	// https://github.com/falcosecurity/libs/blob/d1f550a596b2f04db7b5853bb92c68baeeae8cb1/cmake/modules/engine_config.cmake#L26
-	if runtime.GOARCH == "amd64" {
-		helpList = append(helpList, "--gvisor-generate-config")
 	}
 
 	for _, tc := range tests {
