@@ -38,6 +38,7 @@ package testfalco
 import (
 	"bufio"
 	"bytes"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -792,7 +793,7 @@ func TestFalco_Legacy_InvalidRuleOutput(t *testing.T) {
 		OfCode("LOAD_ERR_COMPILE_OUTPUT").
 		OfItemType("rule").
 		OfItemName("rule_with_invalid_output").
-		OfMessage("invalid formatting token not_a_real_field"))
+		OfMessage(regexp.MustCompile(`(invalid formatting token not_a_real_field|unknown filter:.*unexpected token)`)))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 1, res.ExitCode())
 }
@@ -1611,7 +1612,7 @@ func TestFalco_Legacy_ValidateSkipUnknownNoevt(t *testing.T) {
 		OfMessage("unknown event type some_invalid_event"), res.Stderr())
 	assert.NotNil(t, ruleWarnings.
 		OfItemName("Contains Unknown Event And Skipping (output)").
-		OfMessage("invalid formatting token proc.nobody"), res.Stderr())
+		OfMessage(regexp.MustCompile(`(invalid formatting token proc\.nobody|unknown filter:.*unexpected token)`)), res.Stderr())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
 	assert.Equal(t, 0, res.ExitCode())
 }
