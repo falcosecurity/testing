@@ -81,13 +81,15 @@ func WithEnvVars(vars map[string]string) RunnerOption {
 	}
 }
 
-// ExitCodeError is an error representing the exit code of Falco
-type ExitCodeError struct {
+// ExitError is an error representing the exit code of Falco and a description of the exit reason (useful when Falco
+// process crashes).
+type ExitError struct {
 	Code int
+	Desc string
 }
 
-func (c *ExitCodeError) Error() string {
-	return fmt.Sprintf("error code %d", c.Code)
+func (c *ExitError) Error() string {
+	return fmt.Sprintf("exit error(code: %d, desc: %s)", c.Code, c.Desc)
 }
 
 func buildRunOptions(opts ...RunnerOption) *runOpts {

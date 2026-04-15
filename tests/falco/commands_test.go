@@ -59,7 +59,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 		t.Parallel()
 		res := falco.Test(runner, falco.WithArgs("--version"))
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 0)
+		assert.Zero(t, res.ExitCode(), res.ExitDesc())
 		// Falco version supports:
 		// - (dev) -> 0.36.0-198+30aa28f
 		// - (release) -> 0.36.0
@@ -91,7 +91,7 @@ func TestFalco_Cmd_Version(t *testing.T) {
 		)
 		out := res.StdoutJSON()
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 0)
+		assert.Zero(t, res.ExitCode(), res.ExitDesc())
 		assert.Contains(t, out, "default_driver_version")
 		assert.Contains(t, out, "driver_api_version")
 		assert.Contains(t, out, "driver_schema_version")
@@ -112,7 +112,7 @@ func TestFalco_Cmd_ListPlugins(t *testing.T) {
 		falco.WithArgs("-o", "load_plugins[0]=container"),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, res.ExitCode(), 0)
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	assert.Regexp(t, regexp.MustCompile(
 		`1 Plugins Loaded:[\s]+`+
 			`Name: container[\s]+`+
@@ -136,7 +136,7 @@ func TestFalco_Cmd_PluginInfo(t *testing.T) {
 		falco.WithArgs("-o", "load_plugins[0]=container"),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, res.ExitCode(), 0)
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	assert.Regexp(t, regexp.MustCompile(
 		`Name: container[\s]+`+
 			`Description: .*[\s]+`+
@@ -168,7 +168,7 @@ func TestFalco_Print_IgnoredEvents(t *testing.T) {
 		assert.Contains(t, res.Stdout(), event)
 	}
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, res.ExitCode(), 0)
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Print_Rules(t *testing.T) {
@@ -185,7 +185,7 @@ func TestFalco_Print_Rules(t *testing.T) {
 			falco.WithRules(rules.InvalidRuleOutput),
 		)
 		assert.Error(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 1)
+		assert.Equal(t, res.ExitCode(), 1, res.ExitDesc())
 	})
 
 	t.Run("text-valid-rules", func(t *testing.T) {
@@ -200,7 +200,7 @@ func TestFalco_Print_Rules(t *testing.T) {
 			assert.Contains(t, res.Stdout(), rule)
 		}
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 0)
+		assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	})
 
 	t.Run("json-valid-rules", func(t *testing.T) {
@@ -375,7 +375,7 @@ func TestFalco_Cmd_Help(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			res := falco.Test(runner, falco.WithArgs(tc.args...))
 			assert.NoError(t, res.Err(), "%s", res.Stderr())
-			assert.Equal(t, res.ExitCode(), 0)
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 
 			out := res.Stdout()
 

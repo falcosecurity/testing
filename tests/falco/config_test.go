@@ -39,7 +39,7 @@ func TestFalco_Config_RuleMatchingFirst(t *testing.T) {
 		falco.WithOutputJSON(),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	assert.Equal(t, 1, res.Detections().Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_1").Count())
 }
@@ -54,7 +54,7 @@ func TestFalco_Config_RuleMatchingAll(t *testing.T) {
 		falco.WithOutputJSON(),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	assert.Equal(t, 2, res.Detections().Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_1").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_2").Count())
@@ -72,7 +72,7 @@ func TestFalco_Config_RuleMatchingWrongValue(t *testing.T) {
 	assert.NotNil(t, res.Stderr())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
 	assert.Contains(t, res.Stderr(), "Unknown rule matching strategy")
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Config_Metrics_Enabled(t *testing.T) {
@@ -85,5 +85,5 @@ func TestFalco_Config_Metrics_Enabled(t *testing.T) {
 		falco.WithOutputJSON(),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }

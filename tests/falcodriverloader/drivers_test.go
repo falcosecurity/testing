@@ -46,7 +46,7 @@ func TestFalcoKmod(t *testing.T) {
 		falcoctl.WithArgs("driver", "install", "--download=false", "--type", "kmod"),
 	)
 	assert.NoError(t, loaderRes.Err(), "%s", loaderRes.Stderr())
-	assert.Equal(t, 0, loaderRes.ExitCode())
+	assert.Zero(t, loaderRes.ExitCode(), loaderRes.ExitDesc())
 	// We expect the module to be loaded in dkms
 	assert.Regexp(t, `kernel module available.`, loaderRes.Stdout())
 
@@ -57,7 +57,7 @@ func TestFalcoKmod(t *testing.T) {
 		falco.WithArgs("-o", "engine.kind=kmod"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
-	assert.Equal(t, 0, falcoRes.ExitCode())
+	assert.Zero(t, falcoRes.ExitCode(), falcoRes.ExitDesc())
 	// We want to be sure to run the Kernel module.
 	assert.Regexp(t, `source with Kernel module`, falcoRes.Stderr())
 	// We want to be sure that the engine is correctly opened.
@@ -74,7 +74,7 @@ func TestFalcoModernBpf(t *testing.T) {
 		falco.WithArgs("-o", "engine.kind=modern_ebpf"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
-	assert.Equal(t, 0, falcoRes.ExitCode())
+	assert.Zero(t, falcoRes.ExitCode(), falcoRes.ExitDesc())
 	// We want to be sure to run the Kernel module.
 	assert.Regexp(t, `source with modern BPF probe`, falcoRes.Stderr())
 	// We want to be sure that the engine is correctly opened.
