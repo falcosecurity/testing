@@ -67,7 +67,7 @@ func TestFalco_Legacy_EngineVersionMismatch(t *testing.T) {
 	assert.NotNil(t, res.RuleValidation().AllErrors().
 		OfCode("LOAD_ERR_VALIDATE").
 		OfItemType("required_engine_version"))
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MacroOverriding(t *testing.T) {
@@ -79,7 +79,7 @@ func TestFalco_Legacy_MacroOverriding(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_Endswith(t *testing.T) {
@@ -96,7 +96,7 @@ func TestFalco_Legacy_Endswith(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_StdoutOutputStrict(t *testing.T) {
@@ -109,7 +109,7 @@ func TestFalco_Legacy_StdoutOutputStrict(t *testing.T) {
 		falco.WithArgs("-o", "time_format_iso_8601=true"),
 	)
 
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	expectedContent, err := outputs.SingleRuleWithCatWriteText.Content()
 	assert.Nil(t, err)
 	scanner := bufio.NewScanner(bytes.NewReader(expectedContent))
@@ -134,7 +134,7 @@ func TestFalco_Legacy_StdoutOutputJsonStrict(t *testing.T) {
 		falco.WithEnvVars(map[string]string{"FALCO_HOSTNAME": "test-falco-hostname"}),
 	)
 
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	expectedContent, err := outputs.SingleRuleWithCatWriteJSON.Content()
 	assert.Nil(t, err)
 	scanner := bufio.NewScanner(bytes.NewReader(expectedContent))
@@ -160,7 +160,7 @@ func TestFalco_Legacy_ListAppendFalse(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MacroAppend(t *testing.T) {
@@ -177,7 +177,7 @@ func TestFalco_Legacy_MacroAppend(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListSubstring(t *testing.T) {
@@ -189,7 +189,7 @@ func TestFalco_Legacy_ListSubstring(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidNotArray(t *testing.T) {
@@ -205,7 +205,7 @@ func TestFalco_Legacy_InvalidNotArray(t *testing.T) {
 		OfItemType("rules content").
 		OfMessage("Rules content is not yaml array of objects"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidEngineVersionNotNumber(t *testing.T) {
@@ -221,7 +221,7 @@ func TestFalco_Legacy_InvalidEngineVersionNotNumber(t *testing.T) {
 		OfItemType("required_engine_version").
 		OfMessage("Unable to parse engine version 'not-a-number' as a semver string. Expected \"x.y.z\" semver format."), res.Stdout())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidOverwriteRuleMultipleDocs(t *testing.T) {
@@ -238,7 +238,7 @@ func TestFalco_Legacy_InvalidOverwriteRuleMultipleDocs(t *testing.T) {
 		OfItemName("some rule").
 		OfMessage("Undefined macro 'bar' used in filter."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledRulesUsingSubstring(t *testing.T) {
@@ -251,7 +251,7 @@ func TestFalco_Legacy_DisabledRulesUsingSubstring(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DetectSkipUnknownNoevt(t *testing.T) {
@@ -266,7 +266,7 @@ func TestFalco_Legacy_DetectSkipUnknownNoevt(t *testing.T) {
 	assert.Equal(t, 4, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListAppend(t *testing.T) {
@@ -283,7 +283,7 @@ func TestFalco_Legacy_ListAppend(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleAppendSkipped(t *testing.T) {
@@ -296,7 +296,7 @@ func TestFalco_Legacy_RuleAppendSkipped(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_SkipUnknownError(t *testing.T) {
@@ -314,7 +314,7 @@ func TestFalco_Legacy_SkipUnknownError(t *testing.T) {
 		OfItemName("Contains Unknown Event And Not Skipping (field)").
 		OfMessage("filter_check called with nonexistent field proc.nobody"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MultipleRulesOverriding(t *testing.T) {
@@ -326,7 +326,7 @@ func TestFalco_Legacy_MultipleRulesOverriding(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidAppendMacro(t *testing.T) {
@@ -349,7 +349,7 @@ func TestFalco_Legacy_InvalidAppendMacro(t *testing.T) {
 		OfItemName("some_macro").
 		OfMessage("Macro not referred to by any other rule/macro"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidMissingListName(t *testing.T) {
@@ -365,7 +365,7 @@ func TestFalco_Legacy_InvalidMissingListName(t *testing.T) {
 		OfItemType("list").
 		OfMessage("Mapping for key 'list' is empty"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledTagsB(t *testing.T) {
@@ -396,7 +396,7 @@ func TestFalco_Legacy_DisabledTagsB(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RunTagsC(t *testing.T) {
@@ -427,7 +427,7 @@ func TestFalco_Legacy_RunTagsC(t *testing.T) {
 	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RunTagsAbc(t *testing.T) {
@@ -458,7 +458,7 @@ func TestFalco_Legacy_RunTagsAbc(t *testing.T) {
 	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleAppend(t *testing.T) {
@@ -475,7 +475,7 @@ func TestFalco_Legacy_RuleAppend(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListOverriding(t *testing.T) {
@@ -487,7 +487,7 @@ func TestFalco_Legacy_ListOverriding(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListSubBare(t *testing.T) {
@@ -504,7 +504,7 @@ func TestFalco_Legacy_ListSubBare(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidOverwriteMacroMultipleDocs(t *testing.T) {
@@ -521,7 +521,7 @@ func TestFalco_Legacy_InvalidOverwriteMacroMultipleDocs(t *testing.T) {
 		OfItemName("some_macro").
 		OfMessage("Undefined macro 'foo' used in filter."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledTagsA(t *testing.T) {
@@ -552,7 +552,7 @@ func TestFalco_Legacy_DisabledTagsA(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidYamlParseError(t *testing.T) {
@@ -568,7 +568,7 @@ func TestFalco_Legacy_InvalidYamlParseError(t *testing.T) {
 		OfItemType("rules content").
 		OfMessage("yaml-cpp: error at line 1, column 11: illegal map value"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidRuleWithoutOutput(t *testing.T) {
@@ -585,7 +585,7 @@ func TestFalco_Legacy_InvalidRuleWithoutOutput(t *testing.T) {
 		OfItemName("no output rule").
 		OfMessage("Item has no mapping for key 'output'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_Syscalls(t *testing.T) {
@@ -605,7 +605,7 @@ func TestFalco_Legacy_Syscalls(t *testing.T) {
 	assert.Equal(t, 2, res.Detections().OfRule("detect_madvise").Count())
 	assert.Equal(t, 2, res.Detections().OfRule("detect_open").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_BuiltinRulesNoWarnings(t *testing.T) {
@@ -617,7 +617,7 @@ func TestFalco_Legacy_BuiltinRulesNoWarnings(t *testing.T) {
 		falco.WithCaptureFile(captures.Empty),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RunTagsA(t *testing.T) {
@@ -648,7 +648,7 @@ func TestFalco_Legacy_RunTagsA(t *testing.T) {
 	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MonitorSyscallDropsNone(t *testing.T) {
@@ -664,7 +664,7 @@ func TestFalco_Legacy_MonitorSyscallDropsNone(t *testing.T) {
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MonitorSyscallDropsIgnore(t *testing.T) {
@@ -680,7 +680,7 @@ func TestFalco_Legacy_MonitorSyscallDropsIgnore(t *testing.T) {
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MonitorSyscallDropsThresholdOor(t *testing.T) {
@@ -697,7 +697,7 @@ func TestFalco_Legacy_MonitorSyscallDropsThresholdOor(t *testing.T) {
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MultipleRulesSuppressInfo(t *testing.T) {
@@ -720,7 +720,7 @@ func TestFalco_Legacy_MultipleRulesSuppressInfo(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("exec_from_cat").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("access_from_cat").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListSubMid(t *testing.T) {
@@ -737,7 +737,7 @@ func TestFalco_Legacy_ListSubMid(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidListWithoutItems(t *testing.T) {
@@ -754,7 +754,7 @@ func TestFalco_Legacy_InvalidListWithoutItems(t *testing.T) {
 		OfItemName("bad_list").
 		OfMessage("Item has no mapping for key 'items'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledRulesUsingEnabledFlag(t *testing.T) {
@@ -766,7 +766,7 @@ func TestFalco_Legacy_DisabledRulesUsingEnabledFlag(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
@@ -778,7 +778,7 @@ func TestFalco_Legacy_DisabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidRuleOutput(t *testing.T) {
@@ -795,7 +795,7 @@ func TestFalco_Legacy_InvalidRuleOutput(t *testing.T) {
 		OfItemName("rule_with_invalid_output").
 		OfMessage(regexp.MustCompile(`(invalid formatting token not_a_real_field|unknown filter:.*unexpected token)`)))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_FileOutputStrict(t *testing.T) {
@@ -817,7 +817,7 @@ func TestFalco_Legacy_FileOutputStrict(t *testing.T) {
 		assert.Nil(t, err1)
 		assert.Nil(t, err2)
 		assert.Equal(t, string(expectedContent), string(actualContent))
-		assert.Equal(t, 0, res.ExitCode())
+		assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	})
 }
 
@@ -849,7 +849,7 @@ func TestFalco_Legacy_RunTagsBc(t *testing.T) {
 	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MonitorSyscallDropsIgnoreAndLog(t *testing.T) {
@@ -866,7 +866,7 @@ func TestFalco_Legacy_MonitorSyscallDropsIgnoreAndLog(t *testing.T) {
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MonitorSyscallDropsThresholdNeg(t *testing.T) {
@@ -883,7 +883,7 @@ func TestFalco_Legacy_MonitorSyscallDropsThresholdNeg(t *testing.T) {
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MultipleRulesLastEmpty(t *testing.T) {
@@ -900,7 +900,7 @@ func TestFalco_Legacy_MultipleRulesLastEmpty(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListSubWhitespace(t *testing.T) {
@@ -917,7 +917,7 @@ func TestFalco_Legacy_ListSubWhitespace(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidMacroWithoutCondition(t *testing.T) {
@@ -934,7 +934,7 @@ func TestFalco_Legacy_InvalidMacroWithoutCondition(t *testing.T) {
 		OfItemName("bad_macro").
 		OfMessage("Item has no mapping for key 'condition'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_CatchallOrder(t *testing.T) {
@@ -953,7 +953,7 @@ func TestFalco_Legacy_CatchallOrder(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("open_dev_null").Count())
 	assert.Equal(t, 3, res.Detections().OfRule("dev_null").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListSubFront(t *testing.T) {
@@ -970,7 +970,7 @@ func TestFalco_Legacy_ListSubFront(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListOrder(t *testing.T) {
@@ -987,7 +987,7 @@ func TestFalco_Legacy_ListOrder(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidMissingMacroName(t *testing.T) {
@@ -1003,7 +1003,7 @@ func TestFalco_Legacy_InvalidMissingMacroName(t *testing.T) {
 		OfItemType("macro").
 		OfMessage("Mapping for key 'macro' is empty"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledTagsAbc(t *testing.T) {
@@ -1034,7 +1034,7 @@ func TestFalco_Legacy_DisabledTagsAbc(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_SkipUnknownPrefix(t *testing.T) {
@@ -1046,7 +1046,7 @@ func TestFalco_Legacy_SkipUnknownPrefix(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MonitorSyscallDropsLog(t *testing.T) {
@@ -1062,7 +1062,7 @@ func TestFalco_Legacy_MonitorSyscallDropsLog(t *testing.T) {
 	assert.Regexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidOverwriteRule(t *testing.T) {
@@ -1080,7 +1080,7 @@ func TestFalco_Legacy_InvalidOverwriteRule(t *testing.T) {
 		OfItemName("some rule").
 		OfMessage("Undefined macro 'bar' used in filter."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledTagsC(t *testing.T) {
@@ -1111,7 +1111,7 @@ func TestFalco_Legacy_DisabledTagsC(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RunTagsD(t *testing.T) {
@@ -1142,7 +1142,7 @@ func TestFalco_Legacy_RunTagsD(t *testing.T) {
 	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MacroAppendFalse(t *testing.T) {
@@ -1154,7 +1154,7 @@ func TestFalco_Legacy_MacroAppendFalse(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidAppendMacroMultipleDocs(t *testing.T) {
@@ -1171,7 +1171,7 @@ func TestFalco_Legacy_InvalidAppendMacroMultipleDocs(t *testing.T) {
 		OfItemName("some_macro").
 		OfMessage("unexpected token after 'execve', expecting 'or', 'and'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledRules(t *testing.T) {
@@ -1184,7 +1184,7 @@ func TestFalco_Legacy_DisabledRules(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MultipleRules(t *testing.T) {
@@ -1204,7 +1204,7 @@ func TestFalco_Legacy_MultipleRules(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MultipleDocs(t *testing.T) {
@@ -1224,7 +1224,7 @@ func TestFalco_Legacy_MultipleDocs(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_NestedListOverriding(t *testing.T) {
@@ -1236,7 +1236,7 @@ func TestFalco_Legacy_NestedListOverriding(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MacroOrder(t *testing.T) {
@@ -1253,7 +1253,7 @@ func TestFalco_Legacy_MacroOrder(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidAppendRuleWithoutCondition(t *testing.T) {
@@ -1270,7 +1270,7 @@ func TestFalco_Legacy_InvalidAppendRuleWithoutCondition(t *testing.T) {
 		OfItemName("no condition rule").
 		OfMessage("Appended rule must have exceptions or condition property"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_SkipUnknownUnspecError(t *testing.T) {
@@ -1287,7 +1287,7 @@ func TestFalco_Legacy_SkipUnknownUnspecError(t *testing.T) {
 		OfItemName("Contains Unknown Event And Unspecified").
 		OfMessage("filter_check called with nonexistent field proc.nobody"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MonitorSyscallDropsAlert(t *testing.T) {
@@ -1303,7 +1303,7 @@ func TestFalco_Legacy_MonitorSyscallDropsAlert(t *testing.T) {
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stderr())
 	assert.Regexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MonitorSyscallDropsExit(t *testing.T) {
@@ -1320,7 +1320,7 @@ func TestFalco_Legacy_MonitorSyscallDropsExit(t *testing.T) {
 	assert.Regexp(t, `Exiting.`, res.Stderr())
 	assert.NotRegexp(t, `Falco internal: syscall event drop`, res.Stdout())
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DisabledTagsAb(t *testing.T) {
@@ -1351,7 +1351,7 @@ func TestFalco_Legacy_DisabledTagsAb(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RunTagsB(t *testing.T) {
@@ -1382,7 +1382,7 @@ func TestFalco_Legacy_RunTagsB(t *testing.T) {
 	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleAppendFalse(t *testing.T) {
@@ -1394,7 +1394,7 @@ func TestFalco_Legacy_RuleAppendFalse(t *testing.T) {
 		falco.WithCaptureFile(captures.CatWrite),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleOrder(t *testing.T) {
@@ -1411,7 +1411,7 @@ func TestFalco_Legacy_RuleOrder(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidNotYaml(t *testing.T) {
@@ -1427,7 +1427,7 @@ func TestFalco_Legacy_InvalidNotYaml(t *testing.T) {
 		OfItemType("rules content").
 		OfMessage("Rules content is not yaml"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidOverwriteMacro(t *testing.T) {
@@ -1450,7 +1450,7 @@ func TestFalco_Legacy_InvalidOverwriteMacro(t *testing.T) {
 		OfItemName("some_macro").
 		OfMessage("Macro not referred to by any other rule/macro"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidMissingRuleName(t *testing.T) {
@@ -1466,7 +1466,7 @@ func TestFalco_Legacy_InvalidMissingRuleName(t *testing.T) {
 		OfItemType("rule").
 		OfMessage("Mapping for key 'rule' is empty"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleNamesWithSpaces(t *testing.T) {
@@ -1483,7 +1483,7 @@ func TestFalco_Legacy_RuleNamesWithSpaces(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MultipleRulesFirstEmpty(t *testing.T) {
@@ -1500,7 +1500,7 @@ func TestFalco_Legacy_MultipleRulesFirstEmpty(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ProgramOutputStrict(t *testing.T) {
@@ -1515,7 +1515,7 @@ func TestFalco_Legacy_ProgramOutputStrict(t *testing.T) {
 		falco.WithArgs("-o", "stdout_output.enabled=false"),
 	)
 
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	expectedContent, err := outputs.SingleRuleWithCatWriteText.Content()
 	assert.Nil(t, err)
 	scanner := bufio.NewScanner(bytes.NewReader(expectedContent))
@@ -1541,7 +1541,7 @@ func TestFalco_Legacy_InvalidAppendRule(t *testing.T) {
 		OfItemName("some rule").
 		OfMessage("unexpected token after 'open', expecting 'or', 'and'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidAppendRuleMultipleDocs(t *testing.T) {
@@ -1558,7 +1558,7 @@ func TestFalco_Legacy_InvalidAppendRuleMultipleDocs(t *testing.T) {
 		OfItemName("some rule").
 		OfMessage("unexpected token after 'open', expecting 'or', 'and'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RunTagsAb(t *testing.T) {
@@ -1589,7 +1589,7 @@ func TestFalco_Legacy_RunTagsAb(t *testing.T) {
 	assert.Equal(t, 0, res.Detections().OfRule("open_12").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("open_13").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ValidateSkipUnknownNoevt(t *testing.T) {
@@ -1614,7 +1614,7 @@ func TestFalco_Legacy_ValidateSkipUnknownNoevt(t *testing.T) {
 		OfItemName("Contains Unknown Event And Skipping (output)").
 		OfMessage(regexp.MustCompile(`(invalid formatting token proc\.nobody|unknown filter:.*unexpected token)`)), res.Stderr())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ListSubEnd(t *testing.T) {
@@ -1631,7 +1631,7 @@ func TestFalco_Legacy_ListSubEnd(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InvalidArrayItemNotObject(t *testing.T) {
@@ -1647,7 +1647,7 @@ func TestFalco_Legacy_InvalidArrayItemNotObject(t *testing.T) {
 		OfItemType("rules content item").
 		OfMessage("Unexpected element type. Each element should be a yaml associative array."))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionSecondItem(t *testing.T) {
@@ -1664,7 +1664,7 @@ func TestFalco_Legacy_RuleExceptionSecondItem(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendMultipleValues(t *testing.T) {
@@ -1681,7 +1681,7 @@ func TestFalco_Legacy_RuleExceptionAppendMultipleValues(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendComp(t *testing.T) {
@@ -1698,7 +1698,7 @@ func TestFalco_Legacy_RuleExceptionAppendComp(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionSingleField(t *testing.T) {
@@ -1715,7 +1715,7 @@ func TestFalco_Legacy_RuleExceptionSingleField(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionNewAppendNoField(t *testing.T) {
@@ -1732,7 +1732,7 @@ func TestFalco_Legacy_RuleExceptionNewAppendNoField(t *testing.T) {
 		OfItemName("proc_cmdline").
 		OfMessage("Rule exception must have fields property with a list of fields"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendOneValue(t *testing.T) {
@@ -1749,7 +1749,7 @@ func TestFalco_Legacy_RuleExceptionAppendOneValue(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionQuoted(t *testing.T) {
@@ -1766,7 +1766,7 @@ func TestFalco_Legacy_RuleExceptionQuoted(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendThirdItem(t *testing.T) {
@@ -1783,7 +1783,7 @@ func TestFalco_Legacy_RuleExceptionAppendThirdItem(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionSingleFieldAppend(t *testing.T) {
@@ -1800,7 +1800,7 @@ func TestFalco_Legacy_RuleExceptionSingleFieldAppend(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionNewSingleFieldAppend(t *testing.T) {
@@ -1817,7 +1817,7 @@ func TestFalco_Legacy_RuleExceptionNewSingleFieldAppend(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionUnknownFields(t *testing.T) {
@@ -1834,7 +1834,7 @@ func TestFalco_Legacy_RuleExceptionUnknownFields(t *testing.T) {
 		OfItemName("ex1").
 		OfMessage("'not.exist' is not a supported filter field"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionSecondValue(t *testing.T) {
@@ -1851,7 +1851,7 @@ func TestFalco_Legacy_RuleExceptionSecondValue(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionValuesList(t *testing.T) {
@@ -1868,7 +1868,7 @@ func TestFalco_Legacy_RuleExceptionValuesList(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendFieldsValuesLenMismatch(t *testing.T) {
@@ -1885,7 +1885,7 @@ func TestFalco_Legacy_RuleExceptionAppendFieldsValuesLenMismatch(t *testing.T) {
 		OfItemName("ex1").
 		OfMessage("Fields and values lists must have equal length"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendItemNotInRule(t *testing.T) {
@@ -1902,7 +1902,7 @@ func TestFalco_Legacy_RuleExceptionAppendItemNotInRule(t *testing.T) {
 		OfItemName("ex2").
 		OfMessage("Rule exception must have fields property with a list of fields"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionThirdItem(t *testing.T) {
@@ -1919,7 +1919,7 @@ func TestFalco_Legacy_RuleExceptionThirdItem(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionNoFields(t *testing.T) {
@@ -1936,7 +1936,7 @@ func TestFalco_Legacy_RuleExceptionNoFields(t *testing.T) {
 		OfItemName("ex1").
 		OfMessage("Item has no mapping for key 'fields'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendNoName(t *testing.T) {
@@ -1952,7 +1952,7 @@ func TestFalco_Legacy_RuleExceptionAppendNoName(t *testing.T) {
 		OfItemType("exception").
 		OfMessage("Item has no mapping for key 'name'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionCompsFieldsLenMismatch(t *testing.T) {
@@ -1969,7 +1969,7 @@ func TestFalco_Legacy_RuleExceptionCompsFieldsLenMismatch(t *testing.T) {
 		OfItemName("ex1").
 		OfMessage("Fields and comps lists must have equal length"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionNoValues(t *testing.T) {
@@ -1986,7 +1986,7 @@ func TestFalco_Legacy_RuleExceptionNoValues(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendSecondValue(t *testing.T) {
@@ -2003,7 +2003,7 @@ func TestFalco_Legacy_RuleExceptionAppendSecondValue(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionNoName(t *testing.T) {
@@ -2019,7 +2019,7 @@ func TestFalco_Legacy_RuleExceptionNoName(t *testing.T) {
 		OfItemType("exception").
 		OfMessage("Item has no mapping for key 'name'"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionComp(t *testing.T) {
@@ -2036,7 +2036,7 @@ func TestFalco_Legacy_RuleExceptionComp(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionValuesListref(t *testing.T) {
@@ -2053,7 +2053,7 @@ func TestFalco_Legacy_RuleExceptionValuesListref(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionNewSecondFieldAppend(t *testing.T) {
@@ -2070,7 +2070,7 @@ func TestFalco_Legacy_RuleExceptionNewSecondFieldAppend(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionUnknownComp(t *testing.T) {
@@ -2087,7 +2087,7 @@ func TestFalco_Legacy_RuleExceptionUnknownComp(t *testing.T) {
 		OfItemName("ex1").
 		OfMessage("'no-comp' is not a supported comparison operator"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionFieldsValuesLenMismatch(t *testing.T) {
@@ -2104,7 +2104,7 @@ func TestFalco_Legacy_RuleExceptionFieldsValuesLenMismatch(t *testing.T) {
 		OfItemName("ex1").
 		OfMessage("Fields and values lists must have equal length"))
 	assert.Error(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 1, res.ExitCode())
+	assert.Equal(t, 1, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionOneValue(t *testing.T) {
@@ -2121,7 +2121,7 @@ func TestFalco_Legacy_RuleExceptionOneValue(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionAppendSecondItem(t *testing.T) {
@@ -2138,7 +2138,7 @@ func TestFalco_Legacy_RuleExceptionAppendSecondItem(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleExceptionValuesListrefNoparens(t *testing.T) {
@@ -2155,7 +2155,7 @@ func TestFalco_Legacy_RuleExceptionValuesListrefNoparens(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ReadSensitiveFileUntrusted(t *testing.T) {
@@ -2173,7 +2173,7 @@ func TestFalco_Legacy_ReadSensitiveFileUntrusted(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Read sensitive file untrusted").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_KernelUpgrade(t *testing.T) {
@@ -2190,7 +2190,7 @@ func TestFalco_Legacy_KernelUpgrade(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_CreateFilesBelowDev(t *testing.T) {
@@ -2208,7 +2208,7 @@ func TestFalco_Legacy_CreateFilesBelowDev(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Create files below dev").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ReadSensitiveFileAfterStartup(t *testing.T) {
@@ -2227,7 +2227,7 @@ func TestFalco_Legacy_ReadSensitiveFileAfterStartup(t *testing.T) {
 	assert.Equal(t, 1, res.Detections().OfRule("Read sensitive file untrusted").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Read sensitive file trusted after startup").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RunShellUntrusted(t *testing.T) {
@@ -2245,7 +2245,7 @@ func TestFalco_Legacy_RunShellUntrusted(t *testing.T) {
 	assert.Zero(t, res.Detections().OfPriority("DEBUG").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("Run shell untrusted").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ChangeThreadNamespace(t *testing.T) {
@@ -2263,7 +2263,7 @@ func TestFalco_Legacy_ChangeThreadNamespace(t *testing.T) {
 	assert.Zero(t, res.Detections().OfPriority("NOTICE").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("Change thread namespace").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_MkdirBinaryDirs(t *testing.T) {
@@ -2281,7 +2281,7 @@ func TestFalco_Legacy_MkdirBinaryDirs(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Mkdir binary dirs").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_SystemBinariesNetworkActivity(t *testing.T) {
@@ -2299,7 +2299,7 @@ func TestFalco_Legacy_SystemBinariesNetworkActivity(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("System procs network activity").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_WriteRpmDatabase(t *testing.T) {
@@ -2317,7 +2317,7 @@ func TestFalco_Legacy_WriteRpmDatabase(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Write below rpm database").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DockerCompose(t *testing.T) {
@@ -2336,7 +2336,7 @@ func TestFalco_Legacy_DockerCompose(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
 	assert.Equal(t, 2, res.Detections().OfRule("Redirect STDOUT/STDIN to Network Connection in Container").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_CurlUninstall(t *testing.T) {
@@ -2353,7 +2353,7 @@ func TestFalco_Legacy_CurlUninstall(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DhcpclientRenew(t *testing.T) {
@@ -2370,7 +2370,7 @@ func TestFalco_Legacy_DhcpclientRenew(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_StagingWorker(t *testing.T) {
@@ -2387,7 +2387,7 @@ func TestFalco_Legacy_StagingWorker(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_DbProgramSpawnedProcess(t *testing.T) {
@@ -2406,7 +2406,7 @@ func TestFalco_Legacy_DbProgramSpawnedProcess(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("DB program spawned process").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_UserMgmtBinaries(t *testing.T) {
@@ -2425,7 +2425,7 @@ func TestFalco_Legacy_UserMgmtBinaries(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("NOTICE").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("User mgmt binaries").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_Exim4(t *testing.T) {
@@ -2442,7 +2442,7 @@ func TestFalco_Legacy_Exim4(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_WriteEtc(t *testing.T) {
@@ -2460,7 +2460,7 @@ func TestFalco_Legacy_WriteEtc(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Write below etc").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_StagingCollector(t *testing.T) {
@@ -2477,7 +2477,7 @@ func TestFalco_Legacy_StagingCollector(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ContainerPrivileged(t *testing.T) {
@@ -2496,7 +2496,7 @@ func TestFalco_Legacy_ContainerPrivileged(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.Equal(t, 3, res.Detections().OfRule("Launch Privileged Container").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ContainerSensitiveMount(t *testing.T) {
@@ -2515,7 +2515,7 @@ func TestFalco_Legacy_ContainerSensitiveMount(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.Equal(t, 3, res.Detections().OfRule("Launch Sensitive Mount Container").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_WriteBinaryDir(t *testing.T) {
@@ -2533,7 +2533,7 @@ func TestFalco_Legacy_WriteBinaryDir(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.Equal(t, 4, res.Detections().OfRule("Write below binary dir").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_CurlInstall(t *testing.T) {
@@ -2550,7 +2550,7 @@ func TestFalco_Legacy_CurlInstall(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_StagingDb(t *testing.T) {
@@ -2567,7 +2567,7 @@ func TestFalco_Legacy_StagingDb(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_ModifyBinaryDirs(t *testing.T) {
@@ -2585,7 +2585,7 @@ func TestFalco_Legacy_ModifyBinaryDirs(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("Modify binary dirs").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_NonSudoSetuid(t *testing.T) {
@@ -2601,7 +2601,7 @@ func TestFalco_Legacy_NonSudoSetuid(t *testing.T) {
 	)
 	assert.Equal(t, 0, res.Detections().OfRule("Non sudo setuid").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_GitPush(t *testing.T) {
@@ -2618,7 +2618,7 @@ func TestFalco_Legacy_GitPush(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_KubeDemo(t *testing.T) {
@@ -2638,7 +2638,7 @@ func TestFalco_Legacy_KubeDemo(t *testing.T) {
 	assert.Zero(t, res.Detections().Count())
 	assert.Zero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_FalcoEventGenerator(t *testing.T) {
@@ -2670,7 +2670,7 @@ func TestFalco_Legacy_FalcoEventGenerator(t *testing.T) {
 	assert.Equal(t, 2, res.Detections().OfRule("Modify binary dirs").Count())
 	assert.Equal(t, 0, res.Detections().OfRule("Change thread namespace").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_SystemUserInteractive(t *testing.T) {
@@ -2689,7 +2689,7 @@ func TestFalco_Legacy_SystemUserInteractive(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.Equal(t, 1, res.Detections().OfRule("System user interactive").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RuleNamesWithRegexChars(t *testing.T) {
@@ -2708,7 +2708,7 @@ func TestFalco_Legacy_RuleNamesWithRegexChars(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.Equal(t, 4, res.Detections().OfRule(`Open From Cat ($\.*+?()[]{}|^)`).Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_JsonOutputNoOutputProperty(t *testing.T) {
@@ -2726,7 +2726,7 @@ func TestFalco_Legacy_JsonOutputNoOutputProperty(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_JsonOutputNoTagsProperty(t *testing.T) {
@@ -2744,7 +2744,7 @@ func TestFalco_Legacy_JsonOutputNoTagsProperty(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_JsonOutputEmptyTagsProperty(t *testing.T) {
@@ -2762,7 +2762,7 @@ func TestFalco_Legacy_JsonOutputEmptyTagsProperty(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_RulesDirectory(t *testing.T) {
@@ -2782,7 +2782,7 @@ func TestFalco_Legacy_RulesDirectory(t *testing.T) {
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.NotZero(t, res.Detections().OfPriority("ERROR").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_EnabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
@@ -2800,7 +2800,7 @@ func TestFalco_Legacy_EnabledRuleUsingFalseEnabledFlagOnly(t *testing.T) {
 	assert.Equal(t, 4, res.Detections().OfRule("open_from_cat").Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_NullOutputField(t *testing.T) {
@@ -2818,7 +2818,7 @@ func TestFalco_Legacy_NullOutputField(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_InOperatorNetmasks(t *testing.T) {
@@ -2835,7 +2835,7 @@ func TestFalco_Legacy_InOperatorNetmasks(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("INFO").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_TimeIso8601(t *testing.T) {
@@ -2855,7 +2855,7 @@ func TestFalco_Legacy_TimeIso8601(t *testing.T) {
 	assert.NotZero(t, res.Detections().Count())
 	assert.NotZero(t, res.Detections().OfPriority("WARNING").Count())
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_TestWarnings(t *testing.T) {
@@ -2867,7 +2867,7 @@ func TestFalco_Legacy_TestWarnings(t *testing.T) {
 		falco.WithRulesValidation(rules.FalcoRulesWarnings),
 	)
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 	assert.True(t, res.RuleValidation().At(0).Successful)
 	warnings := res.RuleValidation().AllWarnings().
 		OfCode("LOAD_NO_EVTTYPE").
@@ -2898,7 +2898,7 @@ func TestFalco_Legacy_NoPluginsUnknownSource(t *testing.T) {
 		OfItemName("Cloudtrail Create Instance").
 		OfMessage("Unknown source aws_cloudtrail, skipping"))
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_AppendUnknownSource(t *testing.T) {
@@ -2915,7 +2915,7 @@ func TestFalco_Legacy_AppendUnknownSource(t *testing.T) {
 		OfItemName("Rule1").
 		OfMessage("Unknown source mysource, skipping"))
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }
 
 func TestFalco_Legacy_NoPluginsUnknownSourceRuleException(t *testing.T) {
@@ -2932,5 +2932,5 @@ func TestFalco_Legacy_NoPluginsUnknownSourceRuleException(t *testing.T) {
 		OfItemName("Cloudtrail Create Instance").
 		OfMessage("Unknown source aws_cloudtrail, skipping"))
 	assert.NoError(t, res.Err(), "%s", res.Stderr())
-	assert.Equal(t, 0, res.ExitCode())
+	assert.Zero(t, res.ExitCode(), res.ExitDesc())
 }

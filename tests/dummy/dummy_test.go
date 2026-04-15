@@ -55,7 +55,7 @@ func TestDummy_PrometheusMetrics(t *testing.T) {
 		falco.WithArgs("-o", "engine.kind=nodriver"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
-	assert.Equal(t, 0, falcoRes.ExitCode())
+	assert.Zero(t, falcoRes.ExitCode(), falcoRes.ExitDesc())
 
 	wg.Wait()
 

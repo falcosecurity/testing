@@ -45,7 +45,7 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
 		assert.Error(t, res.Err(), "%s", res.Stdout())
-		assert.NotZero(t, res.ExitCode())
+		assert.NotZero(t, res.ExitCode(), res.ExitDesc())
 		assert.Contains(t, res.Stdout(), "no artifacts to install")
 	})
 
@@ -60,7 +60,7 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
 		assert.Error(t, res.Err(), "%s", res.Stdout())
-		assert.NotZero(t, res.ExitCode())
+		assert.NotZero(t, res.ExitCode(), res.ExitDesc())
 		assert.Contains(t, res.Stdout(), "cannot find some_invalid_artifact")
 	})
 
@@ -74,7 +74,7 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.Contains(t, res.Stdout(), "Artifact successfully installed")
 			assert.FileExists(t, sharedWorkDir+"/plugins/libdummy.so")
 		}))
@@ -90,7 +90,7 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.Contains(t, res.Stdout(), "Artifact successfully installed")
 			assert.FileExists(t, sharedWorkDir+"/rulesfiles/aws_cloudtrail_rules.yaml")
 			assert.FileExists(t, sharedWorkDir+"/plugins/libcloudtrail.so")
@@ -108,7 +108,7 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			require.Nil(t, res.Err(), "%s", res.Stdout())
-			require.Zero(t, res.ExitCode())
+			require.Zero(t, res.ExitCode(), res.ExitDesc())
 
 			// craft a configuration for the plugin
 			config, err := falco.NewPluginConfig(
@@ -137,7 +137,7 @@ func TestFalcoctl_Artifact_InstallPlugin(t *testing.T) {
 				falco.WithEnabledSources("aws_cloudtrail"),
 			)
 			assert.Nil(t, resFalco.Err(), "%s", resFalco.Stderr())
-			assert.Equal(t, 0, resFalco.ExitCode())
+			assert.Zero(t, resFalco.ExitCode(), resFalco.ExitDesc())
 			assert.True(t, resFalco.RuleValidation().At(0).Successful)
 			assert.Zero(t, resFalco.RuleValidation().AllWarnings().Count())
 		}))
@@ -158,7 +158,7 @@ func TestFalcoctl_Artifact_Info(t *testing.T) {
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
 		assert.Error(t, res.Err(), "%s", res.Stderr())
-		assert.NotZero(t, res.ExitCode())
+		assert.NotZero(t, res.ExitCode(), res.ExitDesc())
 		assert.Contains(t, res.Stdout(), "requires at least 1 arg(s), only received 0")
 	})
 
@@ -174,7 +174,7 @@ func TestFalcoctl_Artifact_Info(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.Regexp(t, `.*REF[\s]+TAGS.*`, res.Stdout())
 			assert.Regexp(t, `.*ghcr.io\/falcosecurity\/plugins\/plugin\/dummy[\s]*(latest[\s]*,[\s]*)?[\s]+([0-9]+(.[0-9]+)?(.[0-9]+)?[\s]*,[\s]*)+[\s]*(latest)?.*`, res.Stdout())
 			assert.NoFileExists(t, sharedWorkDir+"/plugins/libdummy.so")
@@ -193,7 +193,7 @@ func TestFalcoctl_Artifact_Info(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.Regexp(t, `.*REF[\s]+TAGS.*`, res.Stdout())
 			assert.Regexp(t, `.*ghcr.io\/falcosecurity\/plugins\/ruleset\/cloudtrail[\s]*(latest[\s]*,[\s]*)?[\s]+([0-9]+(.[0-9]+)?(.[0-9]+)?[\s]*,[\s]*)+[\s]*(latest)?.*`, res.Stdout())
 			assert.NoFileExists(t, sharedWorkDir+"/plugins/libcloudtrail.so")
@@ -217,7 +217,7 @@ func TestFalcoctl_Artifact_List(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.GreaterOrEqual(t, len(strings.Split(res.Stdout(), "\n")), 2)
 			assert.Regexp(t, `.*INDEX[\s]+ARTIFACT[\s]+TYPE[\s]+REGISTRY[\s]+REPOSITORY.*`, res.Stdout())
 			assert.Regexp(t, `.*falcosecurity[\s]+dummy[\s]+plugin[\s]+ghcr.io[\s]+falcosecurity/plugins/plugin/dummy.*`, res.Stdout())
@@ -236,7 +236,7 @@ func TestFalcoctl_Artifact_List(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.GreaterOrEqual(t, len(strings.Split(res.Stdout(), "\n")), 2)
 			assert.Regexp(t, `.*INDEX[\s]+ARTIFACT[\s]+TYPE[\s]+REGISTRY[\s]+REPOSITORY.*`, res.Stdout())
 			assert.Regexp(t, `.*falcosecurity[\s]+dummy[\s]+plugin[\s]+ghcr.io[\s]+falcosecurity/plugins/plugin/dummy.*`, res.Stdout())
@@ -256,7 +256,7 @@ func TestFalcoctl_Artifact_List(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.GreaterOrEqual(t, len(strings.Split(res.Stdout(), "\n")), 2)
 			assert.Regexp(t, `.*INDEX[\s]+ARTIFACT[\s]+TYPE[\s]+REGISTRY[\s]+REPOSITORY.*`, res.Stdout())
 			assert.Regexp(t, `.*falcosecurity[\s]+cloudtrail-rules[\s]+rulesfile[\s]+ghcr.io[\s]+falcosecurity/plugins/ruleset/cloudtrail.*`, res.Stdout())
@@ -279,7 +279,7 @@ func TestFalcoctl_Artifact_Search(t *testing.T) {
 			falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 		)
 		assert.Error(t, res.Err(), "%s", res.Stderr())
-		assert.NotZero(t, res.ExitCode())
+		assert.NotZero(t, res.ExitCode(), res.ExitDesc())
 		assert.Contains(t, res.Stdout(), "requires at least 1 arg(s), only received 0")
 	})
 
@@ -294,7 +294,7 @@ func TestFalcoctl_Artifact_Search(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.Regexp(t, `.*INDEX[\s]+ARTIFACT[\s]+TYPE[\s]+REGISTRY[\s]+REPOSITORY.*`, res.Stdout())
 			assert.Regexp(t, `.*falcosecurity[\s]+dummy[\s]+plugin[\s]+ghcr.io[\s]+falcosecurity/plugins/plugin/dummy.*`, res.Stdout())
 			assert.Regexp(t, `.*falcosecurity[\s]+dummy_c[\s]+plugin[\s]+ghcr.io[\s]+falcosecurity/plugins/plugin/dummy_c.*`, res.Stdout())
@@ -314,7 +314,7 @@ func TestFalcoctl_Artifact_Search(t *testing.T) {
 				falcoctl.WithConfig(run.NewStringFileAccessor("config.yaml", "")),
 			)
 			assert.NoError(t, res.Err(), "%s", res.Stdout()+"\n"+res.Stderr())
-			assert.Zero(t, res.ExitCode())
+			assert.Zero(t, res.ExitCode(), res.ExitDesc())
 			assert.Regexp(t, `.*INDEX[\s]+ARTIFACT[\s]+TYPE[\s]+REGISTRY[\s]+REPOSITORY.*`, res.Stdout())
 			assert.Regexp(t, `.*falcosecurity[\s]+dummy[\s]+plugin[\s]+ghcr.io[\s]+falcosecurity/plugins/plugin/dummy.*`, res.Stdout())
 			assert.Regexp(t, `.*falcosecurity[\s]+dummy_c[\s]+plugin[\s]+ghcr.io[\s]+falcosecurity/plugins/plugin/dummy_c.*`, res.Stdout())
@@ -341,8 +341,8 @@ func TestFalcoctl_Artifact_Search(t *testing.T) {
 		)
 		assert.Nil(t, resList.Err(), "%s", resList.Stdout())
 		assert.Nil(t, resSearch.Err(), "%s", resSearch.Stdout())
-		assert.Zero(t, resList.ExitCode())
-		assert.Zero(t, resSearch.ExitCode())
+		assert.Zero(t, resList.ExitCode(), resList.ExitDesc())
+		assert.Zero(t, resSearch.ExitCode(), resSearch.ExitDesc())
 		listLines := strings.Split(resSearch.Stdout(), "\n")
 		searchLines := strings.Split(resSearch.Stdout(), "\n")
 		for _, line := range listLines {

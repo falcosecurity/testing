@@ -40,7 +40,7 @@ func TestFalcoctl_Version(t *testing.T) {
 			falcoctl.WithArgs("version", "some_other_cmd"),
 		)
 		assert.Error(t, res.Err(), "%s", res.Stderr())
-		assert.NotZero(t, res.ExitCode())
+		assert.NotZero(t, res.ExitCode(), res.ExitDesc())
 		assert.Contains(t, res.Stdout(), `unknown command "some_other_cmd"`)
 	})
 
@@ -51,7 +51,7 @@ func TestFalcoctl_Version(t *testing.T) {
 			falcoctl.WithArgs("version"),
 		)
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
-		assert.Zero(t, res.ExitCode())
+		assert.Zero(t, res.ExitCode(), res.ExitDesc())
 		assert.Regexp(t, `Client Version:[\s]+[0-9]+.[0-9]+.[0-9]+(-[a-z]+[0-9]+)?`, res.Stdout())
 	})
 
@@ -62,7 +62,7 @@ func TestFalcoctl_Version(t *testing.T) {
 			falcoctl.WithArgs("version", "--output=json"),
 		)
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 0)
+		assert.Zero(t, res.ExitCode(), res.ExitDesc())
 		out := make(map[string]interface{})
 		require.Nil(t, json.Unmarshal([]byte(res.Stdout()[strings.Index(res.Stdout(), "{"):]), &out))
 		assert.Contains(t, out, "semVersion")
@@ -80,7 +80,7 @@ func TestFalcoctl_Version(t *testing.T) {
 			falcoctl.WithArgs("version", "--output=yaml"),
 		)
 		assert.NoError(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 0)
+		assert.Zero(t, res.ExitCode(), res.ExitDesc())
 		out := make(map[string]interface{})
 		require.Nil(t, yaml.Unmarshal([]byte(res.Stdout()[strings.Index(res.Stdout(), ":\n")+1:]), &out))
 		assert.Contains(t, out, "semversion")

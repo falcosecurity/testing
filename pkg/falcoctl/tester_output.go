@@ -20,6 +20,7 @@ package falcoctl
 
 import (
 	"context"
+	"errors"
 
 	"github.com/falcosecurity/testing/pkg/run"
 	"go.uber.org/multierr"
@@ -41,14 +42,25 @@ func (t *TestOutput) DurationExceeded() bool {
 	return false
 }
 
-// ExitCode returns the numeric exit code of the falcoctl process.
+// ExitCode returns the numeric exit code of the falcoctl processor or -1, in case the process was terminated by a
+// signal. In this latter case, the details can be retrieved leveraging ExitDesc.
 func (t *TestOutput) ExitCode() int {
 	for _, err := range multierr.Errors(t.Err()) {
-		if exitCodeErr, ok := err.(*run.ExitCodeError); ok {
-			return exitCodeErr.Code
+		if exitErr := (*run.ExitError)(nil); errors.As(err, &exitErr) {
+			return exitErr.Code
 		}
 	}
 	return 0
+}
+
+// ExitDesc returns a description of the exit reason of the falcoctl process.
+func (t *TestOutput) ExitDesc() string {
+	for _, err := range multierr.Errors(t.Err()) {
+		if exitErr := (*run.ExitError)(nil); errors.As(err, &exitErr) {
+			return exitErr.Desc
+		}
+	}
+	return ""
 }
 
 // Stdout returns a string containing the stdout output of the falcoctl run.

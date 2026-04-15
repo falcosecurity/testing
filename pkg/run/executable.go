@@ -20,6 +20,7 @@ package run
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -113,8 +114,8 @@ func (e *execRunner) Run(ctx context.Context, options ...RunnerOption) error {
 	}
 
 	err := cmd.Run()
-	if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() != 0 {
-		err = &ExitCodeError{Code: exitErr.ExitCode()}
+	if exitErr := (*exec.ExitError)(nil); errors.As(err, &exitErr) {
+		err = &ExitError{Code: exitErr.ExitCode(), Desc: exitErr.String()}
 	}
 	return err
 }

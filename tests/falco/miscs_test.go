@@ -73,7 +73,7 @@ func TestFalco_Miscs_StartupFail(t *testing.T) {
 	t.Run("empty-config", func(t *testing.T) {
 		res := falco.Test(runner, falco.WithConfig(configs.EmptyConfig))
 		assert.Error(t, res.Err(), "%s", res.Stderr())
-		assert.Equal(t, res.ExitCode(), 1)
+		assert.Equal(t, res.ExitCode(), 1, res.ExitDesc())
 		assert.Contains(t, res.Stderr(), "You must specify at least one rules file")
 	})
 }
@@ -104,7 +104,7 @@ func TestFalco_Miscs_HotReload(t *testing.T) {
 		falco.WithArgs("-o", "engine.kind=nodriver"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
-	assert.Equal(t, 0, falcoRes.ExitCode())
+	assert.Zero(t, falcoRes.ExitCode(), falcoRes.ExitDesc())
 	// We want to be sure that the hot reload was triggered
 	assert.Regexp(t, `SIGHUP received, restarting...`, falcoRes.Stderr())
 }
@@ -130,7 +130,7 @@ func TestFalco_Miscs_PrometheusMetricsNoDriver(t *testing.T) {
 		falco.WithArgs("-o", "engine.kind=nodriver"),
 	)
 	assert.NoError(t, falcoRes.Err(), "%s", falcoRes.Stderr())
-	assert.Equal(t, 0, falcoRes.ExitCode())
+	assert.Zero(t, falcoRes.ExitCode(), falcoRes.ExitDesc())
 
 	wg.Wait()
 
