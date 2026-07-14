@@ -3,7 +3,7 @@
 // +build ignore
 
 /*
-Copyright (C) 2023 The Falco Authors.
+Copyright (C) 2026 The Falco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,18 +40,22 @@ func die(err error) {
 
 func downloadFalcoOrgTraces() ([]*data.LargeFileVarInfo, error) {
 	var res []*data.LargeFileVarInfo
-	tracesVersion := "20200831"
-	traces := []string{"traces-info", "traces-positive", "traces-negative"}
+	traces := []struct{ localName, remoteName string }{
+		{"traces-info", "traces-info-20200831"},
+		{"traces-positive", "traces-positive-20200831"},
+		{"traces-negative", "traces-negative-20200831"},
+		{"traces-utf8", "traces-utf8"},
+	}
 	extractDir := data.DownloadDir + "/captures/"
-	for _, traceName := range traces {
-		url := fmt.Sprintf("https://download.falco.org/fixtures/trace-files/%s-%s.zip", traceName, tracesVersion)
-		err := data.Download(url, data.DownloadDir+"/"+traceName+".zip")
-		if err != nil {
-			return nil, err
+	for _, trace := range traces {
+		url := fmt.Sprintf("https://download.falco.org/fixtures/trace-files/%s.zip", trace.remoteName)
+		traceFilePath := data.DownloadDir + "/" + trace.localName + ".zip"
+		if err := data.Download(url, traceFilePath); err != nil {
+			return nil, fmt.Errorf("error downloading trace file %s (%s): %w", trace.localName, trace.remoteName, err)
 		}
-		err = data.Unzip(data.DownloadDir+"/"+traceName+".zip", extractDir)
-		if err != nil {
-			return nil, err
+
+		if err := data.Unzip(traceFilePath, extractDir); err != nil {
+			return nil, fmt.Errorf("error unzipping trace file %s in %s: %w", traceFilePath, extractDir, err)
 		}
 	}
 	dirFiles, err := data.ListDirFiles(extractDir, true)
