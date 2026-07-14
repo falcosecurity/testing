@@ -1,5 +1,6 @@
 approvers:
   - jasondellaluce
   - leogr
-  - andreagit97
   - lucaguerra
+emeritus_approvers:
+  - andreagit97
